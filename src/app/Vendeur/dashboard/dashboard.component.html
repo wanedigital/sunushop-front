@@ -1,0 +1,57 @@
+<main class="dashboard-content" [style.margin-left.px]="sidebarWidth">
+  <div class="head-title mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1>Dashboard</h1>
+        <ul class="breadcrumb list-inline">
+          <li class="list-inline-item"><a href="#">Dashboard</a></li>
+          <li class="list-inline-item"><i class="bi bi-chevron-right"></i></li>
+          <li class="list-inline-item active">Home</li>
+        </ul>
+      </div>
+      <a href="#" class="btn btn-primary"><i class="bi bi-cloud-download"></i>Get PDF</a>
+    </div>
+  </div>
+
+  <ul class="box-info list-unstyled">
+    <li *ngFor="let stat of stats">
+      <i [class]="stat.icon"></i>
+      <div>
+        <h5>{{ stat.value }}</h5>
+        <p>{{ stat.label }}</p>
+      </div>
+    </li>
+  </ul>
+
+  <div class="table-data">
+    <div class="table-header">
+      <h4>Recent Orders</h4>
+      <div class="table-actions">
+        <i class="bi bi-search"></i>
+        <i class="bi bi-filter"></i>
+        <i class="bi bi-download"></i>
+      </div>
+    </div>
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Date Order</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of recentOrders">
+          <td>
+            <span>
+              <img [src]="order.user.image" [alt]="order.user.name">
+              <span>{{ order.user.name }}</span>
+            </span>
+          </td>
+          <td>{{ order.date }}</td>
+          <td><span class="badge" [class]="order.status.class">{{ order.status.text }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>

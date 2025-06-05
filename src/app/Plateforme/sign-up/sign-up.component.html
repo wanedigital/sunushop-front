@@ -1,0 +1,43 @@
+<!-- Multistep Form -->
+<form id="msform">
+  <!-- Progressbar -->
+  <ul id="progressbar">
+    <li class="active">Création de compte</li>
+    <li>Profils sociaux</li>
+    <li>Détails personnels</li>
+  </ul>
+
+  <!-- Step 1 -->
+  <fieldset>
+    <h2 class="fs-title">Créer votre compte</h2>
+    <h3 class="fs-subtitle">Étape 1</h3>
+    <input type="text" name="email" placeholder="Email" />
+    <input type="password" name="pass" placeholder="Mot de passe" />
+    <input type="password" name="cpass" placeholder="Confirmer mot de passe" />
+    <input type="button" class="next action-button" value="Suivant" (click)="next()"/>
+  </fieldset>
+
+  <!-- Step 2 -->
+  <fieldset>
+    <h2 class="fs-title">Profils sociaux</h2>
+    <h3 class="fs-subtitle">Votre présence en ligne</h3>
+    <input type="text" name="twitter" placeholder="Twitter" />
+    <input type="text" name="facebook" placeholder="Facebook" />
+    <input type="text" name="gplus" placeholder="Google Plus" />
+    <input type="button" class="previous action-button" value="Précédent" (click)="previous()"/>
+    <input type="button" class="next action-button" value="Suivant" (click)="next()"/>
+  </fieldset>
+
+  <!-- Step 3 -->
+  <fieldset>
+    <h2 class="fs-title">Détails personnels</h2>
+    <h3 class="fs-subtitle">Nous ne les partagerons jamais</h3>
+    <input type="text" name="fname" placeholder="Prénom" />
+    <input type="text" name="lname" placeholder="Nom" />
+    <input type="text" name="phone" placeholder="Téléphone" />
+    <input type="text" name="logo" placeholder="logo" />
+    <textarea name="address" placeholder="Adresse"></textarea>
+    <input type="button" class="previous action-button" value="Précédent" (click)="previous()"/>
+    <input type="submit" class="submit action-button" value="Valider" />
+  </fieldset>
+</form>

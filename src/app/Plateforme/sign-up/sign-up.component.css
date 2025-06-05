@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: 'Montserrat', sans-serif;
+  height: 100%;
+  background: linear-gradient(rgba(255, 132, 0, 0.6), rgba(0, 0, 0, 0.7));
+}
+
+#msform {
+  width: 400px;
+  margin: 50px auto;
+  text-align: center;
+  position: relative;
+}
+
+#msform fieldset {
+  background: white;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  padding: 20px 30px;
+  width: 80%;
+  margin: 0 10%;
+  position: relative;
+  display: none;
+}
+
+#msform fieldset:first-of-type {
+  display: block;
+}
+
+#msform input, #msform textarea {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  width: 100%;
+  font-size: 14px;
+}
+
+.action-button {
+  width: 100px;
+  background: #FF8400;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+  margin: 10px 5px;
+  transition: all 0.3s ease;
+}
+
+.action-button:hover {
+  background: #000000;
+}
+
+.fs-title {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #2C3E50;
+}
+
+.fs-subtitle {
+  font-size: 13px;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+#progressbar {
+  margin-bottom: 30px;
+  overflow: hidden;
+  counter-reset: step;
+}
+
+#progressbar li {
+  list-style-type: none;
+  color: white;
+  text-transform: uppercase;
+  font-size: 9px;
+  width: 33.33%;
+  float: left;
+  position: relative;
+  text-align: center;
+}
+
+#progressbar li:before {
+  content: counter(step);
+  counter-increment: step;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  background: white;
+  color: #333;
+  display: block;
+  margin: 0 auto 5px;
+  border-radius: 3px;
+}
+
+#progressbar li:after {
+  content: '';
+  width: 100%;
+  height: 2px;
+  background: white;
+  position: absolute;
+  left: -50%;
+  top: 9px;
+  z-index: -1;
+}
+
+#progressbar li:first-child:after {
+  content: none;
+}
+
+#progressbar li.active:before,
+#progressbar li.active:after {
+  background: #FF8400;
+  color: white;
+}

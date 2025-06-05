@@ -1,0 +1,36 @@
+<nav class="navbar" [class.scrolled]="isScrolled" [style.margin-left.px]="sidebarWidth">
+  <div class="navbar-content">
+    <div class="left-section">
+      <i class="bi bi-list toggle-sidebar" (click)="toggleSidebar()"></i>
+      <div class="search-form">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Rechercher...">
+      </div>
+    </div>
+    
+    <div class="right-section">
+      <div class="notification">
+        <i class="bi bi-bell"></i>
+        <span class="count">3</span>
+      </div>
+      
+      <div class="profile" (click)="toggleDropdown($event)">
+        <img src="https://placehold.co/40x40" alt="Profile" />
+        <div class="dropdown-menu" *ngIf="isDropdownOpen" @dropdownAnimation>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-person"></i>
+            <span>Mon Profil</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-gear"></i>
+            <span>Paramètres</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Déconnexion</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

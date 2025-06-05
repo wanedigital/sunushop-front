@@ -1,0 +1,26 @@
+/* dashboard.component.css */
+.dashboard-content {
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Version desktop - sidebar étendue */
+@media (min-width: 769px) {
+  .dashboard-content {
+    margin-left: 250px;
+  }
+  
+  .sidebar-collapsed .dashboard-content {
+    margin-left: 60px;
+  }
+}
+
+/* Version mobile - pas de marge */
+@media (max-width: 768px) {
+  .dashboard-content {
+    margin-left: 0;
+  }
+  
+  .sidebar-collapsed .dashboard-content {
+    margin-left: 0;
+  }
+}

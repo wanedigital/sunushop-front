@@ -1,0 +1,47 @@
+<div class="cards">
+  <div class="card" #cardRef>
+    <div class="card__image-holder">
+      <img class="card__image" src="https://source.unsplash.com/300x225/?wave" alt="logo" />
+    </div>
+    <div class="card-title">
+     <i class="fa-solid fa-chevron-down " (click)="toggleCard($event, cardRef)"></i>
+      <h2>
+        Card title
+        <small>Image from unsplash.com</small>
+      </h2>
+    </div>
+    <div class="card-flap flap1">
+      <div class="card-description">
+        This grid is an attempt to make something nice that works on touch devices, ignoring hover states where unavailable.
+      </div>
+      <div class="card-flap flap2">
+        <div class="card-actions">
+          <a href="#" class="btn">Read more</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card" #cardRef>
+    <div class="card__image-holder">
+      <img class="card__image" src="https://source.unsplash.com/300x225/?wave" alt="logo" />
+    </div>
+    <div class="card-title">
+     <i class="fa-solid fa-chevron-down " (click)="toggleCard($event, cardRef)"></i>
+      <h2>
+        Card title
+        <small>Image from unsplash.com</small>
+      </h2>
+    </div>
+    <div class="card-flap flap1">
+      <div class="card-description">
+        This grid is an attempt to make something nice that works on touch devices, ignoring hover states where unavailable.
+      </div>
+      <div class="card-flap flap2">
+        <div class="card-actions">
+          <a href="#" class="btn">Read more</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

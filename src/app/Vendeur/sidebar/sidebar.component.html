@@ -1,0 +1,16 @@
+<section id="sidebar" [ngClass]="{'sidebar-collapsed': isCollapsed, 'show': !isCollapsed && isMobileView}">
+  <div class="brand">
+    <i class="bi bi-emoji-smile" aria-hidden="true"></i>
+    <span class="ms-2" *ngIf="!isCollapsed">Admin</span>
+  </div>
+  
+<ul *ngFor="let section of sections" class="side-menu">
+  <li *ngFor="let item of menuItems[section]" [ngClass]="{'active': item.isActive}">
+
+      <a (click)="setActiveItem(item)">
+        <i [class]="item.icon"></i>
+        <span>{{ item.label }}</span>
+      </a>
+    </li>
+  </ul>
+</section>

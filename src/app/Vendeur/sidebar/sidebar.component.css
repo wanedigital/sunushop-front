@@ -1,0 +1,9 @@
+/* Spécifique au composant sidebar */
+#sidebar .side-menu a.active {
+  background-color: var(--sidebar-hover);
+  color: #fff;
+}
+
+#sidebar .side-menu a.active::before {
+  transform: scaleY(1);
+}

@@ -1,0 +1,106 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="https://image.ibb.co/fOur3b/favicon.png"/>
+  <meta name="theme-color" content="#1885ed">
+  <title>SunuShop | Votre place de marché locale</title>
+
+  <!-- Font Awesome (si pas encore inclus) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-+1eZwY3w2fZqXmgHFJZ0NfFxblKzKXqf9s1RblWZ6Vd9H7Lx08iyI5q5L5U9/O8a1us3MxMlg8FdeCZd/FsB8A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+</head>
+
+<body>
+<header class="header">
+  <div class="container header__container">
+    <div class="header__logo">
+      <img class="header__img" src="https://image.ibb.co/kcVou6/path3000.png">
+      <h1 class="header__title">Sunu<span class="header__light">Shop</span></h1>
+    </div>
+
+    <div class="header__menu">
+      <nav id="navbar" class="header__nav collapse">
+        <ul class="header__elenco">
+          <li class="header__el header__el--blue"><a routerLink="/signup" class="btn btn--white">Connexion →</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- Section d'accroche -->
+<div class="sect sect--padding-top">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="site">
+          <h1 class="site__title">Boostez votre commerce local avec SunuShop</h1>
+          <h2 class="site__subtitle">Vendez, gérez et développez facilement votre boutique en ligne</h2>
+          <div class="site__box-link">
+            <a class="btn btn--width" routerLink="/signup">Créer une boutique</a>
+          </div>
+          <img class="site__img" src="https://image.ibb.co/c7grYb/image3015.png" alt="Aperçu plateforme SunuShop">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Nos boutiques -->
+<div class="sect sect--padding-bottom">
+  <div class="container">
+    <div class="row row--center">
+      <h1 class="row__title">Découvrez nos Boutiques</h1>
+      <h2 class="row__sub">Trouvez les produits de vos commerçants préférés près de chez vous</h2>
+    </div>
+    <app-seller-cards></app-seller-cards>
+  </div>
+</div>
+
+<!-- Blog / Actualités -->
+<div class="sect sect--white">
+  <div class="container">
+    <div class="row">
+      <h1 class="row__title">Notre Blog</h1>
+      <h2 class="row__sub">Actualités, conseils et astuces pour entrepreneurs</h2>
+    </div>
+  </div>
+</div>
+
+<!-- Section emploi -->
+<div class="sect sect--violet">
+  <img src="https://image.ibb.co/fWyVtb/path3762.png" class="career-img" alt="Opportunités">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="career_title">À la recherche d’une nouvelle opportunité ?</h1>
+        <h1 class="career_sub">Rejoignez notre équipe et construisez l’e-commerce africain de demain</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pied de page -->
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-2 col-xs-6">
+        <img class="footer__img" src="https://image.ibb.co/kcVou6/path3000.png" alt="Logo SunuShop">
+        <h1 class="footer__title">Sunu<span class="footer__light">Shop</span></h1>
+      </div>
+      <div class="col-md-10 col-xs-6">
+        <div class="footer__social">
+          <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+          <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+          <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
