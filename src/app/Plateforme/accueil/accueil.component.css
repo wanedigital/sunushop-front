@@ -218,8 +218,24 @@ img {
 /* Responsive */
 @media screen and (max-width: 991px) {
   .header__nav {
-    display: none;
+     display: flex !important; 
+    justify-content: flex-end;
+    align-items: flex-end;
+
   }
+  .header__container {
+  flex-wrap: nowrap;
+   gap: 70%;
+}
+
+
+.header__menu {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+
 
   .header__menu {
     width: 100%;
@@ -242,6 +258,10 @@ img {
   .row__title {
     font-size: 22px;
   }
+   .header__container {
+  flex-wrap: nowrap;
+   gap: 40%;
+}
 
   .row__sub {
     font-size: 16px;

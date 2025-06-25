@@ -6,6 +6,31 @@
   --sidebar-hover: #0B5ED7;
   --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --transition-all: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        /* Register */
+  --primary-color: #4361ee;
+  --primary-hover: #3a56d4;
+  --secondary-color: #3f37c9;
+  --dark-color: #212529;
+  --light-color: #f8f9fa;
+  --gray-300: #dee2e6;
+  --danger-color: #ef233c;
+  --border-radius: 12px;
+  --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+
+        /* Login */
+
+  --primary-hover: #3a56d4;
+  --secondary-color: #3f37c9;
+  --dark-color: #212529;
+  --light-color: #f8f9fa;
+  --danger-color: #ef233c;
+  --success-color: #4cc9f0;
+  --border-radius: 12px;
+  --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+
 }
 
 /* Structure de base */
