@@ -40,6 +40,9 @@ body {
   margin: 0;
   overflow-x: hidden;
   transition: var(--transition-all);
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 /* Sidebar */
@@ -49,7 +52,7 @@ body {
   top: 0;
   left: 0;
   height: 100vh;
-  background: var(--sidebar-bg);
+  background: #1e293b;
   padding-top: 1rem;
   color: white;
   z-index: 998;
@@ -447,3 +450,12 @@ body {
 #sidebar .side-menu a.active::before {
   transform: scaleY(1);
 }
+
+
+
+
+
+
+
+
+

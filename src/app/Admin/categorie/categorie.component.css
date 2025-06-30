@@ -1,0 +1,79 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Conteneur principal avec gestion du décalage sidebar */
+.categorie-wrapper {
+  min-height: 100vh;
+  margin-left: 16rem; /* fallback pour w-64 (sidebar étendue) */
+  padding: 1.5rem;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: calc(100vw - 16rem); /* Empêche le débordement côté droit */
+  overflow-x: hidden;
+}
+
+/* Grille des cartes */
+.custom-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+/* Cartes */
+.custom-card {
+  flex: 1 1 calc(20% - 20px); /* 5 cartes par ligne avec gap */
+  max-width: calc(20% - 20px);
+  min-width: 150px;
+
+  background-color: rgba(255, 132, 0, 0.8);
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #fff;
+  padding: 20px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.custom-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Sidebar étendue sur desktop */
+@media (min-width: 769px) {
+  .categorie-wrapper {
+    margin-left: 250px;
+    max-width: calc(100vw - 250px);
+  }
+
+  .sidebar-collapsed .categorie-wrapper {
+    margin-left: 60px;
+    max-width: calc(100vw - 60px);
+  }
+}
+
+/* Version mobile - pas de sidebar visible */
+@media (max-width: 768px) {
+  .categorie-wrapper {
+    margin-left: 0;
+    max-width: 100vw;
+  }
+
+  .sidebar-collapsed .categorie-wrapper {
+    margin-left: 0;
+    max-width: 100vw;
+  }
+}

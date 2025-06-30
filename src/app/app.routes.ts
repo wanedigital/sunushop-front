@@ -6,6 +6,12 @@ import { NavbarComponent } from './Vendeur/navbar/navbar.component';
 import { EmployeeManagementComponent } from './components/employee-management/employee-management.component';
 import { RegisterComponent } from './Plateforme/register/register.component';
 import { LoginComponent } from './Plateforme/login/login.component';
+import { BoutiqueComponent } from './Admin/boutique/boutique.component';
+import { CategorieComponent } from './Admin/categorie/categorie.component';
+import { ProduitComponent } from './Admin/produit/produit.component';
+
+
+
 
 export const routes: Routes = [
       { path: '', redirectTo: 'accueil', pathMatch: 'full' }, 
@@ -16,9 +22,12 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent,
       children: [
       { path: 'home', component: NavbarComponent },
-      { path: 'emp', component: EmployeeManagementComponent },
-]
-      } 
+      { path: 'emp', component: EmployeeManagementComponent },]
+      },
+
+      { path: 'boutique', component: BoutiqueComponent },
+      { path: 'categorie', component: CategorieComponent },
+      { path: 'produit', component: ProduitComponent }
     /* { path: 'dashboard', component: DashboardComponent,
     children: [
       { path: 'home', component: DashboardHomeComponent },
@@ -29,4 +38,14 @@ export const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
       },*/
+
+
+      
+
+
+      
+     
+     
+
+      
 ];
