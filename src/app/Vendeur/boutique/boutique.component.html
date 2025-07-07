@@ -1,1 +1,95 @@
-<p>boutique works!</p>
+<!-- Dans ton composant -->
+<div class="form-container">
+  <div class="form-wrapper">
+    <div class="form-card">
+      <div class="form-header">
+        <h2>Créer votre Boutique</h2>
+        <p class="subtitle">Donnez vie à votre entreprise en quelques clics</p>
+      </div>
+
+      <form [formGroup]="boutiqueForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="row g-4">
+          <!-- Nom -->
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="text" formControlName="nom" class="form-control" 
+                     id="nomInput" placeholder="Ex : SunuShop">
+              <label for="nomInput">Nom de la boutique</label>
+              <div class="invalid-feedback" *ngIf="isInvalid('nom')">
+                Nom requis (min. 3 caractères)
+              </div>
+            </div>
+          </div>
+
+          <!-- Adresse -->
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="text" formControlName="adresse" class="form-control" 
+                     id="adresseInput" placeholder="Ex : 123 rue du Commerce">
+              <label for="adresseInput">Adresse</label>
+              <div class="invalid-feedback" *ngIf="isInvalid('adresse')">
+                Adresse requise
+              </div>
+            </div>
+          </div>
+
+          <!-- Numéro -->
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="text" formControlName="numeroCommercial" class="form-control" 
+                     id="numeroInput" placeholder="+221771234567">
+              <label for="numeroInput">Numéro commercial</label>
+              <div class="invalid-feedback" *ngIf="isInvalid('numeroCommercial')">
+                Format invalide
+              </div>
+            </div>
+          </div>
+
+          <!-- Statut -->
+          <div class="col-md-6">
+            <div class="form-floating">
+              <select formControlName="status" class="form-select" id="statusSelect">
+                <option value="ouvret">Ouvert</option>
+                <option value="ferme">Fermé</option>
+              </select>
+              <label for="statusSelect">Statut</label>
+            </div>
+          </div>
+
+          <!-- Logo -->
+          <div class="col-12">
+            <div class="file-upload-card">
+              <label class="upload-label">
+                <input type="file" (change)="onFileChange($event)" accept="image/*" class="d-none">
+                <div class="upload-content">
+                  <i class="bi bi-cloud-arrow-up"></i>
+                  <span *ngIf="!previewUrl">Choisir un logo</span>
+                  <span *ngIf="previewUrl">Changer le logo</span>
+                </div>
+              </label>
+              <div class="preview-container" *ngIf="previewUrl">
+                <img [src]="previewUrl" alt="Logo Preview">
+                <button type="button" class="btn-remove" (click)="removeLogo()">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+              <div class="text-danger small mt-2" *ngIf="logoInvalid">
+                Un logo est requis (max 2MB)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-section">
+          <button class="submit-btn" type="submit" [disabled]="isLoading">
+            <span *ngIf="!isLoading">Créer la boutique</span>
+            <span *ngIf="isLoading">
+              <span class="spinner-border spinner-border-sm" role="status"></span>
+              Création...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

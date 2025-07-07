@@ -1,18 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
-export interface Plat {
+export interface Produit {
+  selected: boolean;
   id?: string;
-  nom: string;
+  libelle: string;
   prix: number;
   quantite: number;
-  imageUrl?: string;
+  image?: string;
   categorie_id:number;
   description: string;
-  disponibilite: string;
+  disponible: boolean;
 }
-
+export interface Categorie {
+  id: number;
+  libelle: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -22,20 +26,48 @@ export class ServiceService {
 
   constructor(private http: HttpClient) {
   }
-    AddProduit(produit: any): Observable<any> {
-    return this.http.post(this.apiUrl, produit);
+// CRUD Produits
+// Ajout produit avec FormData
+addProduit(produit: FormData): Observable<Produit> {
+  return this.http.post<Produit>(`${this.apiUrl}/produits`, produit);
+}
+
+// Mise à jour produit avec FormData
+updateProduit(id: string, produit: FormData): Observable<Produit> {
+  return this.http.post<Produit>(`${this.apiUrl}/produits/${id}?_method=PUT`, produit);
+}
+
+
+  getProduitById(id: string): Observable<Produit> {
+    return this.http.get<Produit>(`${this.apiUrl}/produits/${id}`);
   }
 
-  getProduitById(id: string): Observable<any> {
-    return this.http.get<Plat>(`${this.apiUrl}/${id}`);
+  getAllProduits(): Observable<Produit[]> {
+    return this.http.get<Produit[]>(`${this.apiUrl}/produits`);
   }
-   getAlProduit(): Observable<any> {
-    return this.http.get(this.apiUrl);
+
+  deleteProduitById(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/produits/${id}`);
   }
-DeleteProduitById(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/produits/${id}`);
+  // boutiques 
+  createBoutique(boutiqueData: any) {
+    return this.http.post(`${this.apiUrl}/boutiques`, boutiqueData);
   }
-  EditProduitById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/produits/${id}`);
+  getBoutiques() {
+    return this.http.get(`${this.apiUrl}/boutiques`);
   }
+// Categories 
+  createCategories(categorieData: any) {
+    return this.http.post(`${this.apiUrl}/categories`, categorieData);
+  }
+getCategories(): Observable<Categorie[]> {
+  return this.http.get<Categorie[]>(`${this.apiUrl}/categories`).pipe(
+    tap(data => console.log('Données catégories:', data)) 
+  );
+}
+
+    // Paginations 
+getProduitsPagines(page: number, perPage: number): Observable<{data: Produit[], total: number}> {
+  return this.http.get<{data: Produit[], total: number}>(`${this.apiUrl}/produits?page=${page}&perPage=${perPage}`);
+}
 }

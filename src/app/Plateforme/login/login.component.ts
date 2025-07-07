@@ -1,13 +1,13 @@
 import { CommonModule, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/authservice.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  imports: [CommonModule, NgIf, NgClass,  ReactiveFormsModule] ,
+  imports: [CommonModule, NgIf, NgClass,  ReactiveFormsModule,RouterModule] ,
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
@@ -15,13 +15,22 @@ export class LoginComponent {
   showPassword = false;
   isLoading = false;
   errorMessage = '';
+  returnUrl: string = '/accueil'; // valeur par défaut
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService,   
+    private route: ActivatedRoute, ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       remember: [false]
     });
+
+    // Récupérer returnUrl depuis les query params
+    this.route.queryParams.subscribe(params => {
+      if (params['returnUrl']) {
+        this.returnUrl = params['returnUrl'];
+      }
+    })
   }
 
   onSubmit() {
@@ -46,11 +55,12 @@ export class LoginComponent {
       });
       setTimeout(() => {
         this.isLoading = false;
-        this.router.navigate(['/accueil']);
-      }, 2000);
+        // ✅ Redirection dynamique après login
+          this.router.navigate([this.returnUrl]);      
+        }, 2000);
     }
   }
-
+  
   togglePassword() {
     this.showPassword = !this.showPassword;
   }

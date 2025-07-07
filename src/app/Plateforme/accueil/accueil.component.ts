@@ -1,24 +1,43 @@
-import { Component, OnInit } from '@angular/core';
-import { CardComponent } from "../card/card.component";
-import { RouterLink } from '@angular/router';
-import { AuthService } from '../../services/authservice.service';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { ServiceService } from '../../services/service.service';
 
 @Component({
-  selector: 'app-accueil',
-  imports: [CardComponent,RouterLink],
+  selector: 'app-acceuil',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './accueil.component.html',
-  styleUrl: './accueil.component.css'
+  styleUrls: ['./accueil.component.css']
 })
-export class AccueilComponent implements OnInit{
-  constructor(private auth:AuthService){
+export class AcceuilComponent {
+  boutiques: any = [];
+  isLoading = true;
 
-  }
+  constructor(private boutiqueService: ServiceService) {}
+
   ngOnInit(): void {
-
+    this.loadBoutiques();
   }
-  
 
+  loadBoutiques(): void {
+    this.boutiqueService.getBoutiques().subscribe({
+      next: (data) => {
+        this.boutiques = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Erreur:', err);
+        this.isLoading = false;
+      }
+    });
+  }
 
+  getStatusClass(status: string): string {
+    return status === 'ouvret' ? 'bg-success' : 'bg-secondary';
+  }
 
-  
+  getStatusText(status: string): string {
+    return status === 'ouvret' ? 'Ouvert' : 'Fermé';
+  }
 }
