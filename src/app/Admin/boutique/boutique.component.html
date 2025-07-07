@@ -1,0 +1,46 @@
+<div class="table-data">
+  <div class="table-header">
+    <h4>Liste des Boutiques</h4>
+    <div class="table-actions">
+  
+      <input
+        type="text"
+        placeholder="Rechercher..."
+        [(ngModel)]="searchQuery"
+        (input)="allboutique(searchQuery)"
+        class="search-input"
+      />
+      <i class="bi bi-trash" title="Supprimer" (click)="deleteSelected()"></i>
+     
+    </div>
+  </div>
+
+
+
+  <div class="overflow-auto rounded-xl shadow-md">
+    <table class="table table-hover align-middle w-full text-left border-collapse bg-white">
+      <thead class="bg-[#04192F] text-white">
+        <tr>
+          <th class="px-6 py-3 whitespace-nowrap">Nom</th>
+          <th class="px-6 py-3 whitespace-nowrap">Adresse</th>
+          <th class="px-6 py-3 whitespace-nowrap">Téléphone</th>
+          <th class="px-6 py-3 whitespace-nowrap">Vendeur</th>
+          <th class="px-6 py-3 whitespace-nowrap">Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let boutique of tabBoutique" class="hover:bg-[#157CEA]/10 transition" [class.selected]="boutique.id === selectedBoutiqueId"
+    (click)="selectBoutique(boutique)">
+          <td class="px-6 py-4 border-t">{{ boutique.nom }}</td>
+          <td class="px-6 py-4 border-t">{{ boutique.adresse }}</td>
+          <td class="px-6 py-4 border-t">{{ boutique.numeroCommercial }}</td>
+          <td class="px-6 py-4 border-t">{{ boutique.user?.prenom }}</td>
+          <td class="px-6 py-4 border-t">
+            <span class="badge bg-success">{{ boutique.status }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

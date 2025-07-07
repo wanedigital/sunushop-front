@@ -10,6 +10,7 @@ import { AcceuilComponent } from './Plateforme/accueil/accueil.component';
 import { VendeurLayoutComponent } from './Vendeur/vendeur-layout/vendeur-layout.component';
 import { ProductComponent } from './Vendeur/product/product.component';
 
+
 export const routes: Routes = [
       { path: '', redirectTo: 'accueil', pathMatch: 'full' },
       { path: 'accueil', component:AcceuilComponent },
@@ -24,7 +25,10 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
 
 ]
-      } 
+      } ,
+      { path: 'emp', component: EmployeeManagementComponent },
+];
+
     /* { path: 'dashboard', component: DashboardComponent,
     children: [
       { path: 'home', component: DashboardHomeComponent },
@@ -35,4 +39,12 @@ export const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
       },*/
-];
+
+
+      
+
+
+      
+     
+     
+
