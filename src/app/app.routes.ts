@@ -9,6 +9,8 @@ import { LoginComponent } from './Plateforme/login/login.component';
 import { BoutiqueComponent } from './Admin/boutique/boutique.component';
 import { CategorieComponent } from './Admin/categorie/categorie.component';
 import { ProduitComponent } from './Admin/produit/produit.component';
+import { ClientComponent } from './Admin/client/client.component';
+import { SellerComponent } from './Admin/seller/seller.component';
 
 
 
@@ -27,7 +29,11 @@ export const routes: Routes = [
 
       { path: 'boutique', component: BoutiqueComponent },
       { path: 'categorie', component: CategorieComponent },
-      { path: 'produit', component: ProduitComponent }
+      { path: 'produit', component: ProduitComponent },
+      { path: 'client', component: ClientComponent },
+      { path: 'vendeur', component: SellerComponent },
+      
+
     /* { path: 'dashboard', component: DashboardComponent,
     children: [
       { path: 'home', component: DashboardHomeComponent },

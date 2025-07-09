@@ -28,7 +28,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let produit of tabProduit" class="hover:bg-[#157CEA]/10 transition" >
+        <tr *ngFor="let produit of tabProduit | paginate: { itemsPerPage: itemsPerPage, currentPage: page }" class="hover:bg-[#157CEA]/10 transition" >
           <td class="px-6 py-4 border-t">{{ produit.libelle }}</td>
           <td class="px-6 py-4 border-t">{{ produit.description }}</td>
           <td class="px-6 py-4 border-t">{{ produit.prix }}</td>
@@ -39,6 +39,9 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Contrôles de pagination -->
+  <pagination-controls (pageChange)="page = +$event"></pagination-controls>
 </div>
 
 

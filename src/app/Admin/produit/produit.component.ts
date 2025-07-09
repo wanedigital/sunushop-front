@@ -2,16 +2,19 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-produit',
   standalone: true,
-  imports: [CommonModule,HttpClientModule, FormsModule],
+  imports: [CommonModule,HttpClientModule, FormsModule, NgxPaginationModule],
   templateUrl: './produit.component.html',
   styleUrls: ['./produit.component.css']
 })
 export class ProduitComponent implements OnInit{
 
+  page: number = 1; // Page initiale
+  itemsPerPage: number = 5; // Nombre d'éléments par page
   sidebarWidth: number = 250;
   tabProduit:any = [];
   filteredProduits: any[] = [];    // Pour afficher uniquement celles filtrées
