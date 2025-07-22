@@ -10,12 +10,19 @@ import { AcceuilComponent } from './Plateforme/accueil/accueil.component';
 import { VendeurLayoutComponent } from './Vendeur/vendeur-layout/vendeur-layout.component';
 import { ProductComponent } from './Vendeur/product/product.component';
 import { ProduitComponent } from './Admin/produit/produit.component';
+
+import { ClientComponent } from './Admin/client/client.component';
+import { SellerComponent } from './Admin/seller/seller.component';
+
+
+
 import { CategorieComponent } from './Admin/categorie/categorie.component';
 import { SidebarComponent } from './Vendeur/sidebar/sidebar.component';
 import { SidebardAdminComponent } from './Admin/sidebard-admin/sidebard-admin.component';
 import { HeaderAdminComponent } from './Admin/header-admin/header-admin.component';
 import { AdminLayoutComponent } from './Admin/admin-layout/admin-layout.component';
 import { StatistiqueAdminComponent } from './Admin/statistique-admin/statistique-admin.component';
+
 
 
 export const routes: Routes = [
@@ -45,6 +52,15 @@ export const routes: Routes = [
       } ,
       { path: 'emp', component: EmployeeManagementComponent },
 ];
+
+
+      { path: 'boutique', component: BoutiqueComponent },
+      { path: 'categorie', component: CategorieComponent },
+      { path: 'produit', component: ProduitComponent },
+      { path: 'client', component: ClientComponent },
+      { path: 'vendeur', component: SellerComponent },
+      
+
 
     /* { path: 'dashboard', component: DashboardComponent,
     children: [

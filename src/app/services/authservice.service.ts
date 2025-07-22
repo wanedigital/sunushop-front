@@ -46,7 +46,12 @@ export class AuthService {
   login(credentials: User & { remember?: boolean }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
-        tap(response => this.storeAuthData(response, credentials.remember ?? false))
+        tap(response => {this.storeAuthData(response, credentials.remember ?? false);
+           console.log('Réponse login:', response);
+           const token = (response.token as any).plainTextToken;
+           localStorage.setItem('auth_token', token); 
+           
+          })
       );
   }
 
@@ -121,6 +126,7 @@ export class AuthService {
    const user = this.getUserInfo();
   return user?.profil?.libelle ?? null;
 }
+
 
 }
 

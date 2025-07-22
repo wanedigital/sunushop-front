@@ -2,19 +2,30 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
+import { NgxPaginationModule } from 'ngx-pagination';
+
 import { ServiceService, Produit } from '../../services/service.service';
 import Swal from 'sweetalert2';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
+
 @Component({
   selector: 'app-produit',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule,HttpClientModule, FormsModule, NgxPaginationModule],
   templateUrl: './produit.component.html',
   styleUrls: ['./produit.component.css']
 })
-export class ProduitComponent implements OnInit {
+export class ProduitComponent implements OnInit{
+
+  page: number = 1; // Page initiale
+  itemsPerPage: number = 5; // Nombre d'éléments par page
+  sidebarWidth: number = 250;
+  tabProduit:any = [];
+  filteredProduits: any[] = [];    // Pour afficher uniquement celles filtrées
+
   produits: Produit[] = [];
   filteredProduits: Produit[] = [];
   searchQuery: string = '';

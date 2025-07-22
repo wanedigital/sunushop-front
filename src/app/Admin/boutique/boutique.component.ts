@@ -4,16 +4,22 @@ import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { BoutiqueService } from '../../services/boutique.service';
 import { FormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @Component({
   selector: 'app-boutique',
+  standalone: true,
+  imports: [CommonModule,HttpClientModule, FormsModule, NgxPaginationModule],
+
   imports: [CommonModule,HttpClientModule, FormsModule],
   templateUrl: './boutique.component.html',
   styleUrls: ['./boutique.component.css']
 })
 export class BoutiqueComponent implements OnInit{
 
+  page: number = 1; // Page initiale
+  itemsPerPage: number = 5; // Nombre d'éléments par page
   sidebarWidth: number = 250;
   tabBoutique:any = [];
   selectedBoutiqueId?: number;
