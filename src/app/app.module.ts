@@ -1,4 +1,4 @@
- import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
@@ -21,12 +21,15 @@ import { SellerComponent } from './Admin/seller/seller.component';
     ProduitComponent,
     ClientComponent,
     SellerComponent,
+
     // autres composants ici...
   ],
   imports: [
     BrowserModule,
     RouterModule,
+
     NgxPaginationModule,
+
     RouterModule.forRoot([
      
      
@@ -35,6 +38,6 @@ import { SellerComponent } from './Admin/seller/seller.component';
     ])
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: []
 })
 export class AppModule { }

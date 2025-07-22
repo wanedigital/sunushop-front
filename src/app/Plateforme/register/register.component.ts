@@ -1,7 +1,7 @@
 import { CommonModule, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/authservice.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { AuthService } from '../../services/authservice.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,NgIf ]
+  imports: [CommonModule, ReactiveFormsModule,NgIf,RouterModule ]
 })
 export class RegisterComponent {
 

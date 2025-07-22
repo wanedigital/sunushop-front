@@ -8,7 +8,7 @@
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    
+    integrity="sha512-+1eZwY3w2fZqXmgHFJZ0NfFxblKzKXqf9s1RblWZ6Vd9H7Lx08iyI5q5L5U9/O8a1us3MxMlg8FdeCZd/FsB8A=="
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
@@ -22,85 +22,128 @@
       <h1 class="header__title">Sunu<span class="header__light">Shop</span></h1>
     </div>
 
-    <div class="header__menu" >
-      <nav id="navbar" class="header__nav collapse">
-        <ul class="header__elenco">
-          <li class="header__el header__el--blue"><a routerLink="/login" class="btn btn--white">Connexion →</a></li>
-        </ul>
-      </nav>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">+500</div>
+          <div class="stat-label">Commerçants</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Disponible</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">0%</div>
+          <div class="stat-label">Commission</div>
+        </div>
+      </div>
     </div>
-  </div>
+
+    <div class="hero-visual">
+      <div class="mockup-container">
+        <img src="sunushop.jpeg" alt="Interface SunuShop" class="mockup-img">
+        <div class="mockup-overlay"></div>
+      </div>
+    </div>
 </header>
 
-<!-- Section d'accroche -->
-<div class="sect sect--padding-top">
+<!-- Boutiques Section -->
+<section class="py-5">
   <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="site">
-          <h1 class="site__title">Boostez votre commerce local avec SunuShop</h1>
-          <h2 class="site__subtitle">Vendez, gérez et développez facilement votre boutique en ligne</h2>
-          <div class="site__box-link">
-            <a class="btn btn--width" routerLink="/signup">Créer une boutique</a>
+    <h2 class="text-center mb-5">Nos Boutiques Partenaires</h2>
+    
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+    </div>
+
+    <!-- Boutiques Grid -->
+    <div *ngIf="!isLoading" class="row g-4">
+      <div *ngFor="let boutique of boutiques" class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <img [src]="boutique.logo || 'assets/images/shop-default.png'" 
+               class="card-img-top p-4" 
+               [alt]="boutique.nom"
+               style="height: 200px; object-fit: contain;">
+
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h3 class="h5 card-title mb-0">{{ boutique.nom }}</h3>
+              <span class="badge rounded-pill" 
+                    [ngClass]="getStatusClass(boutique.status)">
+                {{ getStatusText(boutique.status) }}
+              </span>
+            </div>
+
+            <ul class="list-unstyled mb-4">
+              <li class="mb-2">
+                <span class="text-muted me-2">📍</span>
+                {{ boutique.adresse }}
+              </li>
+              <li *ngIf="boutique.numeroCommercial" class="mb-2">
+                <span class="text-muted me-2">📞</span>
+                {{ boutique.numeroCommercial }}
+              </li>
+            </ul>
           </div>
-          <img class="site__img" src="https://image.ibb.co/c7grYb/image3015.png" alt="Aperçu plateforme SunuShop">
+
+          <div class="card-footer bg-transparent border-top-0">
+            <a [routerLink]="['/boutique', boutique.id]" 
+               class="btn btn-outline-primary w-100">
+              Voir la boutique
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && boutiques.length === 0" class="text-center py-5">
+      <span class="text-muted mb-3" style="font-size: 3rem;">🛍️</span>
+      <h3 class="h4">Aucune boutique disponible</h3>
+      <p class="text-muted">Revenez plus tard ou créez votre propre boutique</p>
+      <a routerLink="/boutique/creer" class="btn btn-primary mt-3">
+        Devenir commerçant
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="text-center p-4">
+          <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-4" 
+               style="width: 80px; height: 80px; line-height: 80px; font-size: 2rem;">
+            🏪
+          </div>
+          <h3 class="h4">Créez votre boutique</h3>
+          <p class="text-muted">Mettez en ligne votre commerce en quelques minutes seulement</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="text-center p-4">
+          <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-4" 
+               style="width: 80px; height: 80px; line-height: 80px; font-size: 2rem;">
+            ⏰
+          </div>
+          <h3 class="h4">Gérez facilement</h3>
+          <p class="text-muted">Modifiez vos horaires et produits à tout moment</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="text-center p-4">
+          <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-4" 
+               style="width: 80px; height: 80px; line-height: 80px; font-size: 2rem;">
+            📱
+          </div>
+          <h3 class="h4">Contact direct</h3>
+          <p class="text-muted">Vos clients peuvent vous contacter facilement</p>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<!-- Nos boutiques -->
-<div class="sect sect--padding-bottom">
-  <div class="container">
-    <div class="row row--center">
-      <h1 class="row__title">Découvrez nos Boutiques</h1>
-      <h2 class="row__sub">Trouvez les produits de vos commerçants préférés près de chez vous</h2>
-    </div>
-    <app-seller-cards></app-seller-cards>
-  </div>
-</div>
-
-<!-- Blog / Actualités -->
-<div class="sect sect--white">
-  <div class="container">
-    <div class="row">
-      <h1 class="row__title">Notre Blog</h1>
-      <h2 class="row__sub">Actualités, conseils et astuces pour entrepreneurs</h2>
-    </div>
-  </div>
-</div>
-
-<!-- Section emploi -->
-<div class="sect sect--violet">
-  <img src="https://image.ibb.co/fWyVtb/path3762.png" class="career-img" alt="Opportunités">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <h1 class="career_title">À la recherche d’une nouvelle opportunité ?</h1>
-        <h1 class="career_sub">Rejoignez notre équipe et construisez l’e-commerce africain de demain</h1>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Pied de page -->
-<footer class="footer">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-2 col-xs-6">
-        <img class="footer__img" src="https://image.ibb.co/kcVou6/path3000.png" alt="Logo SunuShop">
-        <h1 class="footer__title">Sunu<span class="footer__light">Shop</span></h1>
-      </div>
-      <div class="col-md-10 col-xs-6">
-        <div class="footer__social">
-          <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
-          <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
-          <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
-          <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin"></i></a>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-</body>
+</section>

@@ -1,6 +1,10 @@
 import { NgForOf } from '@angular/common';
 import { Component } from '@angular/core';
 import { LayoutService } from '../../services/layout.service';
+import Swal from 'sweetalert2';
+import { ServiceService } from '../../services/service.service';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/authservice.service';
 
 interface StatCard {
   icon: string;
@@ -29,7 +33,7 @@ interface Order {
 export class DashboardComponent {
   sidebarWidth: number = 250;
 
-  constructor(private layoutService: LayoutService) {
+  constructor(private layoutService: LayoutService, private auth: AuthService, private router: Router) {
     this.layoutService.sidebarWidth$.subscribe(width => {
       this.sidebarWidth = width;
     });
@@ -67,5 +71,6 @@ export class DashboardComponent {
       status: { text: 'Completed', class: 'bg-success' } 
     }
   ];
+
 
 }

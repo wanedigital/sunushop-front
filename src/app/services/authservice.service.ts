@@ -117,10 +117,14 @@ export class AuthService {
     return this.getUserInfo()?.nom ?? 'Inconnu';
   }
 
+   getIdUser(): string {
+    const user = this.getUserInfo();
+    return user?.id || null;
+  }
+
   getRole(): Observable<string> {
-  return this.getCurrentUser().pipe(
-    map(user => user?.profil ?? 'Aucun rôle')
-  );
+   const user = this.getUserInfo();
+  return user?.profil?.libelle ?? null;
 }
 
 
