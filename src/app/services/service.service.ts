@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
@@ -46,9 +46,36 @@ updateProduit(id: string, produit: FormData): Observable<Produit> {
     return this.http.get<Produit[]>(`${this.apiUrl}/produits`);
   }
 
+      // Paginations 
+
+  getProduitsPagines(page: number, perPage: number, searchQuery?: string): Observable<{data: Produit[], total: number}> {
+  let params = new HttpParams()
+    .set('page', page.toString())
+    .set('perPage', perPage.toString());
+
+  if (searchQuery && searchQuery.trim() !== '') {
+    params = params.set('search', searchQuery);
+  }
+
+  return this.http.get<{data: Produit[], total: number}>(`${this.apiUrl}/produits`, { params });
+}
   deleteProduitById(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/produits/${id}`);
   }
+
+  // methodes recherches
+  searchProduits(page: number, perPage: number, searchTerm?: string): Observable<{data: any[], total: number}> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('perPage', perPage.toString());
+
+    if (searchTerm) {
+      params = params.set('search', searchTerm);
+    }
+
+    return this.http.get<{data: any[], total: number}>(`${this.apiUrl}/produits`, { params });
+  }
+  
   // boutiques 
   createBoutique(boutiqueData: any) {
     return this.http.post(`${this.apiUrl}/boutiques`, boutiqueData);
@@ -66,8 +93,4 @@ getCategories(): Observable<Categorie[]> {
   );
 }
 
-    // Paginations 
-getProduitsPagines(page: number, perPage: number): Observable<{data: Produit[], total: number}> {
-  return this.http.get<{data: Produit[], total: number}>(`${this.apiUrl}/produits?page=${page}&perPage=${perPage}`);
-}
 }

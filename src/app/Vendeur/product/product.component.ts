@@ -80,6 +80,8 @@ loadProduits(): void {
       error: (err) => {
         this.produits = []; 
         this.isLoading = false;
+        Swal.fire('Erreur', 'Impossible de charger les produits', 'error');
+
       }
     });
 }

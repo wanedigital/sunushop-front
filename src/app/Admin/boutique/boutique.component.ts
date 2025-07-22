@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-boutique',
-  standalone: true,
   imports: [CommonModule,HttpClientModule, FormsModule],
   templateUrl: './boutique.component.html',
   styleUrls: ['./boutique.component.css']
@@ -26,14 +25,8 @@ export class BoutiqueComponent implements OnInit{
   
    ){}
 
-  
- 
-
-
   ngOnInit(): void {
     this.allboutique();
-   
-    
   }
 
   allboutique(searchQuery?: string) {
@@ -56,10 +49,6 @@ export class BoutiqueComponent implements OnInit{
       }
     );
   }
-
-  
-
-
 
   selectBoutique(boutique: any): void {
     this.selectedBoutiqueId = boutique.id;

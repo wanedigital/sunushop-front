@@ -1,4 +1,4 @@
- import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
@@ -13,15 +13,13 @@ import { ProduitComponent } from './Admin/produit/produit.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    BoutiqueComponent,
-    CategorieComponent,
-    ProduitComponent,
+    
     // autres composants ici...
   ],
   imports: [
     BrowserModule,
     RouterModule,
+    
     RouterModule.forRoot([
      
      
@@ -29,6 +27,6 @@ import { ProduitComponent } from './Admin/produit/produit.component';
     ])
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: []
 })
 export class AppModule { }
