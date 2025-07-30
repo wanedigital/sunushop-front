@@ -1,0 +1,119 @@
+<div class="confirmation-container">
+  <!-- État de chargement -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement de votre commande...</p>
+  </div>
+
+  <!-- État d'erreur -->
+  <div class="error-state" *ngIf="error && !loading">
+    <div class="error-card">
+      <h2>❌ Erreur</h2>
+      <p>{{error}}</p>
+      <button class="btn-primary" (click)="retourAccueil()">
+        Retour à l'accueil
+      </button>
+    </div>
+  </div>
+
+  <!-- Confirmation de commande -->
+  <div class="confirmation-content" *ngIf="commande && !loading">
+    <!-- En-tête de confirmation -->
+    <div class="confirmation-header">
+      <div class="success-icon">✅</div>
+      <h1>Commande confirmée !</h1>
+      <p class="confirmation-message">
+        Merci pour votre commande. Vous recevrez bientôt un email de confirmation.
+      </p>
+    </div>
+
+    <!-- Informations de la commande -->
+    <div class="order-info">
+      <div class="info-card">
+        <h2>Détails de votre commande</h2>
+        
+        <div class="order-details">
+          <div class="detail-row">
+            <span class="label">Numéro de commande:</span>
+            <span class="value order-number">{{commande?.numeroCommande}}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Date:</span>
+            <span class="value">{{commande?.date | date:'dd/MM/yyyy'}}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Statut:</span>
+            <span class="value">
+              <span class="status-badge"
+                    *ngIf="commande?.etat"
+                    [style.background-color]="getStatutColor(commande.etat)">
+                 {{ getStatutLabel(commande.etat) }}
+                </span>
+            </span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Total:</span>
+            <span class="value total-amount">{{commande.total | currency:'XOF':'symbol':'1.0-0'}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Articles commandés -->
+      <div class="items-card">
+        <h3>Articles commandés</h3>
+        <div class="order-items">
+          <div class="order-item" *ngFor="let item of commande.items">
+            <img [src]="item.produit.image" [alt]="item.produit.nom" class="item-image">
+            <div class="item-details">
+              <h4>{{item.produit.nom}}</h4>
+              <p>Quantité: {{item.quantite}} × {{item.prixUnitaire | currency:'XOF':'symbol':'1.0-0'}}</p>
+            </div>
+            <div class="item-total">
+              {{(item.quantite * item.prixUnitaire) | currency:'XOF':'symbol':'1.0-0'}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informations de livraison -->
+      <div class="delivery-card">
+        <h3>Informations de livraison</h3>
+        <div class="delivery-details">
+          <p><strong>Nom:</strong> {{commande?.nomComplet}}</p>
+          <p><strong>Téléphone:</strong> {{commande?.telephone}}</p>
+          <p><strong>Adresse:</strong> {{commande?.adresse}}</p>
+          <p *ngIf="commande.notes"><strong>Notes:</strong> {{commande?.notes}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-buttons">
+      <button 
+        class="btn-secondary" 
+        (click)="retourAccueil()">
+        Continuer mes achats
+      </button>
+      
+      <button 
+        class="btn-danger" 
+        *ngIf="peutEtreAnnulee()"
+        (click)="annulerCommande()">
+        Annuler la commande
+      </button>
+    </div>
+
+    <!-- Informations importantes -->
+    <div class="important-info">
+      <div class="info-box">
+        <h4>📧 Suivi de votre commande</h4>
+        <p>Conservez précieusement votre <strong>numéro de commande: {{commande.numeroCommande}}</strong></p>
+        <p>Vous recevrez des mises à jour par email à l'adresse: <strong>{{commande.email}}</strong></p>
+        <p>Pour toute question, contactez-nous en mentionnant ce numéro de commande.</p>
+      </div>
+    </div>
+  </div>
+</div>

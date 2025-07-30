@@ -9,6 +9,7 @@ import { ServiceService, Produit } from '../../services/service.service';
 import Swal from 'sweetalert2';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { HttpClientModule } from '@angular/common/http'; // à ajouter
 
 
 @Component({
@@ -24,14 +25,14 @@ export class ProduitComponent implements OnInit{
   itemsPerPage: number = 5; // Nombre d'éléments par page
   sidebarWidth: number = 250;
   tabProduit:any = [];
-  filteredProduits: any[] = [];    // Pour afficher uniquement celles filtrées
+  //filteredProduits: any[] = [];    // Pour afficher uniquement celles filtrées
 
   produits: Produit[] = [];
   filteredProduits: Produit[] = [];
   searchQuery: string = '';
   isLoading = false;
   currentPage = 1;
-  itemsPerPage = 10;
+  //itemsPerPage = 10;
   totalItems = 0;
   totalPages = 0;
   private searchSubject = new Subject<string>();

@@ -1,0 +1,95 @@
+<div class="boutique-produits-container">
+  <!-- En-tête de la boutique -->
+  <div class="boutique-header" *ngIf="boutique">
+    <button class="back-btn" (click)="retourBoutiques()">
+      <span>←</span> Retour aux boutiques
+    </button>
+    <div class="boutique-info">
+      <img [src]="boutique.logo || '/assets/images/boutique-placeholder.png'" 
+        [alt]="boutique.nom" 
+        class="boutique-image"
+        (error)="handleImageError($event)">
+      <div class="boutique-details">
+        <h1>{{boutique.nom}}</h1>
+        <p *ngIf="boutique.adresse">{{boutique.adresse}}</p>
+        <p *ngIf="!boutique.adresse" class="no-description">Aucune description disponible</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message d'erreur -->
+  <!--<div class="error-message" *ngIf="error">
+    <p>{{error}}</p>
+    <button (click)="loadProduits()">Réessayer</button>
+  </div> -->
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement des produits...</p>
+  </div>
+
+  <!-- Liste des produits -->
+  <div class="produits-section" *ngIf="!loading && !error">
+    <div class="section-header">
+      <h2>Nos Produits</h2>
+      <p *ngIf="produits.length === 0">Aucun produit disponible pour cette boutique.</p>
+    </div>
+
+    <div class="produits-grid" *ngIf="produits.length > 0">
+      <div class="produit-card" *ngFor="let produit of produits">
+        <div class="produit-image">
+            <img [src]="produit.image" 
+                [alt]="produit.libelle"
+                (error)="handleProduitImageError($event)">
+                
+            <div class="stock-badge" [ngClass]="getStockBadgeClass(produit)">
+                {{ getStockText(produit) }}
+            </div>
+        </div>
+        
+        <div class="produit-info">
+          <h3>{{produit.libelle}}</h3>
+          <p class="produit-description">{{produit.description}}</p>
+          
+          <div class="produit-footer">
+            <div class="prix">
+              <span class="prix-amount">{{produit.prix | currency:'XOF':'symbol':'1.0-0'}}</span>
+            </div>
+            
+            <button 
+              class="add-to-cart-btn"
+              [disabled]="!isProductAvailable(produit)"
+              (click)="ajouterAuPanier(produit)">
+              <span *ngIf="isProductAvailable(produit)">🛒 Ajouter</span>
+              <span *ngIf="!isProductAvailable(produit)">Indisponible</span>
+            </button>
+          </div>
+          
+          <div class="stock-info" *ngIf="produit.disponible && produit.quantite > 0 && produit.quantite < 10">
+            <small>Plus que {{produit.quantite}} en stock</small>
+          </div>
+          
+          <!-- Indicateur de produit non disponible -->
+          <div class="unavailable-info" *ngIf="!produit.disponible">
+            <small class="text-danger">Produit temporairement indisponible</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panier flottant -->
+<div 
+  class="floating-cart" 
+  *ngIf="(panierService.panier$ | async) as panier">
+  
+  <ng-container *ngIf="panier.length > 0">
+    <button class="cart-btn" (click)="goToPanier()">
+      <span class="cart-icon">🛒</span>
+      <span class="cart-count">{{panierService.getNombreItems()}}</span>
+      <span class="cart-total">{{panierService.getTotalPanier() | currency:'XOF':'symbol':'1.0-0'}}</span>
+    </button>
+  </ng-container>
+
+</div>

@@ -22,6 +22,14 @@ import { SidebardAdminComponent } from './Admin/sidebard-admin/sidebard-admin.co
 import { HeaderAdminComponent } from './Admin/header-admin/header-admin.component';
 import { AdminLayoutComponent } from './Admin/admin-layout/admin-layout.component';
 import { StatistiqueAdminComponent } from './Admin/statistique-admin/statistique-admin.component';
+import { ClientLayoutComponent } from './client/client-layout/client-layout.component';
+import { BoutiqueProduitsComponent } from './client/produits/boutique-produits/boutique-produits.component';
+import { PanierComponent } from './client/panier/panier.component';
+import { CommandesComponent } from './client/commandes/commandes.component';
+import { HistoriqueComponent } from './client/historique/historique.component';
+import { ProfilComponent } from './client/profil/profil.component';
+import { ConfirmationCommandeComponent } from './client/confirmation-commande/confirmation-commande.component';
+import { RechercheCommandeComponent } from './client/recherche-commande/recherche-commande.component';
 
 
 
@@ -50,15 +58,36 @@ export const routes: Routes = [
 
 ]
       } ,
-      { path: 'emp', component: EmployeeManagementComponent },
+      {
+      path: 'client',
+            component: ClientLayoutComponent,
+            children: [
+                  // OPTION 1: Route recommandée - plus claire sémantiquement
+                  { path: 'boutiques/:id/produits', component: BoutiqueProduitsComponent },
+                  
+                  // OPTION 2: Si vous préférez garder une structure similaire
+                  // { path: 'boutiques/:id', component: BoutiqueProduitsComponent },
+                  
+                  { path: 'panier', component: PanierComponent },
+                  { path: 'commandes', component: CommandesComponent },
+                  { path: 'historique', component: HistoriqueComponent },
+                  { path: 'profil', component: ProfilComponent },
+                  { path: 'commande/confirmation', component: ConfirmationCommandeComponent },
+                  { path: 'commande/recherche', component: RechercheCommandeComponent},
+                  
+                  
+                  // Route par défaut - à adapter selon votre choix
+                  { path: '', redirectTo: 'boutiques/1/produits', pathMatch: 'full' },
+            ],
+      }
 ];
 
 
-      { path: 'boutique', component: BoutiqueComponent },
+      /*{ path: 'boutique', component: BoutiqueComponent },
       { path: 'categorie', component: CategorieComponent },
       { path: 'produit', component: ProduitComponent },
       { path: 'client', component: ClientComponent },
-      { path: 'vendeur', component: SellerComponent },
+      { path: 'vendeur', component: SellerComponent },*/
       
 
 
