@@ -1,0 +1,110 @@
+<div class="recherche-container">
+  <div class="recherche-content">
+    <div class="header">
+      <h1>🔍 Rechercher ma commande</h1>
+      <p class="subtitle">
+        Retrouvez votre commande en utilisant votre numéro de commande et votre adresse email
+      </p>
+    </div>
+
+    <div class="search-form-container">
+      <form (ngSubmit)="onSubmit()" #rechercheForm="ngForm" class="search-form">
+        <div class="form-group">
+          <label for="numeroCommande">
+            <i class="icon-receipt"></i>
+            Numéro de commande
+          </label>
+          <input 
+            type="text"
+            id="numeroCommande"
+            [(ngModel)]="formData.numeroCommande"
+            name="numeroCommande"
+            required
+            placeholder="Ex: CMD202407280001"
+            class="form-input">
+          <small class="form-help">
+            Le numéro de commande vous a été envoyé par email
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="email">
+            <i class="icon-email"></i>
+            Adresse email
+          </label>
+          <input 
+            type="email"
+            id="email"
+            [(ngModel)]="formData.email"
+            name="email"
+            required
+            placeholder="votre.email@exemple.com"
+            class="form-input">
+          <small class="form-help">
+            L'adresse email utilisée lors de la commande
+          </small>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div class="error-message" *ngIf="error">
+          <i class="icon-alert"></i>
+          {{error}}
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="form-actions">
+          <button 
+            type="button" 
+            class="btn-secondary"
+            (click)="clearForm()"
+            [disabled]="loading">
+            Effacer
+          </button>
+          
+          <button 
+            type="submit" 
+            class="btn-primary"
+            [disabled]="!isFormValid() || loading">
+            <span *ngIf="!loading">
+              <i class="icon-search"></i>
+              Rechercher
+            </span>
+            <span *ngIf="loading">
+              <i class="icon-spinner"></i>
+              Recherche...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Informations d'aide -->
+    <div class="help-section">
+      <div class="help-card">
+        <h3>❓ Besoin d'aide ?</h3>
+        <div class="help-content">
+          <div class="help-item">
+            <strong>Vous ne trouvez pas votre numéro de commande ?</strong>
+            <p>Vérifiez votre boîte email (et vos spams) pour l'email de confirmation de commande.</p>
+          </div>
+          
+          <div class="help-item">
+            <strong>Commande introuvable ?</strong>
+            <p>Assurez-vous d'utiliser la même adresse email que lors de la commande.</p>
+          </div>
+          
+          <div class="help-item">
+            <strong>Toujours des problèmes ?</strong>
+            <p>Contactez notre service client avec les informations de votre commande.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liens utiles -->
+    <div class="quick-links">
+      <a href="/" class="link">← Retour à l'accueil</a>
+      <a href="/contact" class="link">Contacter le support</a>
+    </div>
+  </div>
+</div>

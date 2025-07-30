@@ -1,0 +1,55 @@
+<!--<nav>
+  <h1>Multi-Boutique</h1>
+  <button (click)="logout()">Déconnexion</button>
+</nav> -->
+
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Menu hamburger -->
+    <button class="menu-toggle" (click)="onToggleSidebar()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Logo -->
+    <div class="navbar-brand">
+      <h1>MonMarché</h1>
+    </div>
+
+    <!-- Navigation links 
+    <div class="navbar-nav">
+      <a routerLink="/client/boutiques" routerLinkActive="active">Boutiques</a>
+      <a routerLink="/client/commandes" routerLinkActive="active">Mes Commandes</a>
+      <a routerLink="/client/historique" routerLinkActive="active">Historique</a>
+    </div> -->
+
+    <!-- Actions -->
+    <div class="navbar-actions">
+      <!-- Panier -->
+      <button class="panier-btn" (click)="goToPanier()">
+        <i class="icon-cart">🛒</i>
+        <span class="badge" *ngIf="nombreItemsPanier > 0">{{nombreItemsPanier}}</span>
+      </button>
+
+      <!-- Menu utilisateur -->
+     <p style="color:red">isMenuOpen = {{ isMenuOpen }}</p>
+
+      <div class="user-menu" *ngIf="currentUser">
+        <div class="dropdown">
+          <button class="user-btn" (click)="toggleMenu()"> 
+            <i class="icon-user">👤</i>
+            <span>{{currentUser?.prenom}} {{currentUser?.nom}}</span>
+            <i class="icon-arrow">▼</i>
+          </button>
+        <div class="dropdown-menu" [class.open]="isMenuOpen">
+          <a routerLink="/client/profil">Mon Profil</a>
+          <button (click)="logout()">Déconnexion</button>
+        </div>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+

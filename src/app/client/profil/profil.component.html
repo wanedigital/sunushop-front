@@ -1,0 +1,198 @@
+<div class="profil-container">
+  <div class="profil-header">
+    <h1>Mon Profil</h1>
+  </div>
+
+  <!-- Messages -->
+  <div class="success-message" *ngIf="successMessage">
+    <p>✅ {{successMessage}}</p>
+  </div>
+
+  <div class="error-message" *ngIf="error">
+    <p>❌ {{error}}</p>
+  </div>
+
+  <div class="profil-content">
+    <!-- Informations du profil -->
+    <div class="profil-card">
+      <div class="card-header">
+        <h2>Informations personnelles</h2>
+        <button class="edit-btn" (click)="toggleEdit()" *ngIf="!isEditing">
+          ✏️ Modifier
+        </button>
+      </div>
+
+      <div class="card-body">
+        <!-- Mode lecture -->
+        <div class="profil-info" *ngIf="!isEditing && currentUser">
+          <div class="info-row">
+            <span class="label">Nom complet:</span>
+            <span class="value">{{currentUser.prenom}} {{currentUser.nom}}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Email:</span>
+            <span class="value">{{currentUser.email}}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Téléphone:</span>
+            <span class="value">{{currentUser.telephone || 'Non renseigné'}}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Adresse:</span>
+            <span class="value">{{profilForm.adresse || 'Non renseignée'}}</span>
+          </div>
+        </div>
+
+        <!-- Mode édition -->
+        <form class="profil-form" *ngIf="isEditing" (ngSubmit)="updateProfil()">
+          <div class="form-group">
+            <label for="prenom">Prénom *</label>
+            <input 
+                type="text"
+                id="prenom"
+                [(ngModel)]="profilForm.prenom"
+                name="prenom"
+                required>
+          </div>
+
+          <div class="form-group">
+            <label for="nom">Nom *</label>
+            <input 
+                type="text"
+                id="nom"
+                [(ngModel)]="profilForm.nom"
+                name="nom"
+                required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+              type="email"
+              id="email"
+              [value]="profilForm.email"
+              disabled
+              class="disabled-input">
+            <small>L'email ne peut pas être modifié</small>
+          </div>
+
+          <div class="form-group">
+            <label for="telephone">Téléphone</label>
+            <input 
+              type="tel"
+              id="telephone"
+              [(ngModel)]="profilForm.telephone"
+              name="telephone"
+              placeholder="Ex: +221 77 123 45 67">
+          </div>
+
+          <div class="form-group">
+            <label for="adresse">Adresse</label>
+            <textarea 
+              id="adresse"
+              [(ngModel)]="profilForm.adresse"
+              name="adresse"
+              rows="3"
+              placeholder="Votre adresse complète">
+            </textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" (click)="cancelEdit()">
+              Annuler
+            </button>
+            <button type="submit" class="save-btn" [disabled]="loading">
+              <span *ngIf="!loading">Enregistrer</span>
+              <span *ngIf="loading">Enregistrement...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Sécurité -->
+    <div class="security-card">
+      <div class="card-header">
+        <h2>Sécurité</h2>
+      </div>
+
+      <div class="card-body">
+        <div class="security-actions">
+          <button class="password-btn" (click)="togglePasswordForm()">
+        {{showPasswordForm ? '❌ Annuler' : '🔒 Changer le mot de passe'}}
+          </button>
+        </div> 
+
+        <!-- Formulaire changement mot de passe -->
+        <form class="password-form" *ngIf="showPasswordForm" (ngSubmit)="changePassword()">
+          <!-- Ancien mot de passe -->
+            <div class="form-group">
+            <label for="ancienMotDePasse">Ancien mot de passe *</label>
+            <div class="password-container">
+                <input 
+                [type]="showAncienMotDePasse ? 'text' : 'password'"
+                id="ancienMotDePasse"
+                [(ngModel)]="passwordForm.ancienMotDePasse"
+                name="ancienMotDePasse"
+                required>
+                <span class="password-toggle" (click)="togglePasswordVisibility('ancien')">
+                {{showAncienMotDePasse ? '👁️' : '👁️‍🗨️'}}
+                </span>
+            </div>
+            </div>
+
+            <!-- Nouveau mot de passe -->
+            <div class="form-group">
+            <label for="nouveauMotDePasse">Nouveau mot de passe *</label>
+            <div class="password-container">
+                <input 
+                [type]="showNouveauMotDePasse ? 'text' : 'password'"
+                id="nouveauMotDePasse"
+                [(ngModel)]="passwordForm.nouveauMotDePasse"
+                name="nouveauMotDePasse"
+                required
+                minlength="6">
+                <span class="password-toggle" (click)="togglePasswordVisibility('nouveau')">
+                {{showNouveauMotDePasse ? '👁️' : '👁️‍🗨️'}}
+                </span>
+            </div>
+            <small>Minimum 6 caractères</small>
+            </div>
+
+            <!-- Confirmation mot de passe -->
+            <div class="form-group">
+            <label for="confirmerMotDePasse">Confirmer le nouveau mot de passe *</label>
+            <div class="password-container">
+                <input 
+                [type]="showConfirmerMotDePasse ? 'text' : 'password'"
+                id="confirmerMotDePasse"
+                [(ngModel)]="passwordForm.confirmerMotDePasse"
+                name="confirmerMotDePasse"
+                required>
+                <span class="password-toggle" (click)="togglePasswordVisibility('confirmer')">
+                {{showConfirmerMotDePasse ? '👁️' : '👁️‍🗨️'}}
+                </span>
+            </div>
+            </div>
+
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" (click)="togglePasswordForm()">
+              Annuler
+            </button>
+            <button type="submit" class="save-btn" [disabled]="loading">
+              <span *ngIf="!loading">Modifier le mot de passe</span>
+              <span *ngIf="loading">Modification...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Actions du compte -->
+    <div class="account-actions">
+      <button class="logout-btn" (click)="logout()">
+        🚪 Se déconnecter
+      </button>
+    </div>
+  </div>
+</div>
