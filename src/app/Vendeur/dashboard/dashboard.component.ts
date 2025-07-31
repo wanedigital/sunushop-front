@@ -39,9 +39,9 @@ export class DashboardComponent {
     });
   }
   stats: StatCard[] = [
-    { icon: 'bi-calendar-check', value: '1020', label: 'New Orders' },
-    { icon: 'bi-people', value: '2834', label: 'Visitors' },
-    { icon: 'bi-currency-dollar', value: 'N$2543.00', label: 'Total Sales' }
+    { icon: 'bi-calendar-check', value: '1020', label: 'Nouvelles commandes' },
+    { icon: 'bi-people', value: '2834', label: 'Visiteurs' },
+    { icon: 'bi-currency-dollar', value: 'N$2543.00', label: 'Ventes totales' }
   ];
 
   recentOrders: Order[] = [

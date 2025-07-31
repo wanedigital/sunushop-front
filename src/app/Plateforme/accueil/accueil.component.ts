@@ -13,6 +13,7 @@ import { ServiceService } from '../../services/service.service';
 export class AcceuilComponent {
   boutiques: any = [];
   isLoading = true;
+  boutique: any = [];
 
   constructor(private boutiqueService: ServiceService) {}
 

@@ -32,6 +32,8 @@ export const routes: Routes = [
       { path: 'sidebar', component: SidebardAdminComponent },
       { path: 'header', component: HeaderAdminComponent },
       { path: 'statistique', component: StatistiqueAdminComponent },
+      { path: 'produit', component: ProduitComponent },
+
 
 ]
 },
@@ -44,6 +46,7 @@ export const routes: Routes = [
 ]
       } ,
       { path: 'emp', component: EmployeeManagementComponent },
+
 ];
 
     /* { path: 'dashboard', component: DashboardComponent,
