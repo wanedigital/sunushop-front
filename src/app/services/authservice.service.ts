@@ -2,18 +2,22 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 
-interface User {
+export interface User {
   email: string;
   password: string;
+  adresse?: string;
+  prenom?: string;
+  nom?: string;
+  telephone?: string;
 }
 
-interface AuthResponse {
+export interface AuthResponse {
   token: string;
   user: {
   id: String;
   email: String;
   password: String;
-  adress: String;
+  adresse: String;
   prenom:String;
   nom:String;
   telephone:String;
@@ -23,6 +27,19 @@ interface AuthResponse {
   };
 }
 
+export interface ProfilUpdateRequest {
+  nom: string;
+  prenom: string;
+  adresse: string;
+  telephone?: string;
+  email: string;
+}
+
+export interface PasswordChangeRequest {
+  ancienMotDePasse: string;
+  nouveauMotDePasse: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +47,9 @@ interface AuthResponse {
 export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = "http://localhost:8000/api";
-  private currentUser = new BehaviorSubject<any>(null);
+  public currentUser = new BehaviorSubject<any>(null);
+
+  
 
   // ✅ Enregistrement
   register(userData: any): Observable<AuthResponse> {
@@ -46,7 +65,12 @@ export class AuthService {
   login(credentials: User & { remember?: boolean }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
-        tap(response => this.storeAuthData(response, credentials.remember ?? false))
+        tap(response => {this.storeAuthData(response, credentials.remember ?? false);
+           console.log('Réponse login:', response);
+           const token = (response.token as any).plainTextToken;
+           localStorage.setItem('auth_token', token); 
+           
+          })
       );
   }
 
@@ -93,6 +117,8 @@ export class AuthService {
     }
   }
 
+  
+
   // ✅ Déconnexion
   logout(): void {
     localStorage.removeItem('auth_token');
@@ -117,10 +143,61 @@ export class AuthService {
     return user?.id || null;
   }
 
+  
+
   getRole(): Observable<string> {
-   const user = this.getUserInfo();
-  return user?.profil?.libelle ?? null;
-}
+    const user = this.getUserInfo();
+    return user?.profil?.libelle ?? null;
+  }
+
+  getHeaders(): HttpHeaders {
+    const token = this.getToken();
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  // ✅ Méthodes de gestion de profil
+  getProfil(): Observable<User> {
+        const headers = this.getHeaders();
+
+    return this.http.get<{ user: User }>(`${this.apiUrl}/user`, { headers })
+      .pipe(
+        map(response => response.user),
+        tap(user => {
+          this.currentUser.next(user);
+          // Mise à jour du stockage
+          const storage = localStorage.getItem('auth_user') ? localStorage : sessionStorage;
+          storage.setItem('auth_user', JSON.stringify(user));
+        })
+      );
+  }
+
+  updateProfil(profilData: ProfilUpdateRequest): Observable<User> {
+        const headers = this.getHeaders();
+
+    return this.http.put<{ user: User }>(`${this.apiUrl}/user/update`, profilData, { headers })
+      .pipe(
+        map(response => response.user),
+        tap(user => {
+          this.currentUser.next(user);
+          // Mise à jour du stockage
+          const storage = localStorage.getItem('auth_user') ? localStorage : sessionStorage;
+          storage.setItem('auth_user', JSON.stringify(user));
+        })
+      );
+  }
+
+  changerMotDePasse(passwordData: PasswordChangeRequest): Observable<User> {
+    const headers = this.getHeaders();
+    return this.http.patch<User>(
+      `${this.apiUrl}/user/change-password`,
+      passwordData,
+      { headers }
+    );
+  }
+
 
 }
 

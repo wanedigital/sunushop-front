@@ -1,0 +1,125 @@
+<!-- ============= panier.component.html ============= -->
+<div class="panier-container">
+  <div class="panier-header">
+    <div class="header-info">
+      <h1>Mon Panier</h1>
+      <p class="boutique-info" *ngIf="hasBoutiqueInfo()">
+        <span class="boutique-label">Boutique:</span> 
+        <span class="boutique-name">{{getBoutiqueName()}}</span>
+      </p>
+    </div>
+    <button class="continue-shopping-btn" (click)="continuerAchats()">
+      ← Retourner à {{getBoutiqueName()}}
+    </button>
+  </div>
+
+  <!-- Panier vide -->
+  <div class="empty-cart" *ngIf="panierItems.length === 0">
+    <div class="empty-cart-icon">🛒</div>
+    <h2>Votre panier est vide</h2>
+    <p *ngIf="hasBoutiqueInfo()">Découvrez les produits de {{getBoutiqueName()}} et ajoutez-les à votre panier</p>
+    <p *ngIf="!hasBoutiqueInfo()">Découvrez nos produits et ajoutez-les à votre panier</p>
+    <button class="shop-now-btn" (click)="continuerAchats()">
+      <span *ngIf="hasBoutiqueInfo()">Retourner à {{getBoutiqueName()}}</span>
+      <span *ngIf="!hasBoutiqueInfo()">Commencer mes achats</span>
+    </button>
+  </div>
+
+  <!-- Contenu du panier -->
+  <div class="panier-content" *ngIf="panierItems.length > 0">
+    <div class="panier-items">
+      <div class="panier-item" *ngFor="let item of panierItems">
+        <div class="item-image">
+          <img [src]="item.produit.image" 
+               [alt]="item.produit.libelle"
+               (error)="onImageError($event)">
+        </div>
+        
+        <div class="item-details">
+          <h3>{{item.produit.libelle}}</h3>
+          <p class="item-description">{{item.produit.description}}</p>
+          <p class="item-price">{{item.produit.prix | currency:'XOF':'symbol':'1.0-0'}} / unité</p>
+          <p class="item-availability" [class.unavailable]="!item.produit.disponible">
+            <span *ngIf="item.produit.disponible && item.produit.quantite > 0">✅ Disponible ({{item.produit.quantite}} en stock)</span>
+            <span *ngIf="!item.produit.disponible">❌ Indisponible</span>
+            <span *ngIf="item.produit.disponible && item.produit.quantite === 0">⚠️ Rupture de stock</span>
+          </p>
+        </div>
+        
+        <div class="item-quantity">
+          <label>Quantité:</label>
+          <div class="quantity-controls">
+            <button 
+              class="qty-btn"
+              (click)="modifierQuantite(item.produit.id, item.quantite - 1)">
+              -
+            </button>
+            <input 
+                type="number" 
+                [value]="item.quantite" 
+                min="1"
+                (change)="modifierQuantiteDepuisEvent(item.produit.id, $event)"
+                class="qty-input">
+            <button 
+              class="qty-btn"
+              [disabled]="item.quantite >= item.produit.quantite"
+              (click)="modifierQuantite(item.produit.id, item.quantite + 1)">
+              +
+            </button>
+          </div>
+          <small class="stock-warning" *ngIf="item.quantite > item.produit.quantite">
+            ⚠️ Quantité demandée supérieure au stock disponible
+          </small>
+        </div>
+        
+        <div class="item-total">
+          <p class="subtotal">{{(item.produit.prix * item.quantite) | currency:'XOF':'symbol':'1.0-0'}}</p>
+        </div>
+        
+        <div class="item-actions">
+          <button class="remove-btn" 
+                  (click)="retirerProduit(item.produit.id)"
+                  title="Supprimer du panier">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Résumé du panier -->
+    <div class="panier-summary">
+      <div class="summary-card">
+        <h3>Résumé de la commande</h3>
+        <p class="summary-boutique" *ngIf="hasBoutiqueInfo()">
+          Boutique: <strong>{{getBoutiqueName()}}</strong>
+        </p>
+        
+        <div class="summary-line">
+          <span>Sous-total ({{panierItems.length}} article{{panierItems.length > 1 ? 's' : ''}})</span>
+          <span>{{total | currency:'XOF':'symbol':'1.0-0'}}</span>
+        </div>
+        
+        <div class="summary-line">
+          <span>Frais de livraison</span>
+          <span class="free-delivery">Gratuite</span>
+        </div>
+        
+        <hr>
+        
+        <div class="summary-total">
+          <span>Total</span>
+          <span>{{total | currency:'XOF':'symbol':'1.0-0'}}</span>
+        </div>
+        
+        <div class="summary-actions">
+          <button class="checkout-btn" (click)="passerCommande()">
+            Passer la commande
+          </button>
+          <button class="clear-cart-btn" (click)="viderPanier()">
+            Vider le panier
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
