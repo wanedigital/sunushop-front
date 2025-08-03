@@ -27,7 +27,7 @@ isSidebarExpanded = false;
         { icon: 'bi-bag-check', label: 'Les Boutiques', route: 'boutiques', isActive: true  },
         { icon: 'bi-pie-chart', label: 'Statistiques', route: '/admin/statistique' },
         { icon: 'bi-bag', label: 'Produits', route: 'produit' },
-        { icon: 'bi-person-badge', label: 'Vendeurs', route: 'admin/vendeur' }
+        { icon: 'bi-person-badge', label: 'Utilisateurs', route: 'admin/vendeur' }
       ],
       bottom: [
         { icon: 'bi-power', label: 'Logout', route: '/logout', }

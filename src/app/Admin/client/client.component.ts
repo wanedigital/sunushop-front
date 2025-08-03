@@ -4,52 +4,44 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserServiceService } from '../../services/user-service.service';
 import Swal from 'sweetalert2';
-import { NgxPaginationModule } from 'ngx-pagination';
-
+import { NgxPaginationModule } from 'ngx-pagination'; // Ajoutez cette ligne
 
 @Component({
   selector: 'app-client',
   standalone: true,
-  imports: [CommonModule,HttpClientModule, FormsModule, NgxPaginationModule],
+  imports: [CommonModule, HttpClientModule, FormsModule, NgxPaginationModule], 
   templateUrl: './client.component.html',
   styleUrls: ['./client.component.css']
 })
 export class ClientComponent implements OnInit {
-
-  page: number = 1; // Page initiale
-  itemsPerPage: number = 5; // Nombre d'éléments par page
+  page: number = 1;
+  itemsPerPage: number = 5;
   sidebarWidth: number = 250;
-  tabClient:any = [];
-  filteredClients: any[] = [];    // Pour afficher uniquement celles filtrées
+  tabClient: any = [];
+  filteredClients: any[] = [];
   searchQuery: string = '';
   clients: any[] = [];
   selectedUserId?: number;
   
-  
-  constructor(private httpClient : HttpClient, private userService: UserServiceService ){}
-
+  constructor(private httpClient: HttpClient, private userService: UserServiceService) {}
 
   ngOnInit(): void {
     this.allclient();
-    
   }
 
-  
   allclient(searchQuery?: string) {
-   this.userService.getUsers(searchQuery).subscribe({
-     next: (data: any) => {
-       this.tabClient = data.users; // car le JSON renvoie { users: [...] }
-       this.filteredClients = data.users;
-       // filtrer uniquement les clients
-       this.clients = this.tabClient.filter((u: any) => u.profil?.libelle === 'Client');
-       console.log('infos:', data.users);
+    this.userService.getUsers(searchQuery).subscribe({
+      next: (data: any) => {
+        this.tabClient = data.users;
+        this.filteredClients = data.users;
+        this.clients = this.tabClient.filter((u: any) => u.profil?.libelle === 'Client');
+        this.page = 1; // Réinitialiser à la première page après un filtre
       },
       error: (err: any) => {
-       console.error('Erreur lors de la récupération des utilisateurs', err);
+        console.error('Erreur lors de la récupération des utilisateurs', err);
       }
     });
   }
-
 
   selectUser(client: any): void {
     this.selectedUserId = client.id;
@@ -105,6 +97,4 @@ export class ClientComponent implements OnInit {
       }
     });
   }
-
-
 }

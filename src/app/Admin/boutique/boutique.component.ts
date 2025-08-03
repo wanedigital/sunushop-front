@@ -5,8 +5,6 @@ import { RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { BoutiqueService } from '../../services/boutique.service';
 import { FormsModule } from '@angular/forms';
-import { NgxPaginationModule } from 'ngx-pagination';
-
 @Component({
   selector: 'app-boutiques',
   imports: [CommonModule, HttpClientModule, FormsModule, RouterModule],

@@ -1,22 +1,3 @@
-/*import { Component } from '@angular/core';
-import { AuthService } from '../../services/authservice.service';
-
-@Component({
-  selector: 'app-navbar',
-  imports: [],
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
-})
-export class NavbarComponent {
-
-  constructor(private authService: AuthService) {}
-
-  logout() {
-    this.authService.logout();
-  }
-
-}*/
-
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, AuthResponse } from '../../services/authservice.service';
