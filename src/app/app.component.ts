@@ -23,7 +23,9 @@ export class AppComponent implements OnInit {
   });
     this.auth.initializeUserFromStorage(); // 🔥 restaure l’utilisateur connecté
 
+
       console.log("Utilisateur connecté :", this.auth.getName(), this.auth.getIdUser(), this.auth.getRole());
+
 
   }
 

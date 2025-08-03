@@ -1,0 +1,142 @@
+<!-- ============= historique.component.html ============= -->
+<div class="historique-container">
+  <div class="historique-header">
+    <h1>Historique de mes commandes</h1>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-message" *ngIf="error">
+    <p>{{error}}</p>
+    <button (click)="loadCommandes()">Réessayer</button>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement de votre historique...</p>
+  </div>
+
+  <!-- Aucune commande -->
+  <div class="no-orders" *ngIf="!loading && !error && commandes.length === 0">
+    <div class="no-orders-icon">📦</div>
+    <h2>Aucune commande trouvée</h2>
+    <p>Vous n'avez pas encore passé de commande</p>
+    <button routerLink="/client/boutiques" class="shop-btn">
+      Commencer mes achats
+    </button>
+  </div>
+
+  <!-- Liste des commandes -->
+  <div class="commandes-list" *ngIf="!loading && !error && commandes.length > 0">
+    <div class="commande-card" *ngFor="let commande of commandes">
+      <div class="commande-header">
+        <div class="commande-info">
+          <h3>Commande #{{commande.numeroCommande}}</h3>
+          <p class="commande-date">{{commande.date | date:'dd/MM/yyyy à HH:mm'}}</p>
+        </div>
+        <div class="commande-status">
+          <span class="status-badge" [style.backgroundColor]="getStatusClass(commande.etat)">
+            {{getStatusText(commande.etat)}}
+          </span>
+        </div>
+      </div>
+
+      <div class="commande-summary">
+        <div class="items-preview">
+          <span>{{commande.items.length}} article{{commande.items.length > 1 ? 's' : ''}}</span>
+          <div class="items-thumbs">
+            <img 
+              *ngFor="let item of commande.items.slice(0, 3)" 
+              [src]="item.produit.image" 
+              [alt]="item.produit.libelle"
+              class="item-thumb">
+            <span *ngIf="commande.items.length > 3" class="more-items">
+              +{{commande.items.length - 3}}
+            </span>
+          </div>
+        </div>
+        
+        <div class="commande-total">
+          <span class="total-amount">{{commande.total | currency:'XOF':'symbol':'1.0-0'}}</span>
+        </div>
+      </div>
+
+      <div class="commande-actions">
+        <button class="details-btn" (click)="showDetails(commande)">
+          Voir détails
+        </button>
+        <button 
+          *ngIf="peutAnnuler(commande.etat)" 
+          class="cancel-btn"
+          (click)="annulerCommande(commande)">
+          Annuler
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de détails -->
+<div class="modal-overlay" *ngIf="selectedCommande" (click)="closeDetails()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Détails de la commande #{{selectedCommande.numeroCommande}}</h2>
+      <button class="close-modal" (click)="closeDetails()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="order-info">
+        <div class="info-row">
+          <span class="label">Date:</span>
+          <span>{{selectedCommande.date | date:'dd/MM/yyyy à HH:mm'}}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Statut:</span>
+          <span class="status-badge" [style.backgroundColor]="getStatusClass(selectedCommande.etat)">
+            {{getStatusText(selectedCommande.etat)}}
+          </span>
+        </div>
+        <div class="info-row">
+          <span class="label">Adresse:</span>
+          <span>{{selectedCommande.adresse}}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Téléphone:</span>
+          <span>{{selectedCommande.telephone}}</span>
+        </div>
+      </div>
+
+      <div class="order-items">
+        <h3>Articles commandés</h3>
+        <div class="item-detail" *ngFor="let item of selectedCommande.items">
+          <img [src]="item.produit.image" [alt]="item.produit.libelle" class="item-image">
+          <div class="item-info">
+            <h4>{{item.produit.libelle}}</h4>
+            <p>{{item.produit.description}}</p>
+            <div class="item-pricing">
+              <span>{{item.produit.prix | currency:'XOF':'symbol':'1.0-0'}} × {{item.quantite}}</span>
+              <strong>{{(item.produit.prix * item.quantite) | currency:'XOF':'symbol':'1.0-0'}}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-total">
+        <div class="total-row">
+          <span>Total</span>
+          <strong>{{selectedCommande.total | currency:'XOF':'symbol':'1.0-0'}}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="close-btn" (click)="closeDetails()">Fermer</button>
+      <button 
+        *ngIf="peutAnnuler(selectedCommande.etat)" 
+        class="cancel-order-btn"
+        (click)="annulerCommande(selectedCommande)">
+        Annuler la commande
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,172 @@
+<div class="commandes-container">
+  <div class="commandes-header">
+    <h1>Finaliser ma commande</h1>
+    <button class="back-btn" (click)="retourPanier()">
+      ← Retour au panier
+    </button>
+  </div>
+
+  <!-- Message d'information pour les invités -->
+  <div class="guest-info" *ngIf="!isUserConnected">
+    <div class="info-banner">
+      <div class="info-content">
+        <h3>🔐 Commande en tant qu'invité</h3>
+        <p>Vous commandez en tant qu'invité. Vous recevrez un numéro de commande par email pour suivre votre commande.</p>
+        <button class="login-btn" (click)="goToLogin()">
+          Vous avez un compte ? Connectez-vous
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="commandes-content">
+    <!-- Résumé de la commande -->
+    <div class="order-summary">
+      <h2>Résumé de votre commande</h2>
+      
+      <div class="summary-items">
+        <div class="summary-item" *ngFor="let item of panierItems">
+          <img [src]="item.produit.image" [alt]="item.produit.libelle" class="item-thumb">
+          <div class="item-info">
+            <h4>{{item.produit.libelle}}</h4>
+            <p>Quantité: {{item.quantite}}</p>
+          </div>
+          <div class="item-price">
+            {{(item.produit.prix * item.quantite) | currency:'XOF':'symbol':'1.0-0'}}
+          </div>
+        </div>
+      </div>
+      
+      <div class="summary-total">
+        <div class="total-line">
+          <span>Total</span>
+          <span class="total-amount">{{total | currency:'XOF':'symbol':'1.0-0'}}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulaire de commande -->
+    <div class="delivery-form">
+      <h2>Informations de commande</h2>
+      
+      <form (ngSubmit)="onSubmit()" #commandeForm="ngForm">
+        
+        <!-- Informations personnelles (seulement pour les invités) -->
+        <div class="form-section" *ngIf="!isUserConnected">
+          <h3>Vos informations</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nom">Nom *</label>
+              <input 
+                type="text"
+                id="nom"
+                [(ngModel)]="formData.nom"
+                name="nom"
+                required
+                placeholder="Votre nom">
+            </div>
+
+            <div class="form-group">
+              <label for="prenom">Prénom *</label>
+              <input 
+                type="text"
+                id="prenom"
+                [(ngModel)]="formData.prenom"
+                name="prenom"
+                required
+                placeholder="Votre prénom">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input 
+              type="email"
+              id="email"
+              [(ngModel)]="formData.email"
+              name="email"
+              required
+              placeholder="votre.email@exemple.com">
+            <small class="form-help">Vous recevrez la confirmation de commande à cette adresse</small>
+          </div>
+        </div>
+
+        <!-- Informations de livraison -->
+        <div class="form-section">
+          <h3>Informations de livraison</h3>
+          
+          <div class="form-group">
+            <label for="adresse">Adresse de livraison *</label>
+            <textarea 
+              id="adresse"
+              [(ngModel)]="formData.adresseLivraison"
+              name="adresseLivraison"
+              required
+              placeholder="Entrez votre adresse complète de livraison"
+              rows="3">
+            </textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="telephone">Numéro de téléphone *</label>
+            <input 
+              type="tel"
+              id="telephone"
+              [(ngModel)]="formData.telephone"
+              name="telephone"
+              required
+              placeholder="Ex: +221 77 123 45 67">
+          </div>
+
+          <div class="form-group">
+            <label for="notes">Notes pour le livreur (optionnel)</label>
+            <textarea 
+              id="notes"
+              [(ngModel)]="formData.notes"
+              name="notes"
+              placeholder="Instructions spéciales pour la livraison"
+              rows="2">
+            </textarea>
+          </div>
+        </div>
+
+        <!-- Informations de livraison -->
+        <div class="delivery-info">
+          <div class="info-card">
+            <h3>🚚 Informations de livraison</h3>
+            <ul>
+              <li>Livraison gratuite</li>
+              <li>Délai: 24-48h ouvrables</li>
+              <li>Paiement à la livraison disponible</li>
+              <li>Suivi de commande par SMS</li>
+              <li *ngIf="!isUserConnected">Suivi par email avec le numéro de commande</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Actions du formulaire -->
+        <div class="form-actions">
+          <button 
+            type="button" 
+            class="cancel-btn"
+            (click)="retourPanier()">
+            Annuler
+          </button>
+          <button 
+            type="submit" 
+            class="submit-btn"
+            [disabled]="!isFormValid() || loading">
+            <span *ngIf="!loading">
+              <i class="icon-check"></i>
+              Confirmer la commande
+            </span>
+            <span *ngIf="loading">
+              ⏳ Traitement en cours...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

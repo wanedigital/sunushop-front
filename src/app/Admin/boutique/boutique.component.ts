@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { BoutiqueService } from '../../services/boutique.service';
 import { FormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-boutiques',
@@ -16,6 +17,7 @@ export class BoutiquesComponent implements OnInit {
   tabBoutique: any = [];
   filteredBoutiques: any = [];
   paginatedBoutiques: any = [];
+ 
   selectedBoutiqueId?: number;
   searchQuery: string = '';
   filterBy: string = 'all';

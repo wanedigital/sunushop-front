@@ -52,6 +52,15 @@
   </header>
 
 
+    <!-- Boutiques Grid -->
+    <div  class="row g-4">
+      <div *ngFor="let boutique of boutiques" class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <img [src]="boutique.logo || 'assets/images/shop-default.png'" 
+               class="card-img-top p-4" 
+               [alt]="boutique.nom"
+               style="height: 200px; object-fit: contain;">
+
 
   <!-- Section Boutiques -->
   <section class="py-5">

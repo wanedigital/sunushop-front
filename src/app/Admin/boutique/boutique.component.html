@@ -75,11 +75,17 @@
               <i class="bi bi-shop"></i>
               <p>Aucune boutique trouvée</p>
             </div>
+
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+
+
+  <!-- Contrôles de pagination -->
+  <pagination-controls (pageChange)="page = +$event"></pagination-controls>
+</div>
 
   <!-- Pagination -->
 <div class="pagination-container" *ngIf="filteredBoutiques.length > 0">

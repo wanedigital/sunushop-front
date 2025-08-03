@@ -1,0 +1,35 @@
+<aside class="sidebar" [class.open]="isOpen">
+
+  <div class="sidebar-header">
+    <h2>Menu</h2>
+    <button class="close-btn" (click)="onCloseSidebar()">
+      <span>×</span>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li *ngFor="let item of menuItems" class="nav-item">
+        <a 
+          class="nav-link" 
+          [routerLink]="item.path" 
+          routerLinkActive="active"
+          (click)="navigateTo(item.path)">
+          <span class="nav-icon">{{item.icon}}</span>
+          <span class="nav-label">{{item.label}}</span>
+          <span 
+            class="nav-badge" 
+            *ngIf="item.badge && nombreItemsPanier > 0">
+            {{nombreItemsPanier}}
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <p>Connecté en tant que client</p>
+    </div>
+  </div>
+</aside>

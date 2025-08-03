@@ -1,14 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
+import { NgxPaginationModule } from 'ngx-pagination';
+
 import { ServiceService, Produit } from '../../services/service.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { HttpClientModule } from '@angular/common/http'; // à ajouter
+
 
 @Component({
   selector: 'app-produit',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule,HttpClientModule, FormsModule, NgxPaginationModule],
   templateUrl: './produit.component.html',
   styleUrls: ['./produit.component.css']
 })
@@ -18,7 +23,7 @@ export class ProduitComponent implements OnInit {
   searchQuery: string = '';
   isLoading = false;
   currentPage = 1;
-  itemsPerPage = 10;
+  //itemsPerPage = 10;
   totalItems = 0;
   totalPages = 0;
   sortField = 'libelle';
