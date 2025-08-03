@@ -4,7 +4,6 @@ import { MenuItem } from '../../models/menu-item';
 import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { AuthService } from '../../services/authservice.service';
 import {  Router, RouterModule } from '@angular/router';
-import { EmployeeManagementComponent } from "../../components/employee-management/employee-management.component";
 
 @Component({
   selector: 'app-sidebar',
@@ -19,14 +18,15 @@ export class SidebarComponent implements OnInit {
 
   menuItems: Record<'top' | 'bottom', MenuItem[]> = {
     top: [
-      { icon: 'bi-speedometer2', label: 'Dashboard', route: '/vendeur/dashboard', isActive: true },
+      { icon: 'bi-speedometer2', label: 'Statistique', route: '/vendeur/statistique', isActive: true },
       { icon: 'bi-bag-check', label: 'Ma Boutique', route: '/vendeur/produit' },
-      { icon: 'bi-pie-chart', label: 'Statistique', route: '/statistique' },
-      { icon: 'bi-chat-dots', label: 'Messages', route: '/messages' },
-      { icon: 'bi-people', label: 'Clients', route: '/client' }
+      { icon: 'bi-chat-dots', label: 'Commande', route: '/commandes' },
+      { icon: 'bi-people', label: 'Clients', route: '/client' },
+      { icon: 'bi-people', label: 'Categories', route: '/vendeur/categorie' }
+
     ],
     bottom: [
-      { icon: 'bi-gear', label: 'Settings', route: '/settings' },
+      { icon: 'bi-gear', label: 'Parametre', route: '/parametre' },
       { icon: 'bi-power', label: 'Logout', route: '/logout' }
     ]
   };

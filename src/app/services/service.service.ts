@@ -17,6 +17,11 @@ export interface Categorie {
   id: number;
   libelle: string;
 }
+
+interface ApiResponse {
+  data: Produit[];
+  total: number;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -44,6 +49,10 @@ updateProduit(id: string, produit: FormData): Observable<Produit> {
 
   getAllProduits(): Observable<Produit[]> {
     return this.http.get<Produit[]>(`${this.apiUrl}/produits`);
+  }
+
+  getProduits(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.apiUrl}/produits`);
   }
 
       // Paginations 
@@ -92,5 +101,7 @@ getCategories(): Observable<Categorie[]> {
     tap(data => console.log('Données catégories:', data)) 
   );
 }
+
+
 
 }

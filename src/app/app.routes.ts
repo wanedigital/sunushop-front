@@ -17,11 +17,12 @@ import { SellerComponent } from './Admin/seller/seller.component';
 
 
 import { CategorieComponent } from './Admin/categorie/categorie.component';
-import { SidebarComponent } from './Vendeur/sidebar/sidebar.component';
 import { SidebardAdminComponent } from './Admin/sidebard-admin/sidebard-admin.component';
 import { HeaderAdminComponent } from './Admin/header-admin/header-admin.component';
 import { AdminLayoutComponent } from './Admin/admin-layout/admin-layout.component';
 import { StatistiqueAdminComponent } from './Admin/statistique-admin/statistique-admin.component';
+import { BoutiquesComponent } from './Admin/boutique/boutique.component';
+import { CardsStatisticComponent } from './Admin/cards-statistic/cards-statistic.component';
 import { ClientLayoutComponent } from './client/client-layout/client-layout.component';
 import { BoutiqueProduitsComponent } from './client/produits/boutique-produits/boutique-produits.component';
 import { PanierComponent } from './client/panier/panier.component';
@@ -39,15 +40,19 @@ export const routes: Routes = [
       { path: 'signup', component: SignUpComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
-      { path: 'boutique', component: BoutiqueComponent },
-      { path: 'produit', component: ProduitComponent },
       { path: 'categories', component: CategorieComponent },
+
       { path: 'admin', component: AdminLayoutComponent,
       children: [
       { path: 'sidebar', component: SidebardAdminComponent },
       { path: 'header', component: HeaderAdminComponent },
       { path: 'statistique', component: StatistiqueAdminComponent },
-      { path: 'produit', component: ProduitComponent },
+      { path: 'boutiques', component:  BoutiquesComponent},
+      { path: 'produit', component:  ProduitComponent},
+      { path: 'cards', component:  CardsStatisticComponent},
+
+
+
 
 
 ]
@@ -56,10 +61,14 @@ export const routes: Routes = [
       children: [
       { path: 'home', component: NavbarComponent },
       { path: 'produit', component: ProductComponent },
-      { path: 'dashboard', component: DashboardComponent },
+      { path: 'statistique', component: DashboardComponent },
+      { path: 'card', component: CardsStatisticComponent },
+      { path: 'categorie', component: CategorieComponent },
+
 
 ]
-      } ,
+      } ,            
+
 
       {
       path: 'client',

@@ -1,7 +1,14 @@
-<section>
-<app-header-admin></app-header-admin>
-<app-sidebard-admin></app-sidebard-admin>
-  <main class="dashboard-content" > 
-    <router-outlet></router-outlet> 
-  </main>
-</section>
+<div class="admin-layout">
+  <!-- Header -->
+  <app-header-admin></app-header-admin>
+  <app-cards-statistic></app-cards-statistic>
+  <div class="main-container">
+    <!-- Sidebar -->
+    <app-sidebard-admin></app-sidebard-admin>
+    
+    <!-- Zone de contenu principal -->
+    <div class="content-area">
+      <router-outlet></router-outlet> <!-- Ici s'afficheront les composants enfants -->
+    </div>
+  </div>
+</div>

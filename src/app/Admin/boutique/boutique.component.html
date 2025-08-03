@@ -1,49 +1,124 @@
-<div class="table-data">
-  <div class="table-header">
-    <h4>Liste des Boutiques</h4>
-    <div class="table-actions">
-  
-      <input
-        type="text"
-        placeholder="Rechercher..."
-        [(ngModel)]="searchQuery"
-        (input)="allboutique(searchQuery)"
-        class="search-input"
-      />
-      <i class="bi bi-trash" title="Supprimer" (click)="deleteSelected()"></i>
-     
+<main class="content">
+<div class="shops-container">
+  <div class="shops-header">
+    <h2>Liste des Boutiques</h2>
+    
+    <div class="header-actions">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          placeholder="Rechercher par nom, adresse ou vendeur..."
+          [(ngModel)]="searchQuery"
+          (input)="applyFilter()"
+          class="search-input"
+        />
+        <button class="clear-search" *ngIf="searchQuery" (click)="clearFilter()">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      
+      <div class="filter-controls">
+        <select class="filter-select" [(ngModel)]="filterBy" (change)="applyFilter()">
+          <option value="all">Tous les champs</option>
+          <option value="nom">Nom</option>
+          <option value="adresse">Adresse</option>
+          <option value="vendeur">Vendeur</option>
+        </select>
+      </div>
+      
+      <button class="btn btn-danger" title="Supprimer" (click)="deleteSelected()" [disabled]="!selectedBoutiqueId">
+        <i class="bi bi-trash"></i>
+      </button>
     </div>
   </div>
 
-
-
-  <div class="overflow-auto rounded-xl shadow-md">
-    <table class="table table-hover align-middle w-full text-left border-collapse bg-white">
-      <thead class="bg-[#04192F] text-white">
+  <div class="shops-table-container">
+    <table class="shops-table">
+      <thead>
         <tr>
-          <th class="px-6 py-3 whitespace-nowrap">Nom</th>
-          <th class="px-6 py-3 whitespace-nowrap">Adresse</th>
-          <th class="px-6 py-3 whitespace-nowrap">Téléphone</th>
-          <th class="px-6 py-3 whitespace-nowrap">Vendeur</th>
-          <th class="px-6 py-3 whitespace-nowrap">Statut</th>
+          <th>Nom</th>
+          <th>Adresse</th>
+          <th>Téléphone</th>
+          <th>Vendeur</th>
+          <th>Statut</th>
+          <th>Détails</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let boutique of tabBoutique | paginate: { itemsPerPage: itemsPerPage, currentPage: page }" class="hover:bg-[#157CEA]/10 transition" [class.selected]="boutique.id === selectedBoutiqueId"
-    (click)="selectBoutique(boutique)">
-          <td class="px-6 py-4 border-t">{{ boutique.nom }}</td>
-          <td class="px-6 py-4 border-t">{{ boutique.adresse }}</td>
-          <td class="px-6 py-4 border-t">{{ boutique.numeroCommercial }}</td>
-          <td class="px-6 py-4 border-t">{{ boutique.user?.prenom }}</td>
-          <td class="px-6 py-4 border-t">
-            <span class="badge bg-success">{{ boutique.status }}</span>
+        <tr *ngFor="let boutique of paginatedBoutiques" 
+            [class.selected]="boutique.id === selectedBoutiqueId"
+            (click)="selectBoutique(boutique)">
+          <td class="name-cell">
+            <div class="shop-name">
+              <i class="bi bi-shop-window"></i>
+              {{ boutique.nom }}
+            </div>
+          </td>
+          <td>{{ boutique.adresse }}</td>
+          <td>{{ boutique.numeroCommercial }}</td>
+          <td>{{ boutique.user?.prenom }} {{ boutique.user?.nom }}</td>
+          <td>
+            <span class="status-badge" [class.active]="boutique.status === 'Actif'">
+              {{ boutique.status }}
+            </span>
+          </td>
+          <td class="details-cell">
+            <a [routerLink]="['/vendeurs/details', boutique.user?.id]" class="details-link">
+              <i class="bi bi-eye-fill"></i> Voir
+            </a>
+          </td>
+        </tr>
+        <tr *ngIf="filteredBoutiques.length === 0">
+          <td colspan="6" class="empty-table">
+            <div class="empty-state">
+              <i class="bi bi-shop"></i>
+              <p>Aucune boutique trouvée</p>
+            </div>
+
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
+
   <!-- Contrôles de pagination -->
   <pagination-controls (pageChange)="page = +$event"></pagination-controls>
 </div>
 
+  <!-- Pagination -->
+<div class="pagination-container" *ngIf="filteredBoutiques.length > 0">
+  <div class="pagination-info">
+    {{ getDisplayedRange() }}
+  </div>
+  
+  <div class="pagination-controls" *ngIf="totalPages > 1">
+    <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    
+    <div class="page-numbers">
+      <button *ngFor="let page of getPages()" 
+              class="page-btn" 
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+    </div>
+    
+    <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+      <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="items-per-page">
+    <select [(ngModel)]="itemsPerPage" (change)="updatePagination()">
+      <option value="2">2/page</option>
+      <option value="5">5/page</option>
+      <option value="10">10/page</option>
+    </select>
+  </div>
+</div>
+</div>
+</main>

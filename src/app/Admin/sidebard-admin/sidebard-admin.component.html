@@ -1,72 +1,25 @@
-<!-- dashboard.component.html -->
-<div class="wrapper">
-  <aside id="sidebar" [class.expand]="isSidebarExpanded">
-    <div class="d-flex">
-      <button class="toggle-btn" type="button" (click)="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="sidebar-logo">
-        <i class="fas fa-user"></i>
-        <a >Menu</a>
-      </div>
-    </div>
-    <ul class="sidebar-nav">
-      <li class="sidebar-item">
-        <a routerLink="/home" class="sidebar-link">
-          <i class="fas fa-home"></i>
-          <span>Home</span>
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a routerLink="/dashboard/admin" class="sidebar-link">
-          <i class="fas fa-users"></i>
-          <span>Profile</span>
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a routerLink="/dashboard/statistique" class="sidebar-link">
-          <i class="fas fa-bar-chart"></i>
-          <span>Statistique</span>
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a routerLink="/login" class="sidebar-link collapsed has-dropdown">
-          <i class="fas fa-shield-alt"></i>
-          <span>Auth</span>
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a routerLink="/dashboard/menus" class="sidebar-link collapsed has-dropdown">
-          <i class="fas fa-hamburger"></i>
-          <span>Plats</span>
-        </a>
-        <ul class="sidebar-dropdown list-unstyled">
-          <li class="sidebar-item">
-            <a routerLink="/dashboard/menus" class="sidebar-link">Liste Plats</a>
-          </li>
-        </ul>
-      </li>
-      <li class="sidebar-item">
-        <a class="sidebar-link">
-          <i class="fas fa-bell"></i>
-          <span>Notification</span>
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a  class="sidebar-link">
-          <i class="fas fa-cog"></i>
-          <span>Setting</span>
-        </a>
-      </li>
-      <li class="sidebar-item logout">
-        <a  class="sidebar-link">
-          <i class="fa fa-power-off"></i>
-          <span>Logout</span>
-        </a>
-      </li>
-    </ul>
-  </aside>
-  <div class="main p-3">
- 
+
+<section id="sidebar" [ngClass]="{'sidebar-collapsed': isCollapsed, 'show': !isCollapsed && isMobileView}">
+  <div class="brand" style="cursor: pointer;">
+    <i class="bi bi-emoji-smile" aria-hidden="true"></i>
+    <span class="ms-2" *ngIf="!isCollapsed">Admin</span>
   </div>
-</div>
+  
+<ul *ngFor="let section of sections" class="side-menu">
+  <li *ngFor="let item of menuItems[section]">
+    <!-- Cas du logout -->
+    <a *ngIf="item.label === 'Logout'" (click)="logout()" style="cursor: pointer;">
+      <i [class]="item.icon"></i>
+      <span>{{ item.label }}</span>
+    </a>
+    <!-- Cas des autres liens -->
+    <a *ngIf="item.label !== 'Logout'" [routerLink]="item.route" routerLinkActive="active">
+      <i [class]="item.icon"></i>
+      <span>{{ item.label }}</span>
+    </a>
+  </li>
+</ul>
+
+
+  
+</section>
