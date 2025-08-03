@@ -10,9 +10,10 @@
         <button class="btn btn-add" (click)="openAddModal()">
           <span class="btn-icon">➕</span> Nouveau produit
         </button>
-        <button class="btn btn-delete" >
-          <span class="btn-icon">🗑️</span> Supprimer
+        <button class="btn btn-delete" (click)="openCategorieModal()">
+          <span class="btn-icon">➕</span> Nouvelle catégorie
         </button>
+
       </div>
     </div>
   </div>
@@ -198,5 +199,35 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal Catégorie -->
+<div *ngIf="showCategorieModal" class="modal-overlay">
+  <div class="product-modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Nouvelle Catégorie</h3>
+      <button class="modal-close-btn" (click)="closeCategorieModal()">&times;</button>
+    </div>
+
+    <div class="modal-content-wrapper">
+      <form (ngSubmit)="saveCategorie()" class="product-form">
+        <div class="form-group">
+          <label class="form-label">Libellé</label>
+          <input
+            class="form-input"
+            [(ngModel)]="categorieData.libelle"
+            name="libelleCategorie"
+            required
+          />
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-cancel" (click)="closeCategorieModal()">Annuler</button>
+          <button type="submit" class="btn btn-save">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 </div>
 </main>

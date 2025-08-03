@@ -11,11 +11,12 @@ import { VendeurLayoutComponent } from './Vendeur/vendeur-layout/vendeur-layout.
 import { ProductComponent } from './Vendeur/product/product.component';
 import { ProduitComponent } from './Admin/produit/produit.component';
 import { CategorieComponent } from './Admin/categorie/categorie.component';
-import { SidebarComponent } from './Vendeur/sidebar/sidebar.component';
 import { SidebardAdminComponent } from './Admin/sidebard-admin/sidebard-admin.component';
 import { HeaderAdminComponent } from './Admin/header-admin/header-admin.component';
 import { AdminLayoutComponent } from './Admin/admin-layout/admin-layout.component';
 import { StatistiqueAdminComponent } from './Admin/statistique-admin/statistique-admin.component';
+import { BoutiquesComponent } from './Admin/boutique/boutique.component';
+import { CardsStatisticComponent } from './Admin/cards-statistic/cards-statistic.component';
 
 
 export const routes: Routes = [
@@ -24,15 +25,19 @@ export const routes: Routes = [
       { path: 'signup', component: SignUpComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
-      { path: 'boutique', component: BoutiqueComponent },
-      { path: 'produit', component: ProduitComponent },
       { path: 'categories', component: CategorieComponent },
+
       { path: 'admin', component: AdminLayoutComponent,
       children: [
       { path: 'sidebar', component: SidebardAdminComponent },
       { path: 'header', component: HeaderAdminComponent },
       { path: 'statistique', component: StatistiqueAdminComponent },
-      { path: 'produit', component: ProduitComponent },
+      { path: 'boutiques', component:  BoutiquesComponent},
+      { path: 'produit', component:  ProduitComponent},
+      { path: 'cards', component:  CardsStatisticComponent},
+
+
+
 
 
 ]
@@ -41,10 +46,15 @@ export const routes: Routes = [
       children: [
       { path: 'home', component: NavbarComponent },
       { path: 'produit', component: ProductComponent },
-      { path: 'dashboard', component: DashboardComponent },
+      { path: 'statistique', component: DashboardComponent },
+      { path: 'card', component: CardsStatisticComponent },
+      { path: 'categorie', component: CategorieComponent },
+
 
 ]
-      } ,
+      } ,            
+
+
       { path: 'emp', component: EmployeeManagementComponent },
 
 ];

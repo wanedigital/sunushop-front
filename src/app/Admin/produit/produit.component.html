@@ -1,78 +1,124 @@
-<div class="table-data">
-  <div class="table-header">
-    <h4>Liste des Produits</h4>
-<div class="table-actions">
-  <input
-    type="text"
-    placeholder="Rechercher..."
-    [(ngModel)]="searchQuery"
-    (input)="onSearchInput()"
-    class="search-input"
-  />
-  <select [(ngModel)]="itemsPerPage" (change)="changeItemsPerPage()" class="page-select">
-    <option value="5">5 par page</option>
-    <option value="10">10 par page</option>
-    <option value="20">20 par page</option>
-    <option value="50">50 par page</option>
-  </select>
-</div>
-  </div>
+<main class="content">
+  <div class="admin-products-container">
+    <div class="admin-header">
+      <div class="header-title">
+        <h2>Liste des Produits</h2>
+      </div>
+      <div class="admin-controls">
+        <div class="admin-search">
+          <i class="bi bi-search"></i>
+          <input
+            type="text"
+            placeholder="Filtrer les produits..."
+            [(ngModel)]="searchQuery"
+            (input)="onSearchInput()"
+            class="search-input"
+          />
+          <button *ngIf="searchQuery" (click)="resetFilters()" class="clear-search">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        <select [(ngModel)]="itemsPerPage" (change)="changeItemsPerPage()" class="page-select">
+          <option value="5">5 par page</option>
+          <option value="10">10 par page</option>
+          <option value="25">25 par page</option>
+          <option value="50">50 par page</option>
+        </select>
+      </div>
+    </div>
 
-  <div *ngIf="isLoading" class="loading-indicator">
-    Chargement en cours...
-  </div>
-
-  <div class="overflow-auto rounded-xl shadow-md">
-    <table class="table table-hover align-middle w-full text-left border-collapse bg-white">
-      <thead class="bg-[#04192F] text-white">
-        <tr>
-          <th class="px-6 py-3 whitespace-nowrap">Libellé</th>
-          <th class="px-6 py-3 whitespace-nowrap">Description</th>
-          <th class="px-6 py-3 whitespace-nowrap">Prix</th>
-          <th class="px-6 py-3 whitespace-nowrap">Quantité</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let produit of filteredProduits" class="hover:bg-[#157CEA]/10 transition">
-          <td class="px-6 py-4 border-t">{{ produit.libelle }}</td>
-          <td class="px-6 py-4 border-t">{{ produit.description }}</td>
-          <td class="px-6 py-4 border-t">{{ produit.prix | currency:'EUR':'symbol':'1.2-2' }}</td>
-          <td class="px-6 py-4 border-t">{{ produit.quantite }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Pagination -->
-  <div class="pagination-container">
-    <div class="pagination-controls">
-      <button (click)="changePage(1)" [disabled]="currentPage === 1" class="page-nav">
-        «
-      </button>
-      <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" class="page-nav">
-        ‹
-      </button>
-
-      <button *ngFor="let page of getPages()" 
-              (click)="changePage(page)"
-              [class.active]="page === currentPage"
-              class="page-number">
-        {{ page }}
-      </button>
-
-      <button (click)="changePage(currentPage + 1)" 
-              [disabled]="currentPage === totalPages" 
-              class="page-nav">
-        ›
-      </button>
-      <button (click)="changePage(totalPages)" 
-              [disabled]="currentPage === totalPages" 
-              class="page-nav">
-        »
+    <!-- Indicateurs de filtres actifs -->
+    <div *ngIf="isFiltered" class="active-filters">
+      <span class="filter-badge" *ngIf="searchQuery">
+        Recherche: "{{searchQuery}}"
+        <i class="bi bi-x" (click)="searchQuery = ''; applyFilter()"></i>
+      </span>
+      <span class="filter-badge" *ngIf="sortField !== 'libelle' || sortDirection !== 'asc'">
+        Tri: {{sortField}} ({{sortDirection === 'asc' ? 'croissant' : 'décroissant'}})
+        <i class="bi bi-x" (click)="resetSort()"></i>
+      </span>
+      <button (click)="resetFilters()" class="btn-reset-filters">
+        Réinitialiser tout
       </button>
     </div>
-    <div class="pagination-info">
-      Page {{currentPage}} sur {{totalPages}} - {{totalItems}} produits
+
+    <div *ngIf="isLoading" class="loading-indicator">
+      <i class="bi bi-arrow-repeat animate-spin"></i>
+      <span>Chargement en cours...</span>
+    </div>
+
+    <div class="admin-table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th class="sortable" (click)="sortBy('libelle')">
+              Libellé 
+              <i *ngIf="sortField === 'libelle'" class="bi bi-arrow-{{sortDirection === 'asc' ? 'up' : 'down'}}"></i>
+              <i *ngIf="sortField !== 'libelle'" class="bi bi-arrow-down-up"></i>
+            </th>
+            <th>Description</th>
+            <th class="sortable" (click)="sortBy('prix')">
+              Prix 
+              <i *ngIf="sortField === 'prix'" class="bi bi-arrow-{{sortDirection === 'asc' ? 'up' : 'down'}}"></i>
+              <i *ngIf="sortField !== 'prix'" class="bi bi-arrow-down-up"></i>
+            </th>
+            <th class="sortable" (click)="sortBy('quantite')">
+              Stock 
+              <i *ngIf="sortField === 'quantite'" class="bi bi-arrow-{{sortDirection === 'asc' ? 'up' : 'down'}}"></i>
+              <i *ngIf="sortField !== 'quantite'" class="bi bi-arrow-down-up"></i>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let produit of displayedProduits">
+            <td>{{ produit.libelle }}</td>
+            <td class="description-cell">{{ produit.description || '-' }}</td>
+            <td class="price-cell">{{ produit.prix | currency:'EUR':'symbol':'1.2-2' }}</td>
+            <td>
+              <span [ngClass]="{
+                'stock-high': produit.quantite >= 10,
+                'stock-medium': produit.quantite < 10 && produit.quantite >= 5,
+                'stock-low': produit.quantite < 5
+              }">
+                {{ produit.quantite }}
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="!isLoading && displayedProduits.length === 0">
+            <td colspan="4" class="empty-table">
+              <div class="empty-state">
+                <i class="bi bi-box"></i>
+                <p>Aucun produit trouvé</p>
+                <button *ngIf="isFiltered" (click)="resetFilters()" class="btn-reset">
+                  Réinitialiser les filtres
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="admin-pagination" *ngIf="displayedProduits.length > 0 && totalPages > 1">
+      <div class="pagination-info">
+        {{ getDisplayedRange() }}
+      </div>
+      <div class="pagination-buttons">
+        <button (click)="previousPage()" [disabled]="currentPage === 1" class="pagination-btn">
+          <i class="bi bi-chevron-left"></i> Précédent
+        </button>
+        <div class="page-numbers">
+          <span *ngFor="let page of getPagesArray()" 
+                (click)="goToPage(page)"
+                [class.active]="page === currentPage"
+                class="page-number">
+            {{page}}
+          </span>
+        </div>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="pagination-btn">
+          Suivant <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
     </div>
   </div>
-</div>
+</main>

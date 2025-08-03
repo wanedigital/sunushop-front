@@ -237,6 +237,39 @@ confirmDelete(produit: Produit): void {
     }
   }
 
+  // Categories
+  showCategorieModal = false;
+categorieData: any = { libelle: '' };
+
+openCategorieModal(): void {
+  this.categorieData = { libelle: '' };
+  this.showCategorieModal = true;
+}
+
+closeCategorieModal(): void {
+  this.showCategorieModal = false;
+}
+
+saveCategorie(): void {
+  if (!this.categorieData.libelle.trim()) {
+    Swal.fire('Erreur', 'Le libellé est requis', 'warning');
+    return;
+  }
+
+  this.produitService.createCategories(this.categorieData).subscribe({
+    next: (res) => {
+      Swal.fire('Succès', 'Catégorie ajoutée avec succès', 'success');
+      this.loadCategories(); // recharge la liste si tu l'affiches quelque part
+      this.closeCategorieModal();
+    },
+    error: (err) => {
+      console.error(err);
+      Swal.fire('Erreur', 'Une erreur est survenue', 'error');
+    }
+  });
+}
+
+      // Paginations
   updatePaginationPages(): void {
     const pagesToShow = 5; // Nombre de pages à afficher dans la pagination
     let startPage = Math.max(1, this.currentPage - Math.floor(pagesToShow / 2));
@@ -258,6 +291,7 @@ confirmDelete(produit: Produit): void {
       this.loadProduits();
     }
   }
+
 
   changeItemsPerPage(): void {
     this.currentPage = 1; // Reset à la première page

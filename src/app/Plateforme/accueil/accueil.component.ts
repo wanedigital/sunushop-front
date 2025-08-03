@@ -20,6 +20,8 @@ export class AcceuilComponent {
   ngOnInit(): void {
     this.loadBoutiques();
   }
+imageBaseUrl = 'http://localhost:8000';
+
 
   loadBoutiques(): void {
     this.boutiqueService.getBoutiques().subscribe({

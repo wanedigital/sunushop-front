@@ -4,14 +4,20 @@
     <i class="bi bi-emoji-smile" aria-hidden="true"></i>
     <span class="ms-2" *ngIf="!isCollapsed">Vendeur</span>
   </div>
-  
   <ul *ngFor="let section of sections" class="side-menu">
-    <li *ngFor="let item of menuItems[section]">
-      <a [routerLink]="item.route" routerLinkActive="active">
-        <i [class]="item.icon"></i>
-        <span>{{ item.label }}</span>
-      </a>
-    </li>
-  </ul>
-  <button class="btn btn-danger" (click)="logout()">Déconnexion</button>    
-</section>
+  <li *ngFor="let item of menuItems[section]">
+    <!-- Cas du logout -->
+    <a *ngIf="item.label === 'Logout'" (click)="logout()" style="cursor: pointer;">
+      <i [class]="item.icon"></i>
+      <span>{{ item.label }}</span>
+    </a>
+    <!-- Cas des autres liens -->
+    <a *ngIf="item.label !== 'Logout'" [routerLink]="item.route" routerLinkActive="active">
+      <i [class]="item.icon"></i>
+      <span>{{ item.label }}</span>
+    </a>
+  </li>
+</ul>
+
+
+  </section>
