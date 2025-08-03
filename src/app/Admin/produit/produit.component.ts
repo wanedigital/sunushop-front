@@ -23,7 +23,7 @@ export class ProduitComponent implements OnInit {
   searchQuery: string = '';
   isLoading = false;
   currentPage = 1;
-  //itemsPerPage = 10;
+  itemsPerPage = 10;
   totalItems = 0;
   totalPages = 0;
   sortField = 'libelle';

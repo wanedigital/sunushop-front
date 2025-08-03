@@ -3,13 +3,12 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserServiceService } from '../../services/user-service.service';
-import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-seller',
   standalone: true,
-  imports: [CommonModule,HttpClientModule, FormsModule, NgxPaginationModule],
+  imports: [CommonModule,HttpClientModule, FormsModule],
   templateUrl: './seller.component.html',
   styleUrls: ['./seller.component.css']
 })

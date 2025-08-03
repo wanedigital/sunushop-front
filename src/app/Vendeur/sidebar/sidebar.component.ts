@@ -21,7 +21,7 @@ export class SidebarComponent implements OnInit {
       { icon: 'bi-speedometer2', label: 'Statistique', route: '/vendeur/statistique', isActive: true },
       { icon: 'bi-bag-check', label: 'Ma Boutique', route: '/vendeur/produit' },
       { icon: 'bi-chat-dots', label: 'Commande', route: '/commandes' },
-      { icon: 'bi-people', label: 'Clients', route: '/client' },
+      { icon: 'bi-people', label: 'Clients', route: '/clients' },
       { icon: 'bi-people', label: 'Categories', route: '/vendeur/categorie' }
 
     ],

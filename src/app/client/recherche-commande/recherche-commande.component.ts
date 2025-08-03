@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommandeService } from '../../services/commande.service';
 import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-recherche-commande',
   templateUrl: './recherche-commande.component.html',
   styleUrls: ['./recherche-commande.component.css'],
-  imports : [FormsModule]
+  imports : [FormsModule,NgIf]
 })
 export class RechercheCommandeComponent {
   formData = {
