@@ -5,12 +5,12 @@
 }
 
 .main-content {
-  flex: 1;
+  flex-grow: 1;
   padding: 20px;
   margin-top: 70px; /* Hauteur de la navbar */
-  transition: margin-left 0.3s ease;
 }
 
+/*
 .main-content.sidebar-open {
   margin-left: 250px;
 }
@@ -32,7 +32,6 @@
   visibility: visible;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .main-content.sidebar-open {
     margin-left: 0;
@@ -47,12 +46,10 @@
   z-index: 1;
 }
 
-/* Sur mobile : pas de marge */
 .client-layout.mobile .main-content {
   margin-left: 0;
 }
 
-/* Position du sidebar sur mobile */
 .client-layout.mobile app-sidebar {
   position: fixed;
   top: 0;
@@ -74,18 +71,9 @@
   flex-grow: 1;
 }
 
-/* Sidebar horizontal (desktop) */
 .client-layout:not(.mobile) app-sidebar {
   position: relative;
   width: 250px;
   flex-shrink: 0;
 }
-
-/* Main responsive */
-.main-content {
-  flex-grow: 1;
-  margin-top: 70px;
-  padding: 20px;
-}
-
-
+*/

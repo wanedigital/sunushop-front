@@ -13,11 +13,15 @@ import { CommonModule } from '@angular/common';
 export class SidebarComponent implements OnInit {
   @Input() isOpen = false;
   @Output() closeSidebar = new EventEmitter<void>();
+  //currentBoutiqueId = '1';
+
   
   nombreItemsPanier = 0;
 
   menuItems = [
-    { path: '/client/boutiques', icon: '🏪', label: 'Boutiques' },
+    //{ path: '/client/boutiques', icon: '🏪', label: 'Boutiques' },
+    { action: () => this.navigateToBoutique(), icon: '🏪', label: 'Boutiques' },
+    //<a (onclick)="navigateToBoutique()">🏪 Boutiques</a>,
     { path: '/client/panier', icon: '🛒', label: 'Mon Panier', badge: true },
     { path: '/client/commandes', icon: '📦', label: 'Mes Commandes' },
     { path: '/client/historique', icon: '📜', label: 'Historique' },
@@ -31,6 +35,13 @@ export class SidebarComponent implements OnInit {
     private router: Router,
     private panierService: PanierService
   ) {}
+
+  navigateToBoutique(): void {
+    const id = this.panierService.getCurrentBoutiqueId();
+    if (id) {
+      this.router.navigate(['/client/boutiques', id, 'produits']);
+    }
+  }
 
   ngOnInit(): void {
     this.panierService.panier$.subscribe(panier => {

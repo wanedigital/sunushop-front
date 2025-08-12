@@ -1,27 +1,45 @@
 <div class="boutique-produits-container">
+
   <!-- En-tête de la boutique -->
   <div class="boutique-header" *ngIf="boutique">
-    <button class="back-btn" (click)="retourBoutiques()">
+    <!--<button class="back-btn" (click)="retourBoutiques()">
       <span>←</span> Retour aux boutiques
-    </button>
-    <div class="boutique-info">
-      <img [src]="boutique.logo || '/assets/images/boutique-placeholder.png'" 
+    </button>-->
+    <!--<div class="boutique-info">
+      <img [src]="boutique.logo" 
         [alt]="boutique.nom" 
         class="boutique-image"
         (error)="handleImageError($event)">
+
       <div class="boutique-details">
         <h1>{{boutique.nom}}</h1>
         <p *ngIf="boutique.adresse">{{boutique.adresse}}</p>
         <p *ngIf="!boutique.adresse" class="no-description">Aucune description disponible</p>
       </div>
-    </div>
+    </div>-->
   </div>
 
-  <!-- Message d'erreur -->
-  <!--<div class="error-message" *ngIf="error">
-    <p>{{error}}</p>
-    <button (click)="loadProduits()">Réessayer</button>
-  </div> -->
+  <!-- Barre d'outils de filtre et de recherche -->
+  <div class="filter-toolbar">
+    <div class="categories-list">
+      <button *ngFor="let cat of categories" 
+              [class.active]="selectedCategory === cat.id"
+              (click)="filterByCategory(cat.id)">
+        {{ cat.libelle }}
+      </button>
+      <button *ngIf="!showAllCategories" 
+              (click)="showAllProducts()"
+              class="show-all">
+        Toutes les catégories
+      </button>
+    </div>
+    <div class="search-bar">
+      <input type="text" [(ngModel)]="searchTerm" 
+            placeholder="Rechercher un produit..." 
+            (keyup.enter)="searchProducts()">
+      <button (click)="searchProducts()">🔍</button>
+    </div>
+  </div>
 
   <!-- Loading -->
   <div class="loading" *ngIf="loading">
@@ -36,8 +54,9 @@
       <p *ngIf="produits.length === 0">Aucun produit disponible pour cette boutique.</p>
     </div>
 
-    <div class="produits-grid" *ngIf="produits.length > 0">
-      <div class="produit-card" *ngFor="let produit of produits">
+    <div class="produits-grid" *ngIf="filteredProduits.length > 0">
+      <div class="produit-card" *ngFor="let produit of filteredProduits"
+       >
         <div class="produit-image">
             <img [src]="produit.image" 
                 [alt]="produit.libelle"

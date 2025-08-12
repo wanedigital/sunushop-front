@@ -1,37 +1,28 @@
-<!--<app-navbar></app-navbar>
-<div class="flex">
-  <app-sidebar></app-sidebar>
-  <div class="flex-1 p-4">
-    <router-outlet></router-outlet>
-  </div>
-</div>
--->
-
-<!--<app-sidebar></app-sidebar>
-<app-navbar></app-navbar>
-<router-outlet></router-outlet> -->
-
-<div class="client-layout" [class.mobile]="isMobile">
+<div class="client-layout">
   <!-- Navbar -->
-  <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+  <app-navbar></app-navbar>
 
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!--
   <div class="layout-horizontal">
-    <!-- Sidebar -->
     <app-sidebar 
       [isOpen]="sidebarOpen" 
       (closeSidebar)="closeSidebar()">
     </app-sidebar>
 
-    <!-- Main -->
     <main class="main-content" [class.sidebar-open]="sidebarOpen">
       <router-outlet></router-outlet>
     </main>
   </div>
 
-  <!-- Overlay mobile -->
   <div 
     class="sidebar-overlay" 
     [class.active]="sidebarOpen && isMobile"
     (click)="closeSidebar()">
   </div>
+  -->
 </div>

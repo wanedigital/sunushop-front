@@ -12,6 +12,7 @@
       <li *ngFor="let item of menuItems" class="nav-item">
         <a 
           class="nav-link" 
+          *ngIf="item.path"
           [routerLink]="item.path" 
           routerLinkActive="active"
           (click)="navigateTo(item.path)">
@@ -22,6 +23,13 @@
             *ngIf="item.badge && nombreItemsPanier > 0">
             {{nombreItemsPanier}}
           </span>
+        </a>
+        <a 
+          class="nav-link" 
+          *ngIf="item.action"
+          (click)="item.action()">
+          <span class="nav-icon">{{item.icon}}</span>
+          <span class="nav-label">{{item.label}}</span>
         </a>
       </li>
     </ul>

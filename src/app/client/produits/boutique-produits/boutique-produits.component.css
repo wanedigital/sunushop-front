@@ -294,3 +294,85 @@
     padding: 12px 16px;
   }
 }
+
+/* Styles pour la barre d'outils de filtre */
+.filter-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.categories-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-bar {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 30px;
+  overflow: hidden;
+  min-width: 300px;
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-bar button {
+  background: #2c5aa0;
+  color: white;
+  border: none;
+  padding: 0 20px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.categories-list button {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.categories-list button.active {
+  background: #2c5aa0;
+  color: white;
+  border-color: #2c5aa0;
+}
+
+.categories-list button:hover {
+  background: #e9ecef;
+}
+
+.show-all {
+  background: #e9f7fe !important;
+  color: #2c5aa0;
+  font-weight: bold;
+}
+
+/* Ajouter un effet de survol sur les cartes produits */
+.produit-card {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.produit-card:hover {
+  transform: translateY(-5px);
+}
+
