@@ -1,55 +1,66 @@
-<!--<nav>
-  <h1>Multi-Boutique</h1>
-  <button (click)="logout()">Déconnexion</button>
-</nav> -->
-
 <nav class="navbar">
   <div class="navbar-container">
-    <!-- Menu hamburger -->
-    <button class="menu-toggle" (click)="onToggleSidebar()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-    <!-- Logo -->
-    <div class="navbar-brand">
-      <h1>MonMarché</h1>
+    <div class="navbar-left">
+      <div class="navbar-brand">
+        <!-- Default Brand -->
+        <div *ngIf="!currentBoutique" class="default-brand">
+          <h1>MonMarché</h1>
+        </div>
+        <!-- Dynamic Boutique Brand -->
+        <div *ngIf="currentBoutique" class="boutique-brand">
+          <img [src]="currentBoutique.logo" [alt]="currentBoutique.nom" class="brand-logo">
+          <span class="brand-name">{{ currentBoutique.nom }}</span>
+        </div>
+      </div>
+      <div class="navbar-nav">
+        <ng-container *ngFor="let item of menuItems">
+          <a *ngIf="item.path" [routerLink]="item.path" routerLinkActive="active">
+            <span class="nav-icon">{{item.icon}}</span>
+            <span class="nav-label">{{item.label}}</span>
+          </a>
+          <a *ngIf="item.action" (click)="item.action()" routerLinkActive="active" style="cursor: pointer;">
+            <span class="nav-icon">{{item.icon}}</span>
+            <span class="nav-label">{{item.label}}</span>
+          </a>
+        </ng-container>
+      </div>
     </div>
 
-    <!-- Navigation links 
-    <div class="navbar-nav">
-      <a routerLink="/client/boutiques" routerLinkActive="active">Boutiques</a>
-      <a routerLink="/client/commandes" routerLinkActive="active">Mes Commandes</a>
-      <a routerLink="/client/historique" routerLinkActive="active">Historique</a>
-    </div> -->
-
-    <!-- Actions -->
     <div class="navbar-actions">
-      <!-- Panier -->
       <button class="panier-btn" (click)="goToPanier()">
         <i class="icon-cart">🛒</i>
         <span class="badge" *ngIf="nombreItemsPanier > 0">{{nombreItemsPanier}}</span>
       </button>
 
-      <!-- Menu utilisateur -->
-     <p style="color:red">isMenuOpen = {{ isMenuOpen }}</p>
-
+      <!-- User Menu (Authenticated) -->
       <div class="user-menu" *ngIf="currentUser">
         <div class="dropdown">
-          <button class="user-btn" (click)="toggleMenu()"> 
+          <button class="user-btn" (click)="toggleMenu()">
             <i class="icon-user">👤</i>
             <span>{{currentUser?.prenom}} {{currentUser?.nom}}</span>
             <i class="icon-arrow">▼</i>
           </button>
-        <div class="dropdown-menu" [class.open]="isMenuOpen">
-          <a routerLink="/client/profil">Mon Profil</a>
-          <button (click)="logout()">Déconnexion</button>
+          <div class="dropdown-menu" [class.open]="isMenuOpen">
+            <a routerLink="/client/profil">Mon Profil</a>
+            <button (click)="logout()">Déconnexion</button>
+          </div>
         </div>
-        
+      </div>
+
+      <!-- Guest Menu (Unauthenticated) -->
+      <div class="guest-menu" *ngIf="!currentUser">
+        <div class="dropdown">
+          <button class="login-btn" (click)="toggleGuestMenu()">
+            <span>🔒 Accès Client</span>
+          </button>
+          <div class="dropdown-menu" [class.open]="isGuestMenuOpen">
+            <div class="preview-header">En tant que client, vous aurez accès à :</div>
+            <span *ngFor="let label of userMenuLabelsPreview" class="preview-item">- {{ label }}</span>
+            <div class="dropdown-divider"></div>
+            <button class="login-action-btn" (click)="goToLogin()">Se connecter</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </nav>
-

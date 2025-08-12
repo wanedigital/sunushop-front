@@ -28,6 +28,13 @@ export interface Boutique {
   updated_at?: string;
 }
 
+export interface Categorie {
+  id: string;
+  libelle: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface ProduitBoutique {
   id: string;
   id_produit: string;
@@ -110,10 +117,10 @@ export class ProduitService {
 
   // Méthode alternative si vous voulez récupérer aussi le nom de la boutique
   // Méthode alternative si vous voulez récupérer aussi le nom de la boutique
-  getBoutiqueWithProduits(boutiqueId: string): Observable<{boutique: string, boutique_image?: string, produits: Produit[]}> {
+  getBoutiqueWithProduits(boutiqueId: string): Observable<{boutique: string, boutique_image: string, produits: Produit[]}> {
     console.log('🔍 Calling API:', `${this.apiUrl}/boutiques/${boutiqueId}/produits`);
     
-    return this.http.get<{boutique: string, boutique_image?: string, produits: any[]}>(`${this.apiUrl}/boutiques/${boutiqueId}/produits`)
+    return this.http.get<{boutique: string, boutique_image: string, produits: any[]}>(`${this.apiUrl}/boutiques/${boutiqueId}/produits`)
       .pipe(
         map(response => {
           console.log('📦 Raw API Response:', response);
@@ -122,8 +129,11 @@ export class ProduitService {
           
           return {
             boutique: response.boutique,
-            boutique_image: response.boutique_image,
-            produits: mappedProduits
+            //boutique_image: response.boutique_image,
+            boutique_image: this.getBoutiqueImageUrl(response.boutique_image),
+            //produits: mappedProduits,
+            produits: response.produits.map(p => this.mapProduitFromLaravel(p))
+
           };
         })
       );
@@ -185,18 +195,15 @@ export class ProduitService {
   // Méthode similaire pour les boutiques
   getBoutiqueImageUrl(imagePath: string): string {
     if (!imagePath) {
-      return '/assets/images/boutique-placeholder.jpg';
+      return '/assets/images/boutique-placeholder.png'; // Retourne un placeholder si pas d'image
     }
-    
+    // Si l'URL est déjà complète, on la retourne directement
     if (imagePath.startsWith('http')) {
       return imagePath;
     }
-    
-    if (imagePath.startsWith('boutiques/')) {
-      return `http://localhost:8000/storage/${imagePath}`;
-    }
-    
-    return `http://localhost:8000/storage/boutiques/${imagePath}`;
+    // Construit l'URL finale en se basant sur le test Postman qui fonctionne
+    // On utilise 127.0.0.1 pour être cohérent avec votre test Postman
+    return `http://127.0.0.1:8000${imagePath.startsWith('/') ? '' : '/'}${imagePath}`.replace('//', '/');
   }
 
   // Convertir un array de produits
@@ -218,4 +225,16 @@ export class ProduitService {
 
     return formData;
   }
+
+   // Récupérer les catégories d'une boutique spécifique
+  getCategoriesByBoutique(boutiqueId: string): Observable<Categorie[]> {
+    return this.http.get<Categorie[]>(`${this.apiUrl}/boutiques/${boutiqueId}/categories`);
+  }
+
+  // Rechercher des produits dans une boutique
+  searchProduitsInBoutique(boutiqueId: string, searchTerm: string): Observable<Produit[]> {
+    return this.http.get<Produit[]>(`${this.apiUrl}/boutiques/${boutiqueId}/search?q=${searchTerm}`)
+      .pipe(map(produits => this.mapProduitsFromLaravel(produits)));
+  }
+
 }

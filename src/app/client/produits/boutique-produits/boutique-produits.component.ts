@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Boutique, Produit, ProduitService } from '../../../services/produit.service';
+import { Boutique, Categorie, Produit, ProduitService } from '../../../services/produit.service';
 import { PanierService } from '../../../services/panier.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { LayoutService } from '../../../services/layout.service';
 
 function mapStatus(status: string): 'ouvret' | 'fermer' {
   return status === 'ouvret' ? 'ouvret' : 'fermer';
@@ -12,30 +14,40 @@ function mapStatus(status: string): 'ouvret' | 'fermer' {
   selector: 'app-boutique-produits',
   templateUrl: './boutique-produits.component.html',
   styleUrls: ['./boutique-produits.component.css'],
-  imports : [CommonModule]
+  imports : [CommonModule, FormsModule]
 })
-export class BoutiqueProduitsComponent implements OnInit {
+export class BoutiqueProduitsComponent implements OnInit, OnDestroy {
   boutique: Boutique | null = null;
   produits: Produit[] = [];
   boutiqueId: string = '';
   loading = true;
   error = '';
+  categories: Categorie[] = [];
+  searchTerm: string = '';
+  selectedCategory: string | null = null;
+  filteredProduits: Produit[] = [];
+  showAllCategories = true;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private produitService: ProduitService,
-    public panierService: PanierService
+    public panierService: PanierService,
+    private layoutService: LayoutService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.boutiqueId = params['id'];
       if (this.boutiqueId) {
-        // Charger boutique et produits en une seule requête
         this.loadBoutiqueAndProduits();
+        this.loadCategories();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.layoutService.setCurrentBoutique(null);
   }
 
   handleImageError(event: Event): void {
@@ -48,17 +60,16 @@ export class BoutiqueProduitsComponent implements OnInit {
     target.src = '/assets/images/product-placeholder.jpg';
   }
 
-  // Nouvelle méthode qui charge boutique et produits ensemble
   loadBoutiqueAndProduits(): void {
     this.loading = true;
     this.produitService.getBoutiqueWithProduits(this.boutiqueId).subscribe({
       next: (response) => {
-        // Créer un objet boutique à partir du nom récupéré
+        console.log('BoutiqueProduitsComponent received response:', response);
         this.boutique = {
           id: this.boutiqueId,
           nom: response.boutique,
           adresse: response.boutique,
-          logo: response.boutique_image || '/assets/images/boutique-placeholder.jpg'  ,       
+          logo: response.boutique_image,
           numeroCommercial: response.boutique ?? null,
           status: mapStatus(response.boutique),
           id_user: response.boutique,
@@ -66,16 +77,63 @@ export class BoutiqueProduitsComponent implements OnInit {
           updated_at: response.boutique
         };
         this.produits = response.produits;
-        
-        // IMPORTANT: Définir la boutique courante dans le service panier
+
+        this.layoutService.setCurrentBoutique(this.boutique);
+
         this.panierService.setBoutiqueCourante(this.boutiqueId, response.boutique);
         
         this.loading = false;
+        this.filteredProduits = [...this.produits];
+
       },
       error: (error) => {
         console.error('Erreur lors du chargement:', error);
         this.error = 'Erreur lors du chargement des données';
         this.loading = false;
+        this.layoutService.setCurrentBoutique(null);
+      }
+    });
+  }
+
+  // Charger les catégories de la boutique
+  loadCategories(): void {
+    this.produitService.getCategoriesByBoutique(this.boutiqueId).subscribe({
+      next: (categories) => {
+        this.categories = categories;
+      },
+      error: (error) => {
+        console.error('Erreur chargement catégories:', error);
+      }
+    });
+  }
+
+  // Filtrer les produits par catégorie
+  filterByCategory(categoryId: string): void {
+    this.selectedCategory = categoryId;
+    this.showAllCategories = false;
+    this.filteredProduits = this.produits.filter(p => p.categorie_id === categoryId);
+  }
+
+  // Afficher tous les produits
+  showAllProducts(): void {
+    this.selectedCategory = null;
+    this.showAllCategories = true;
+    this.filteredProduits = [...this.produits];
+  }
+
+  // Recherche de produits
+  searchProducts(): void {
+    if (this.searchTerm.trim() === '') {
+      this.filteredProduits = [...this.produits];
+      return;
+    }
+
+    this.produitService.searchProduitsInBoutique(this.boutiqueId, this.searchTerm).subscribe({
+      next: (results) => {
+        this.filteredProduits = results;
+      },
+      error: (error) => {
+        console.error('Erreur recherche:', error);
       }
     });
   }

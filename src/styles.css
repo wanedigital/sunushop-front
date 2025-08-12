@@ -63,12 +63,14 @@ body {
   padding: 0;
 }
 /* Wrapper commun pour toutes les pages */
+/*
 .page-wrapper {
   margin-left: var(--sidebar-width);
   padding: 2rem 1rem;
   transition: var(--transition-all);
   min-height: 100vh;
 }
+*/
 
 /* Quand le sidebar est replié */
 body.sidebar-collapsed .page-wrapper {
@@ -112,7 +114,7 @@ body.sidebar-collapsed .page-wrapper {
   background: #fff;
   padding: 1rem 2rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-left: var(--sidebar-width);
+  /* margin-left: var(--sidebar-width); */
   transition: var(--transition-all);
 }
 
