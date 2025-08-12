@@ -1,48 +1,218 @@
-  <!-- Cards Section -->
- <main class="content">
-     <div class="metrics-grid">
-    <div class="metric-card">
-      <div class="metric-info">
-        <h3>Commandes</h3>
-        <span class="metric-label">Ventes</span>
-        <span class="metric-value">54</span>
-      </div>
-      <div class="metric-icon">
-        <i class="fas fa-shopping-cart"></i>
-      </div>
-    </div>
-
-    <div class="metric-card">
-      <div class="metric-info">
-        <h3>Stock</h3>
-        <span class="metric-label">Disponible</span>
-        <span class="metric-value">+130</span>
-      </div>
-      <div class="metric-icon">
-        <i class="fas fa-boxes"></i>
-      </div>
-    </div>
-
-    <div class="metric-card">
-      <div class="metric-info">
-        <h3>Fournisseurs</h3>
-        <span class="metric-label">Partenaires</span>
-        <span class="metric-value">5</span>
-      </div>
-      <div class="metric-icon">
-        <i class="fas fa-truck"></i>
-      </div>
-    </div>
-
-    <div class="metric-card">
-      <div class="metric-info">
-        <h3>Communauté</h3>
-        <span class="metric-label">Membres</span>
-        <span class="metric-value">1.2k</span>
-      </div>
-      <div class="metric-icon">
-        <i class="fas fa-users"></i>
+<div class="container-fluid">
+  <!-- État de chargement -->
+  <div *ngIf="isLoading" class="row">
+    <div class="col-12">
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <h5 class="text-muted">Chargement des statistiques...</h5>
       </div>
     </div>
   </div>
- </main>
+
+  <!-- État d'erreur -->
+  <div *ngIf="error && !isLoading" class="row">
+    <div class="col-12">
+      <div class="alert alert-danger shadow-sm" role="alert">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+          <div>
+            <h5 class="alert-heading mb-1">Erreur de chargement</h5>
+            <p class="mb-2">{{ error }}</p>
+            <button class="btn btn-outline-danger btn-sm" (click)="loadSummary()">
+              <i class="fas fa-redo"></i> Réessayer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cartes statistiques -->
+  <div *ngIf="summaryData && !isLoading && !error" class="row g-4">
+    
+    <!-- Card: Total Commandes -->
+    <div class="col-xl-2 col-md-4 col-sm-6">
+      <div class="card stat-card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center">
+            <div class="stat-icon bg-primary-gradient me-3">
+              <i class="fas fa-shopping-cart text-white"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number text-primary mb-1">{{ summaryData.total_orders | number }}</h3>
+              <p class="stat-label text-muted mb-0">Total Commandes</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <small class="text-success">
+            <i class="fas fa-chart-line"></i> Toutes périodes confondues
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Commandes en Attente -->
+    <div class="col-xl-2 col-md-4 col-sm-6">
+      <div class="card stat-card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center">
+            <div class="stat-icon bg-warning-gradient me-3">
+              <i class="fas fa-clock text-white"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number text-warning mb-1">{{ summaryData.pending_orders | number }}</h3>
+              <p class="stat-label text-muted mb-0">En Attente</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <small class="text-warning">
+            <i class="fas fa-hourglass-half"></i> À traiter
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Commandes Visiteurs -->
+    <div class="col-xl-2 col-md-4 col-sm-6">
+      <div class="card stat-card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center">
+            <div class="stat-icon bg-info-gradient me-3">
+              <i class="fas fa-user-friends text-white"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number text-info mb-1">{{ summaryData.commandes_visiteurs | number }}</h3>
+              <p class="stat-label text-muted mb-0">Visiteurs</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <small class="text-info">
+            <i class="fas fa-users"></i> Non-inscrits
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Boutiques Actives -->
+    <div class="col-xl-2 col-md-4 col-sm-6">
+      <div class="card stat-card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center">
+            <div class="stat-icon bg-success-gradient me-3">
+              <i class="fas fa-store text-white"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number text-success mb-1">{{ summaryData.active_shops | number }}</h3>
+              <p class="stat-label text-muted mb-0">Boutiques Actives</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <small class="text-success">
+            <i class="fas fa-check-circle"></i> Ouvertes
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Clients Enregistrés -->
+    <div class="col-xl-2 col-md-4 col-sm-6">
+      <div class="card stat-card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center">
+            <div class="stat-icon bg-secondary-gradient me-3">
+              <i class="fas fa-user-check text-white"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number text-secondary mb-1">{{ summaryData.total_clients_enregistres | number }}</h3>
+              <p class="stat-label text-muted mb-0">Clients</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <small class="text-secondary">
+            <i class="fas fa-user-plus"></i> Inscrits
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Vendeurs -->
+    <div class="col-xl-2 col-md-4 col-sm-6">
+      <div class="card stat-card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center">
+            <div class="stat-icon bg-dark-gradient me-3">
+              <i class="fas fa-user-tie text-white"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number text-dark mb-1">{{ summaryData.total_vendors | number }}</h3>
+              <p class="stat-label text-muted mb-0">Vendeurs</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <small class="text-dark">
+            <i class="fas fa-handshake"></i> Partenaires
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Informations supplémentaires -->
+  <div *ngIf="summaryData && !isLoading && !error" class="row mt-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <div class="row text-center">
+            <div class="col-md-3">
+              <div class="metric-box">
+                <h4 class="text-primary mb-1">{{ getTauxCommandes() }}%</h4>
+                <p class="text-muted mb-0">Taux commandes visiteurs</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="metric-box">
+                <h4 class="text-success mb-1">{{ getRatioVendeursBoutiques() }}</h4>
+                <p class="text-muted mb-0">Boutiques par vendeur</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="metric-box">
+                <h4 class="text-warning mb-1">{{ getTauxAttente() }}%</h4>
+                <p class="text-muted mb-0">Commandes en attente</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="metric-box">
+                <h4 class="text-info mb-1">{{ getTotalUtilisateurs() | number }}</h4>
+                <p class="text-muted mb-0">Total utilisateurs</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicateur de dernière mise à jour -->
+  <div *ngIf="summaryData && !isLoading && !error" class="row mt-3">
+    <div class="col-12">
+      <div class="text-center text-muted">
+        <small>
+          <i class="fas fa-sync-alt"></i> 
+          Dernière mise à jour: {{ getCurrentTime() }}
+          <button class="btn btn-link btn-sm ms-2 p-0" (click)="loadSummary()" title="Actualiser">
+            <i class="fas fa-redo"></i>
+          </button>
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
