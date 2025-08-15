@@ -3,9 +3,9 @@
      <div class="metrics-grid">
     <div class="metric-card">
       <div class="metric-info">
-        <h3>Commandes</h3>
-        <span class="metric-label">Ventes</span>
-        <span class="metric-value">54</span>
+        <h3>Ventes</h3>
+        <span class="metric-label">Vente</span>
+        <span class="metric-value">{{terminees}}</span>
       </div>
       <div class="metric-icon">
         <i class="fas fa-shopping-cart"></i>
@@ -16,7 +16,7 @@
       <div class="metric-info">
         <h3>Stock</h3>
         <span class="metric-label">Disponible</span>
-        <span class="metric-value">+130</span>
+        <span class="metric-value">{{totalQuantiteProduits}}</span>
       </div>
       <div class="metric-icon">
         <i class="fas fa-boxes"></i>
@@ -25,20 +25,20 @@
 
     <div class="metric-card">
       <div class="metric-info">
-        <h3>Fournisseurs</h3>
-        <span class="metric-label">Partenaires</span>
-        <span class="metric-value">5</span>
+        <h3>Produits</h3>
+        <span class="metric-label">Produits</span>
+        <span class="metric-value">{{totalItems}}</span>
       </div>
       <div class="metric-icon">
-        <i class="fas fa-truck"></i>
+        <i class="fas fa-box"></i>
       </div>
     </div>
 
     <div class="metric-card">
       <div class="metric-info">
         <h3>Communauté</h3>
-        <span class="metric-label">Membres</span>
-        <span class="metric-value">1.2k</span>
+        <span class="metric-label">Clients</span>
+        <span class="metric-value">{{totalClients}}</span>
       </div>
       <div class="metric-icon">
         <i class="fas fa-users"></i>

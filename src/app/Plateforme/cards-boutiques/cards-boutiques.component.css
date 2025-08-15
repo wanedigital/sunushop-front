@@ -1,0 +1,242 @@
+/* Section boutiques */
+    .boutiques-section {
+      background: #f8fafc;
+      padding: 6rem 0;
+      position: relative;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-title h2 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 1rem;
+    }
+
+    .section-title p {
+      font-size: 1.1rem;
+      color: #718096;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .boutique-card {
+      background: white;
+      border-radius: 20px;
+      padding: 0;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.4s ease;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .boutique-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .boutique-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .card-content {
+      padding: 1.5rem;
+    }
+
+    .boutique-status {
+      padding: 0.3rem 1rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .status-ouvert {
+      background: #c6f6d5;
+      color: #2f855a;
+    }
+
+    .status-ferme {
+      background: #fed7d7;
+      color: #c53030;
+    }
+
+    .boutique-info {
+      margin: 1rem 0;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: #718096;
+    }
+
+    .info-icon {
+      margin-right: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .btn-boutique {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn-boutique:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      color: white;
+    }
+/* Animation de la flèche dans le bouton */
+.btn-boutique:hover i {
+  transform: translateX(5px);
+}
+
+/* Animation d'entrée au scroll (optionnel) */
+.boutique-card.animate-in {
+  animation: slideInScale 0.6s ease-out forwards;
+}
+
+/* Effet de survol pour les informations */
+.info-item:hover {
+  transform: translateX(5px);
+  color: #4a5568 !important;
+}
+
+.info-item:hover .info-icon {
+  transform: scale(1.2);
+  filter: grayscale(0) !important;
+}
+
+/* Loading skeleton (si vous voulez ajouter un effet de loading) */
+.boutique-card-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Effet de focus pour l'accessibilité */
+.boutique-card:focus-within {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+.btn-boutique:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Amélioration des transitions sur mobile */
+@media (max-width: 768px) {
+  .boutique-card:hover {
+    transform: translateY(-8px) scale(1.01);
+  }
+  
+  .info-item:hover {
+    transform: none; /* Désactiver sur mobile pour éviter les problèmes de touch */
+  }
+}
+
+/* Animation d'ondulation au clic */
+.boutique-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.boutique-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(102, 126, 234, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+  pointer-events: none;
+}
+
+.boutique-card:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Effet de brillance sur le statut ouvert */
+.status-ouvert {
+  position: relative;
+  overflow: hidden;
+}
+
+.status-ouvert::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+/* Optimisation des performances */
+.boutique-card,
+.boutique-image,
+.btn-boutique,
+.info-item {
+  will-change: transform;
+}
+
+/* Style pour les cartes en mode sombre (optionnel) */
+@media (prefers-color-scheme: dark) {
+  .boutique-card {
+    background: rgba(45, 55, 72, 0.95) !important;
+    color: #e2e8f0;
+  }
+  
+  .boutique-name {
+    color: #e2e8f0 !important;
+  }
+  
+  .info-item {
+    color: #a0aec0 !important;
+  }
+  
+  .boutique-card:hover .info-item {
+    color: #e2e8f0 !important;
+  }
+}

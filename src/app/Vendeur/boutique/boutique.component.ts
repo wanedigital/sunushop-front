@@ -30,26 +30,23 @@ export class BoutiqueComponent {
       nom: ['', [Validators.required, Validators.minLength(3)]],
       adresse: ['', Validators.required],
       numeroCommercial: ['', Validators.required],
-      status: ['ouvret', Validators.required],
-      logo: [null, Validators.required] // Contrôle pour la validation du fichier
+      status: ['ouvret'], 
+      logo: [null, Validators.required]
     });
   }
 
-  // Méthode pour supprimer le logo sélectionné
   removeLogo(): void {
     this.selectedFile = null;
     this.previewUrl = null;
     this.boutiqueForm.patchValue({ logo: null });
-    this.boutiqueForm.get('logo')?.setErrors(null); // Réinitialise les erreurs de validation
+    this.boutiqueForm.get('logo')?.setErrors(null);
   }
 
-  // Gestion du changement de fichier
   onFileChange(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      // Validation du fichier
       const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
-      const maxSize = 2 * 1024 * 1024; // 2MB
+      const maxSize = 2 * 1024 * 1024;
 
       if (!validTypes.includes(file.type)) {
         this.errorMessage = 'Seuls les fichiers JPG, PNG ou GIF sont acceptés';
@@ -65,7 +62,6 @@ export class BoutiqueComponent {
       this.selectedFile = file;
       this.boutiqueForm.patchValue({ logo: file });
 
-      // Création de l'aperçu
       const reader = new FileReader();
       reader.onload = () => {
         this.previewUrl = reader.result;
@@ -74,91 +70,149 @@ export class BoutiqueComponent {
     }
   }
 
-  // Soumission du formulaire
-  onSubmit(): void {
-    this.errorMessage = null;
-    this.successMessage = null;
+onSubmit(): void {
+  this.errorMessage = null;
+  this.successMessage = null;
 
-    if (this.boutiqueForm.invalid) {
-      this.markAllAsTouched();
-      return;
-    }
+  if (this.boutiqueForm.invalid) {
+    this.markAllAsTouched();
+    return;
+  }
 
-    this.isLoading = true;
+  this.isLoading = true;
 
-    const formData = new FormData();
-    formData.append('nom', this.boutiqueForm.get('nom')?.value);
-    formData.append('adresse', this.boutiqueForm.get('adresse')?.value);
-    formData.append('numeroCommercial', this.boutiqueForm.get('numeroCommercial')?.value);
-    formData.append('status', this.boutiqueForm.get('status')?.value);
-    formData.append('id_user', this.auth.getIdUser());
+  const formData = new FormData();
+  formData.append('nom', this.boutiqueForm.get('nom')?.value);
+  formData.append('adresse', this.boutiqueForm.get('adresse')?.value);
+  formData.append('numeroCommercial', this.boutiqueForm.get('numeroCommercial')?.value);
+  formData.append('status', 'ouvret'); 
+  formData.append('id_user', this.auth.getIdUser());
 
-    if (this.selectedFile) {
-      formData.append('logo', this.selectedFile);
-    }
+  if (this.selectedFile) {
+    formData.append('logo', this.selectedFile);
+  }
 
-    if(this.auth.isAuthenticated()){
-       this.boutiqueService.createBoutique(formData).subscribe({
-      next: (res) => {
-        this.isLoading = false;
-        Swal.fire({
-          title: "Création!",
-          text: "Veuillez patientez ",
-          icon: "success"
-        });  
-        this.resetForm();
-        // Redirection après 2 secondes
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 2000);
+  if (this.auth.isAuthenticated()) {
+    // Vérifier d'abord si une boutique avec les mêmes informations existe déjà
+    this.boutiqueService.getBoutiques().subscribe({
+      next: (boutiques: any[]) => {
+        const nomBoutique = this.boutiqueForm.get('nom')?.value;
+        const adresseBoutique = this.boutiqueForm.get('adresse')?.value;
+        const numCommercial = this.boutiqueForm.get('numeroCommercial')?.value;
+
+        const boutiqueExistante = boutiques.find(b => 
+          b.nom === nomBoutique || 
+          b.adresse === adresseBoutique ||
+          b.numeroCommercial === numCommercial
+        );
+
+        if (boutiqueExistante) {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'warning',
+            title: 'Boutique existante',
+            html: `Une boutique avec ces informations existe déjà:<br><br>
+                  <strong>Nom:</strong> ${boutiqueExistante.nom}<br>
+                  <strong>Adresse:</strong> ${boutiqueExistante.adresse}<br>
+                  <strong>Numéro commercial:</strong> ${boutiqueExistante.numeroCommercial}`,
+            showConfirmButton: true
+          });
+          return;
+        }
+
+        // Si aucune boutique existante avec ces infos, procéder à la création
+        this.boutiqueService.createBoutique(formData).subscribe({
+          next: (res) => {
+            this.isLoading = false;
+            Swal.fire({
+              title: "Boutique créée!",
+              text: "Votre nouvelle boutique a été enregistrée avec succès.",
+              icon: "success"
+            });  
+            this.resetForm();
+            setTimeout(() => {
+              this.router.navigate(['/dashboard']);
+            }, 3000);
+          },
+          error: (err) => {
+            this.handleCreationError(err);
+          }
+        });
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error.message || 'Une erreur est survenue';
-        console.error('Erreur:', err);
-      }
-    });
-    }else{
-      Swal.fire({
+        Swal.fire({
           icon: 'error',
           title: 'Erreur',
-          text: "Impossible de créer la boutique car vous n'êtes pas connecté.",
-          showConfirmButton: true
-        }).then(() => {
-          // Redirige vers la page de connexion avec l'URL de retour
-          this.router.navigate(['/login'], { queryParams: { returnUrl: '/boutique' } });
-        });      
-    }
-   
+          text: "Impossible de vérifier les boutiques existantes",
+        });
+      }
+    });
+  } else {
+    this.handleNotAuthenticated();
   }
+}
 
-  // Marque tous les champs comme touchés pour afficher les erreurs
+private handleCreationError(err: any): void {
+  this.isLoading = false;
+  console.error('Erreur création:', err);
+  
+  if (err.status === 401) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Session expirée',
+      text: 'Votre session a expiré. Veuillez vous reconnecter.',
+      showConfirmButton: true
+    }).then(() => {
+      this.auth.logout(); 
+      this.router.navigate(['/login'], { 
+        queryParams: { returnUrl: '/boutique' } 
+      });
+    });
+  } else {
+    this.errorMessage = err.error?.message || 'Une erreur est survenue lors de la création de la boutique';
+    Swal.fire({
+      icon: 'error',
+      title: 'Erreur',
+      text: this.errorMessage || "Erreur lors de la création de la boutique",
+    });
+  }
+}
+
+private handleNotAuthenticated(): void {
+  Swal.fire({
+    icon: 'error',
+    title: 'Erreur',
+    text: "Impossible de créer la boutique car vous n'êtes pas connecté.",
+    showConfirmButton: true
+  }).then(() => {
+    this.router.navigate(['/login'], { queryParams: { returnUrl: '/creatboutique' } });
+  });
+}
+
   private markAllAsTouched(): void {
     Object.values(this.boutiqueForm.controls).forEach(control => {
       control.markAsTouched();
     });
   }
 
-  // Réinitialise le formulaire
   private resetForm(): void {
     this.boutiqueForm.reset({
-      status: 'ouvret'
+      status: 'ouvret' // Réinitialiser avec le bon statut
     });
     this.selectedFile = null;
     this.previewUrl = null;
-    // Réinitialise l'input file
     const fileInput = document.getElementById('logoInput') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
 
-  // Vérifie si un champ est invalide
   isInvalid(controlName: string): boolean {
     const control = this.boutiqueForm.get(controlName);
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
-   get logoInvalid(): boolean {
-    const control = this.boutiqueForm.get('logoFile');
+  get logoInvalid(): boolean {
+    const control = this.boutiqueForm.get('logo');
     return control ? control.invalid && (control.dirty || control.touched) : false;
   }
 }

@@ -17,6 +17,13 @@
       </div>
     </div>
   </div>
+  <!-- Ajoutez ce champ de recherche en haut du tableau -->
+<div class="search-container">
+  <input type="text" [(ngModel)]="searchTerm" 
+         (input)="onSearchChange()" 
+         placeholder="Rechercher des produits..." 
+         class="search-input">
+</div>
 
   <div class="product-table-container">
     <table class="product-table">
@@ -32,7 +39,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let p of produits" class="product-row">
+        <tr *ngFor="let p of prods" class="product-row">
           <td class="product-name">{{ p.libelle }}</td>
          <td class="badge-categorie">
   {{ getCategorieName(p.categorie_id) }}
@@ -46,7 +53,7 @@
           </td>
           <td>
             <img *ngIf="p.image" 
-                 [src]="'http://localhost:8000/storage/' + p.image" 
+                 [src]="p.image" 
                  alt="Product" class="product-image">
           </td>
           <td>
@@ -105,9 +112,9 @@
     </button>
   </div>
 
-  <div class="pagination-info">
-    Page {{currentPage}} sur {{totalPages}} - {{totalItems}} produits
-  </div>
+<div class="pagination-info">
+  Affichage {{prods.length}} sur {{filteredProds.length}} produits ({{totalItems}} au total)
+</div>
 </div>
 
   <!-- Modal -->

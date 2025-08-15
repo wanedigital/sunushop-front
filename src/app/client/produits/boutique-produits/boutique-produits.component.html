@@ -5,10 +5,11 @@
       <span>←</span> Retour aux boutiques
     </button>
     <div class="boutique-info">
-      <img [src]="boutique.logo || '/assets/images/boutique-placeholder.png'" 
+      <img
+              [src]="boutique.logo || 'assets/sunushop.jpeg'"
         [alt]="boutique.nom" 
         class="boutique-image"
-        (error)="handleImageError($event)">
+        >
       <div class="boutique-details">
         <h1>{{boutique.nom}}</h1>
         <p *ngIf="boutique.adresse">{{boutique.adresse}}</p>
@@ -39,9 +40,10 @@
     <div class="produits-grid" *ngIf="produits.length > 0">
       <div class="produit-card" *ngFor="let produit of produits">
         <div class="produit-image">
-            <img [src]="produit.image" 
+            <img [src]="produit.image || 'assets/sunushop.jpeg'
+" 
                 [alt]="produit.libelle"
-                (error)="handleProduitImageError($event)">
+                >
                 
             <div class="stock-badge" [ngClass]="getStockBadgeClass(produit)">
                 {{ getStockText(produit) }}

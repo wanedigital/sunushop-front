@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders  } from '@angular/common/http';
-import { map, Observable, tap } from 'rxjs';
+import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { PanierItem } from './panier.service';
 import { AuthService } from './authservice.service';
+import { ServiceService } from './service.service';
 
 export interface Commande {
   id: number;
@@ -55,10 +56,24 @@ export class CommandeService {
   private apiUrl = 'http://localhost:8000/api'; // URL Laravel
 
   constructor(private http: HttpClient,
-      private authService: AuthService  // Injectez AuthService
+      private authService: AuthService
 
 
   ) {}
+  private getAuthHeaders(): HttpHeaders {
+  // Utilisez la même clé que dans AuthService
+  const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+  
+  if (!token) {
+    console.error('❌ Aucun token trouvé');
+    return new HttpHeaders();
+  }
+
+  return new HttpHeaders({
+    'Authorization': `Bearer ${token}`,
+    'Accept': 'application/json'
+  });
+}
 
   // Créer une commande (connecté ou non connecté)
   creerCommande(commandeData: CommandeRequest): Observable<ApiResponse<Commande>> {
@@ -75,7 +90,6 @@ export class CommandeService {
     return this.http.get<ApiResponse<Commande[]>>(`${this.apiUrl}/commandes`);
   }*/
 
-   // commande.service.ts
   getCommandes(): Observable<Commande[]> {
     const headers = this.authService.getHeaders();
     
@@ -135,4 +149,37 @@ export class CommandeService {
   peutEtreAnnulee(statut: string): boolean {
     return ['en attente', 'valider'].includes(statut);
   }
+
+  // recuperation de commande pour le vendeur
+
+      getCommandesByBoutique(boutiqueId: number): Observable<any> {
+        const headers = this.getAuthHeaders();
+        return this.http.get(`${this.apiUrl}/boutique/${boutiqueId}/commandes`, { headers }).pipe(
+          catchError(error => {
+            if (error.status === 401) {
+              //this.authService.logout();
+              
+            }
+            return throwError(error);
+          })
+        );
+      }
+  // modification de statut de commande pour le vendeur
+
+      updateStatut(commandeId: number, newStatut: string): Observable<any> {
+      const headers = this.getAuthHeaders();
+      return this.http.patch(
+        `${this.apiUrl}/commandes/${commandeId}/statut`,
+        { etat: newStatut },
+        { headers }
+      ).pipe(
+        catchError(error => {
+          if (error.status === 401) {
+            this.authService.logout();
+          }
+          return throwError(error);
+        })
+      );
+    }
+
 }

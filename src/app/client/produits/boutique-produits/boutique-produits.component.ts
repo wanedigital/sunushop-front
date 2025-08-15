@@ -33,10 +33,15 @@ export class BoutiqueProduitsComponent implements OnInit {
       this.boutiqueId = params['id'];
       if (this.boutiqueId) {
         // Charger boutique et produits en une seule requête
-        this.loadBoutiqueAndProduits();
+        console.log("boutique :" ),this.loadBoutiqueAndProduits();
+        
       }
     });
   }
+imageBaseUrl = 'http://localhost:8000';
+isFullUrl(path: string): boolean {
+  return path?.startsWith('http') || path?.startsWith('/storage');
+}
 
   handleImageError(event: Event): void {
     const target = event.target as HTMLImageElement;
@@ -66,6 +71,7 @@ export class BoutiqueProduitsComponent implements OnInit {
           updated_at: response.boutique
         };
         this.produits = response.produits;
+        console.log("logo :", this.boutique.logo)
         
         // IMPORTANT: Définir la boutique courante dans le service panier
         this.panierService.setBoutiqueCourante(this.boutiqueId, response.boutique);

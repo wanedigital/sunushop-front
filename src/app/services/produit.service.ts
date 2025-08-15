@@ -109,7 +109,6 @@ export class ProduitService {
   }
 
   // Méthode alternative si vous voulez récupérer aussi le nom de la boutique
-  // Méthode alternative si vous voulez récupérer aussi le nom de la boutique
   getBoutiqueWithProduits(boutiqueId: string): Observable<{boutique: string, boutique_image?: string, produits: Produit[]}> {
     console.log('🔍 Calling API:', `${this.apiUrl}/boutiques/${boutiqueId}/produits`);
     

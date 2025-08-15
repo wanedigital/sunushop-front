@@ -14,6 +14,7 @@ export interface User {
 export interface AuthResponse {
   token: string;
   user: {
+  [x: string]: any;
   id: String;
   email: String;
   password: String;
@@ -50,7 +51,10 @@ export class AuthService {
   public currentUser = new BehaviorSubject<any>(null);
 
   
-
+isVendeur(): boolean {
+  const user = this.getUserInfo();
+  return user?.profil?.libelle === 'Vendeur'; 
+}
   // ✅ Enregistrement
   register(userData: any): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, {
@@ -69,6 +73,8 @@ export class AuthService {
            console.log('Réponse login:', response);
            const token = (response.token as any).plainTextToken;
            localStorage.setItem('auth_token', token); 
+                   // Stockez aussi le profil si nécessaire
+          //localStorage.setItem('user_profile', response.user.profil.libelle);
            
           })
       );
@@ -76,13 +82,15 @@ export class AuthService {
 
   // ✅ Stockage utilisateur
   private storeAuthData(response: AuthResponse, remember: boolean = false): void {
-    const storage = remember ? localStorage : sessionStorage;
+  const storage = remember ? localStorage : sessionStorage;
 
-    storage.setItem('auth_token', response.token);
-    storage.setItem('auth_user', JSON.stringify(response.user));
+  const token = (response.token as any).plainTextToken ?? response.token;
+  storage.setItem('auth_token', token);
+  storage.setItem('auth_user', JSON.stringify(response.user));
 
-    this.currentUser.next(response.user);
-  }
+  this.currentUser.next(response.user);
+}
+
 
   // ✅ Récupérer le token
   getToken(): string | null {
@@ -137,7 +145,9 @@ export class AuthService {
   getName(): string {
     return this.getUserInfo()?.nom ?? 'Inconnu';
   }
-
+  getUsername(): string {
+    return this.getUserInfo()?.prenom ?? 'Inconnu';
+  }
    getIdUser(): string {
     const user = this.getUserInfo();
     return user?.id || null;
@@ -152,6 +162,9 @@ export class AuthService {
 
   getHeaders(): HttpHeaders {
     const token = this.getToken();
+     if (!token) {
+    throw new Error('No token available');
+  }
     return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
@@ -160,7 +173,7 @@ export class AuthService {
 
   // ✅ Méthodes de gestion de profil
   getProfil(): Observable<User> {
-        const headers = this.getHeaders();
+      const headers = this.getHeaders();
 
     return this.http.get<{ user: User }>(`${this.apiUrl}/user`, { headers })
       .pipe(
