@@ -42,27 +42,6 @@ export class ProfilComponent implements OnInit {
 
   ) {}
 
-  /*ngOnInit(): void {
-      this.authService.initializeUserFromStorage(); // Assure la synchro avant le subscribe
-    this.authService.currentUser.subscribe(user => {
-      this.currentUser = user;
-      if (user) {
-        this.profilForm = {
-          nom: user.nom || '',
-          prenom: user.prenom || '',
-          email: user.email || '',
-          telephone: user.telephone || '',
-          adresse: user.adresse || ''
-        };
-      }
-      // Force la mise à jour de la vue
-      this.cdRef.detectChanges();
-    });
-    console.log('Stocké:', localStorage.getItem('auth_user'));
-
-    this.loadProfil();
-  }*/
-
   ngOnInit(): void {
     this.authService.initializeUserFromStorage(); // ← assure que le BehaviorSubject est prêt
 
@@ -88,29 +67,6 @@ export class ProfilComponent implements OnInit {
     };
   }
 
-
-  /*loadProfil(): void {
-    this.authService.getProfil().subscribe({
-      next: (user) => {
-                console.log('Profil chargé:', user); // Debug
-
-        this.currentUser = user;
-        this.profilForm = {
-          nom: user.nom || '',
-          prenom: user.prenom || '',
-          email: user.email || '',
-          telephone: user.telephone || '',
-          adresse: user.adresse || ''
-        };
-                this.cdRef.detectChanges();
-
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement du profil:', error);
-        this.error = 'Erreur lors du chargement du profil';
-      }
-    });
-  }*/
 
   toggleEdit(): void {
     this.isEditing = !this.isEditing;

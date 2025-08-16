@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { BoutiqueService } from '../../services/boutique.service';
 import { FormsModule } from '@angular/forms';
+import { ServiceService } from '../../services/service.service';
 @Component({
   selector: 'app-boutiques',
   imports: [CommonModule, HttpClientModule, FormsModule, RouterModule],
@@ -25,23 +26,25 @@ export class BoutiquesComponent implements OnInit {
   itemsPerPage: number = 5; // Valeur réduite pour le test
   totalPages: number = 1;
 
-  constructor(private httpClient: HttpClient, private boutiqueService: BoutiqueService) {}
+  constructor(private httpClient: HttpClient, private boutiqueService: ServiceService) {}
 
   ngOnInit(): void {
-    this.allboutique();
+    this.loadBoutiques();
+    console.log("boutique :", this.tabBoutique)
   }
 
-  allboutique() {
-    this.httpClient.get<any[]>('http://127.0.0.1:8000/api/boutiques').subscribe(
-      (data) => {
+
+   loadBoutiques(): void {
+    this.boutiqueService.getBoutiques().subscribe({
+      next: (data) => {
         this.tabBoutique = data;
         this.filteredBoutiques = [...data];
         this.updatePagination();
       },
-      (error) => {
-        console.error(error);
+      error: (err) => {
+        console.error('Erreur:', err);
       }
-    );
+    });
   }
 
   // Méthode de filtrage
@@ -161,7 +164,7 @@ export class BoutiquesComponent implements OnInit {
               confirmButtonColor: '#1e293b'
             });
             
-            this.allboutique();
+            this.loadBoutiques();
             this.selectedBoutiqueId = undefined;
           },
           error: (err) => {

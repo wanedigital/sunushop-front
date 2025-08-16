@@ -23,7 +23,7 @@ isSidebarExpanded = false;
 
   menuItems: Record<'top' | 'bottom', MenuItem[]> = {
       top: [
-       // { icon: 'bi-speedometer2', label: 'Dashboard', route: '/admin/dashboard'},
+       { icon: 'bi-house', label: 'Accueil', route: '/accueil'},
         { icon: 'bi-bag-check', label: 'Les Boutiques', route: 'boutiques', isActive: true  },
         { icon: 'bi-pie-chart', label: 'Statistiques', route: '/admin/statistique' },
         { icon: 'bi-bag', label: 'Produits', route: 'produit' },

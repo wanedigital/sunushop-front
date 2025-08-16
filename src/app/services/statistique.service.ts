@@ -34,24 +34,67 @@ export interface TopProduct {
   quantite_vendue: number;
 }
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class StatistiqueService {
-  private apiUrl = 'http://127.0.0.1:8000/api/admin/statistiques';
+   private apiUrl = 'http://localhost:8000/api'; 
+   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
 
-  private getHeaders(): HttpHeaders {
-    const token = this.authService.getToken();
-    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+ private getAuthHeaders(): HttpHeaders {
+  // Utilisez la même clé que dans AuthService
+  const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+  
+  if (!token) {
+    console.error('❌ Aucun token trouvé');
+    return new HttpHeaders();
   }
+
+  return new HttpHeaders({
+    'Authorization': `Bearer ${token}`,
+    'Accept': 'application/json'
+  });
+}
+
+  getVentesParPeriode(type: 'mois' | 'annee' | 'semaine' | 'semestriel'): Observable<any> {
+    return this.http.get(`${this.apiUrl}/ventes-vendeur/${type}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  getMeilleursClients(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/meilleurs-clients-vendeur`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  /**
+   * Récupérer le nombre de nouvelles commandes (statut = 'en attente')
+   */
+  getNouvellesCommandes(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/nouvelles-commandes-vendeur`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+   /**
+   * Récupérer ses clients
+   */
+    getClients(): Observable<any> {
+     return this.http.get(`${this.apiUrl}/mes-clients`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+
 
   /**
    * Récupère le résumé des statistiques pour l'administrateur.
    */
   getSummary(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/summary`, { headers: this.getHeaders() });
+    return this.http.get(`${this.apiUrl}/admin/statistiques/summary`, { headers: this.getAuthHeaders() });
   }
 
   /**
@@ -62,7 +105,7 @@ export class StatistiqueService {
     return this.http.get(`${this.apiUrl}/utilisateurs/croissance/${periode}`, { headers: this.getHeaders() });
   }*/
   getUserGrowth(periode: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/utilisateurs/croissance/${periode}`, { headers: this.getHeaders() })
+    return this.http.get(`${this.apiUrl}/admin/statistiques/utilisateurs/croissance/${periode}`, { headers: this.getAuthHeaders() })
       .pipe(
         catchError(this.handleError)
       );
@@ -78,7 +121,7 @@ export class StatistiqueService {
    * @param limit - Le nombre de boutiques à retourner.
    */
   getTopShops(limit: number = 10): Observable<any> {
-    return this.http.get(`${this.apiUrl}/boutiques/classement/${limit}`, { headers: this.getHeaders() });
+    return this.http.get(`${this.apiUrl}/admin/statistiques/boutiques/classement/${limit}`, { headers: this.getAuthHeaders() });
   }
 
   /**
@@ -86,6 +129,7 @@ export class StatistiqueService {
    * @param limit - Le nombre de produits à retourner.
    */
   getTopProducts(limit: number = 10): Observable<any> {
-    return this.http.get(`${this.apiUrl}/produits/classement/${limit}`, { headers: this.getHeaders() });
+    return this.http.get(`${this.apiUrl}/admin/statistiques/produits/classement/${limit}`, { headers: this.getAuthHeaders() });
   }
 }
+

@@ -7,12 +7,15 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [FormsModule, CommonModule,NgFor],
+  imports: [FormsModule , CommonModule,NgFor],
+  
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css']
 })
 export class ProductComponent implements OnInit {
   produits: Produit[] = [];
+  prods: Produit[] = [];
+
   selectAll = false;
   showModal = false;
   categories: Categorie[] = []; 
@@ -26,12 +29,15 @@ export class ProductComponent implements OnInit {
   totalItems = 0;
   totalPages = 0;
   paginationPages: number[] = [];
+  prodsAll: Produit[] = []; // Stocke tous les produits
+ filteredProds: Produit[] = []; // Produits filtrés
+  searchTerm: string = ''; // Terme de recherche
 
   constructor(private produitService: ServiceService) {}
 
   ngOnInit(): void {
-    this.loadProduits();
     this.loadCategories();
+    this.loadProduitsVendeur()
   }
 
   initEmptyProduct(): Produit {
@@ -47,7 +53,74 @@ export class ProductComponent implements OnInit {
       selected: false
     };
   }
+
+loadProduitsVendeur(): void {
+  this.isLoading = true;
   
+  this.produitService.getProduitsVendeur().subscribe({
+    next: (response) => {
+      this.boutiqueInfo = response
+      console.log("Infos Boutique :", this.boutiqueInfo)
+
+      
+      // Stocke tous les produits
+      this.prodsAll = response.produits;
+      this.filteredProds = [...this.prodsAll];
+      this.totalItems = this.filteredProds.length;
+      this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+      
+      // Affiche la première page
+      this.updateDisplayedProducts();
+      this.updatePaginationPages();
+      
+      this.isLoading = false;
+    },
+    error: (err) => {
+      this.isLoading = false;
+      if (err.status === 401) {
+        Swal.fire({
+          title: 'Session expirée',
+          text: 'Veuillez vous reconnecter',
+          icon: 'warning'
+        });
+      } else {
+        Swal.fire('Erreur', 'Impossible de charger les produits', 'error');
+      }
+    }
+  });
+}
+
+// Nouvelle méthode pour filtrer les produits
+filterProducts(): void {
+  if (!this.searchTerm) {
+    this.filteredProds = [...this.prodsAll];
+  } else {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredProds = this.prodsAll.filter(p => 
+      p.libelle.toLowerCase().includes(term) || 
+      (p.description && p.description.toLowerCase().includes(term)) ||
+      p.prix.toString().includes(term) ||
+      this.getCategorieName(p.categorie_id).toLowerCase().includes(term)
+    );
+  }
+  
+  this.totalItems = this.filteredProds.length;
+  this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+  this.currentPage = 1;
+  this.updateDisplayedProducts();
+  this.updatePaginationPages();
+}
+
+// Modifiez updateDisplayedProducts()
+updateDisplayedProducts(): void {
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  const endIndex = startIndex + this.itemsPerPage;
+  this.prods = this.filteredProds.slice(startIndex, endIndex);
+}
+// Ajoutez cette méthode pour gérer les changements de recherche
+onSearchChange(): void {
+  this.filterProducts();
+}
  getCategorieName(categorieId: number): string {
   if (!this.categories || this.categories.length === 0) return 'Chargement...';
   const categorie = this.categories.find(c => c.id === categorieId);
@@ -66,26 +139,7 @@ async loadCategories() {
     Swal.fire('Erreur', 'Impossible de charger les catégories', 'error');
   }
 }
-loadProduits(): void {
-  this.isLoading = true;
-  this.produitService.getProduitsPagines(this.currentPage, this.itemsPerPage)
-    .subscribe({
-      next: (response) => {
-        this.produits = response.data || []; 
-        this.totalItems = response.total;
-        this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
-        this.updatePaginationPages();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.produits = []; 
-        this.isLoading = false;
-        Swal.fire('Erreur', 'Impossible de charger les produits', 'error');
-
-      }
-    });
-}
-
+boutiqueInfo: any = {};
 
   toggleAllSelection(): void {
     this.produits.forEach(p => p.selected = this.selectAll);
@@ -162,7 +216,7 @@ saveProduit(): void {
 
     request.subscribe({
       next: () => {
-        this.loadProduits();
+        this.loadProduitsVendeur();
         this.closeModal();
         Swal.fire(
           'Succès',
@@ -173,7 +227,6 @@ saveProduit(): void {
       error: (err) => {
         console.error('Erreur:', err);
         let errorMessage = 'Une erreur est survenue';
-        
         if (err.status === 422) {
           errorMessage = err.error?.message || 'Validation failed';
           if (err.error?.errors) {
@@ -200,7 +253,7 @@ confirmDelete(produit: Produit): void {
       if (result.isConfirmed && produit.id) {
         this.produitService.deleteProduitById(produit.id.toString()).subscribe({
           next: () => {
-            this.loadProduits();
+            this.loadProduitsVendeur();
             Swal.fire('Supprimé!', 'Le produit a été supprimé.', 'success');
           },
           error: (err) => {
@@ -227,7 +280,7 @@ confirmDelete(produit: Produit): void {
 
       Promise.all(deleteRequests.map(req => req.toPromise()))
         .then(() => {
-          this.loadProduits();
+          this.loadProduitsVendeur();
           alert(`${selectedProducts.length} produit(s) supprimé(s) avec succès`);
         })
         .catch(err => {
@@ -288,13 +341,13 @@ saveCategorie(): void {
   changePage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
-      this.loadProduits();
+      this.loadProduitsVendeur();
     }
   }
 
 
   changeItemsPerPage(): void {
     this.currentPage = 1; // Reset à la première page
-    this.loadProduits();
+    this.loadProduitsVendeur();
   }
 }

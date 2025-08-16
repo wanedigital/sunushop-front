@@ -1,0 +1,86 @@
+
+        <section class="boutiques-section">
+    <div class="container">
+      <div class="section-title">
+        <h2>Nos Boutiques Partenaires</h2>
+        <p>Découvrez une sélection des meilleurs commerçants près de chez vous</p>
+      </div>
+
+
+      <div *ngIf="!isLoading && boutiques.length > 0" class="row g-4">
+  <div *ngFor="let boutique of boutiques; let i = index" class="col-md-6 col-lg-4">
+    <div class="boutique-card" [style.animation-delay]="(i * 0.1) + 's'">
+      <!-- Zone image avec container -->
+      <div class="boutique-image-container">
+        <img *ngIf="boutique.logo; else defaultLogo"
+             [src]="imageBaseUrl + boutique.logo"
+             [alt]="boutique.nom || 'Logo boutique'"
+             class="boutique-image" />
+        
+        <ng-template #defaultLogo>
+          <div class="default-logo">
+            <i class="bi bi-shop"></i>
+          </div>
+        </ng-template>
+        
+        <!-- Badge nouveau si nécessaire -->
+        <div *ngIf="isNewBoutique(boutique)" class="new-badge">
+          Nouveau
+        </div>
+      </div>
+      
+      <!-- Contenu de la card -->
+      <div class="card-content">
+        <!-- Header avec nom et statut -->
+        <div class="boutique-header">
+          <h3 class="boutique-name">{{ boutique.nom }}</h3>
+          <span class="boutique-status"
+                [class]="boutique.status === 'ouvret' ? 'status-ouvert' : 'status-ferme'">
+            {{ getStatusText(boutique.status) }}
+          </span>
+        </div>
+       
+        <!-- Informations de la boutique -->
+        <div class="boutique-info">
+          <div class="info-item">
+            <span class="info-icon">📍</span>
+            <span>{{ boutique.adresse }}</span>
+          </div>
+          <div *ngIf="boutique.numeroCommercial" class="info-item">
+            <span class="info-icon">📞</span>
+            <span>{{ boutique.numeroCommercial }}</span>
+          </div>
+          <div *ngIf="boutique.email" class="info-item">
+            <span class="info-icon">✉️</span>
+            <span>{{ boutique.email }}</span>
+          </div>
+          <div *ngIf="boutique.horaires" class="info-item">
+            <span class="info-icon">🕒</span>
+            <span>{{ boutique.horaires }}</span>
+          </div>
+        </div>
+        
+        <!-- Bouton d'action -->
+        <a [routerLink]="['/client/boutiques', boutique.id,'produits']"
+           class="btn-boutique"
+           [attr.aria-label]="'Découvrir la boutique ' + boutique.nom">
+          <span>Découvrir la boutique</span>
+          <i class="bi bi-arrow-right" style="margin-left: 0.5rem; transition: transform 0.3s ease;"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Aucune boutique -->
+      <div *ngIf="!isLoading && boutiques.length === 0" class="empty-state">
+        <div class="empty-icon">🏪</div>
+        <h3 class="empty-title">Aucune boutique disponible</h3>
+        <p class="empty-description">
+          Soyez le premier à rejoindre notre communauté de commerçants !
+        </p>
+        <a routerLink="/creatboutique" class="btn btn-warning btn-lg">
+          Créer ma boutique
+        </a>
+      </div>
+    </div>
+  </section>

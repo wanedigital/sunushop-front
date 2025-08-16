@@ -52,9 +52,22 @@
           </div>
         </div>
 
-        <div class="form-floating mt-3">
-          <input type="tel" class="form-control" id="telephone" formControlName="telephone" placeholder="+1234567890">
+        <div class="form-floating mt-3 phone-field">
+          <input type="tel" 
+                 class="form-control" 
+                 id="telephone" 
+                 formControlName="telephone" 
+                 placeholder="+221123456789"
+                 maxlength="13"
+                 (input)="onPhoneInput($event)">
           <label for="telephone">Téléphone (optionnel)</label>
+          <div *ngIf="detectedOperator" class="operator-badge">
+            <i class="fas fa-mobile-alt"></i>
+            {{ detectedOperator }}
+          </div>
+          <div class="phone-help">
+            <small class="text-muted">Format: +221 XX XXX XXXX (9 chiffres après +221)</small>
+          </div>
         </div>
 
         <div class="form-floating mt-3 password-field">
@@ -101,15 +114,13 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 mt-4" >
-          <span >S'inscrire <i class="fas fa-arrow-right ms-2"></i></span>
+        <button type="submit" class="btn btn-primary w-100 mt-4" [disabled]="isLoading">
+          <span *ngIf="!isLoading">S'inscrire <i class="fas fa-arrow-right ms-2"></i></span>
           <span *ngIf="isLoading">
             <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
             Inscription en cours...
           </span>
         </button>
-        
-        <!-- Gardez votre template existant mais assurez-vous que : -->
       </form>
 
       <div class="social-login mt-4">

@@ -27,7 +27,6 @@ export class BoutiqueProduitsComponent implements OnInit, OnDestroy {
   selectedCategory: string | null = null;
   filteredProduits: Produit[] = [];
   showAllCategories = true;
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -42,9 +41,16 @@ export class BoutiqueProduitsComponent implements OnInit, OnDestroy {
       if (this.boutiqueId) {
         this.loadBoutiqueAndProduits();
         this.loadCategories();
+        // Charger boutique et produits en une seule requête
+        console.log("boutique :" ),this.loadBoutiqueAndProduits();
+        
       }
     });
   }
+imageBaseUrl = 'http://localhost:8000';
+isFullUrl(path: string): boolean {
+  return path?.startsWith('http') || path?.startsWith('/storage');
+}
 
   ngOnDestroy(): void {
     this.layoutService.setCurrentBoutique(null);
@@ -69,7 +75,7 @@ export class BoutiqueProduitsComponent implements OnInit, OnDestroy {
           id: this.boutiqueId,
           nom: response.boutique,
           adresse: response.boutique,
-          logo: response.boutique_image,
+          logo: response.boutique_image ?? '',
           numeroCommercial: response.boutique ?? null,
           status: mapStatus(response.boutique),
           id_user: response.boutique,
@@ -80,6 +86,10 @@ export class BoutiqueProduitsComponent implements OnInit, OnDestroy {
 
         this.layoutService.setCurrentBoutique(this.boutique);
 
+
+        console.log("logo :", this.boutique.logo)
+        
+        // IMPORTANT: Définir la boutique courante dans le service panier
         this.panierService.setBoutiqueCourante(this.boutiqueId, response.boutique);
         
         this.loading = false;

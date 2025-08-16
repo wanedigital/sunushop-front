@@ -1,34 +1,94 @@
+<!-- navbar.component.html -->
 <nav class="navbar" [class.scrolled]="isScrolled" [style.margin-left.px]="sidebarWidth">
   <div class="navbar-content">
+    <!-- Section gauche - Bouton sidebar -->
     <div class="left-section">
-      <i class="bi bi-list toggle-sidebar" (click)="toggleSidebar()"></i>
-      <div class="search-form">
-        <i class="bi bi-search"></i>
-        <input type="text" placeholder="Rechercher...">
+      <button class="toggle-sidebar" (click)="toggleSidebar()" aria-label="Toggle sidebar">
+        <i class="bi bi-list"></i>
+      </button>
+    </div>
+    
+    <!-- Section centrale - Info boutique -->
+    <div class="center-section">
+      <div class="boutique-info" [routerLink]="['/vendeur/parametre']" style="cursor: pointer;">
+        <div class="boutique-logo">
+          <img *ngIf="boutiqueInfo.logo; else defaultLogo" 
+               [src]="boutiqueInfo.logo" 
+               [alt]="boutiqueInfo.nom || 'Logo boutique'" 
+               class="logo-image" />
+          <ng-template #defaultLogo>
+            <div class="default-logo">
+              <i class="bi bi-shop"></i>
+            </div>
+          </ng-template>
+        </div>
+        <span class="boutique-name">{{ boutiqueInfo.nom || 'Ma Boutique' }}</span>
       </div>
     </div>
     
+    <!-- Section droite - Notifications -->
     <div class="right-section">
-      <div class="notification">
-        <i class="bi bi-bell"></i>
-        <span class="count">3</span>
+      <!-- Bouton activation/désactivation son -->
+      <button class="action-button sound-toggle" 
+              (click)="toggleSound()"
+              [title]="soundEnabled ? 'Désactiver les sons' : 'Activer les sons'">
+        <i class="bi" [class.bi-volume-up]="soundEnabled" [class.bi-volume-mute]="!soundEnabled"></i>
+      </button>
+
+      <!-- Notification Stock -->
+      <div class="notification-container">
+        <div class="action-button notification" 
+             title="Alertes stock" 
+             (click)="showAlert = !showAlert">
+          <i class="bi bi-bell"></i>
+          <span class="badge" 
+                [class.new-notification]="(boutiqueInfo.produits | stockAlert).count > 0"
+                *ngIf="(boutiqueInfo.produits | stockAlert).count > 0">
+            {{ (boutiqueInfo.produits | stockAlert).count }}
+          </span>
+        </div>
+
+        <div *ngIf="showAlert && (boutiqueInfo.produits | stockAlert).hasAlert" 
+             class="alert alert-warning alert-dismissible fade show" 
+             role="alert">
+          <strong>
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            {{ (boutiqueInfo.produits | stockAlert).message }}
+          </strong>
+          <ul class="mt-2 mb-1">
+            <li *ngFor="let p of (boutiqueInfo.produits | stockAlert).products">
+              {{ p.libelle }} - {{ p.quantite }} restant(s)
+            </li>
+          </ul>
+          <button type="button" class="btn-close" 
+                  (click)="closeAlert()" aria-label="Close"></button>
+        </div>
       </div>
       
-      <div class="profile" (click)="toggleDropdown($event)">
-        <img src="https://placehold.co/40x40" alt="Profile" />
-        <div class="dropdown-menu" *ngIf="isDropdownOpen" @dropdownAnimation>
-          <a href="#" class="dropdown-item">
-            <i class="bi bi-person"></i>
-            <span>Mon Profil</span>
-          </a>
-          <a href="#" class="dropdown-item">
-            <i class="bi bi-gear"></i>
-            <span>Paramètres</span>
-          </a>
-          <a href="#" class="dropdown-item">
-            <i class="bi bi-box-arrow-right"></i>
-            <span>Déconnexion</span>
-          </a>
+      <!-- Notification Commandes -->
+      <div class="notification-container">
+        <div class="action-button cart" 
+             title="Nouvelles commandes" 
+             (click)="onCartClick()" 
+             [routerLink]="['/vendeur/mes-commandes']">
+          <i class="bi bi-bag"></i>
+          <span class="badge" 
+                [class.new-notification]="cartCount > 0"
+                *ngIf="cartCount > 0">
+            {{ cartCount }}
+          </span>
+        </div>
+
+        <div *ngIf="showOrderAlert" 
+             class="alert alert-info alert-dismissible fade show" 
+             role="alert">
+          <strong>
+            <i class="bi bi-bag-check"></i>
+            {{ orderAlertMessage }}
+          </strong>
+          <div class="small mt-1">Cliquez pour voir les détails</div>
+          <button type="button" class="btn-close" 
+                  (click)="closeOrderAlert()" aria-label="Close"></button>
         </div>
       </div>
     </div>
