@@ -53,7 +53,13 @@ export class AuthService {
   
 isVendeur(): boolean {
   const user = this.getUserInfo();
-  return user?.profil?.libelle === 'Vendeur'; 
+  return !!user && user.profil?.libelle?.toLowerCase() === 'vendeur';
+ 
+}
+
+isClient(): boolean {
+  const user = this.getUserInfo();
+  return user?.profil?.libelle === 'Client'; 
 }
   // ✅ Enregistrement
   register(userData: any): Observable<AuthResponse> {
@@ -160,16 +166,16 @@ isVendeur(): boolean {
     return user?.profil?.libelle ?? null;
   }
 
-  getHeaders(): HttpHeaders {
-    const token = this.getToken();
-     if (!token) {
-    throw new Error('No token available');
+getHeaders(): HttpHeaders {
+  const token = this.getToken();
+  let headers = new HttpHeaders();
+  if (token) {
+    headers = headers.set('Authorization', `Bearer ${token}`);
   }
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-  }
+  return headers;
+}
+
+
 
   // ✅ Méthodes de gestion de profil
   getProfil(): Observable<User> {

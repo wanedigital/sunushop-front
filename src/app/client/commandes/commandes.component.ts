@@ -6,6 +6,7 @@ import { AuthService, User } from '../../services/authservice.service';
 import { CommandeRequest, CommandeService } from '../../services/commande.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -183,9 +184,29 @@ export class CommandesComponent implements OnInit {
   }
 
   // Méthode pour basculer vers la connexion/inscription
-  goToLogin(): void {
-    this.router.navigate(['/auth/login'], {
-      queryParams: { returnUrl: '/client/commande' }
-    });
-  }
+ goToLogin(): void {
+  Swal.fire({
+    title: 'Êtes-vous sûr ?',
+    text: "Vous ne pourrez pas annuler cette action !",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Oui, continuer',
+    cancelButtonText: 'Annuler'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Navigation vers la page de login avec paramètre de retour
+      this.router.navigate(['/auth/login'], {
+        queryParams: { returnUrl: '/client/commande' }
+      });
+
+      // Message de confirmation
+      Swal.fire('Redirection', 'Vous allez être redirigé vers la page de connexion.', 'success');
+    }
+  }).catch((err) => {
+    console.error('Erreur lors de la redirection :', err);
+    Swal.fire('Erreur', 'Impossible de rediriger vers la page de connexion.', 'error');
+  });
+}
 }

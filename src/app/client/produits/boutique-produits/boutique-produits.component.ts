@@ -5,6 +5,7 @@ import { PanierService } from '../../../services/panier.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LayoutService } from '../../../services/layout.service';
+import Swal from 'sweetalert2';
 
 function mapStatus(status: string): 'ouvret' | 'fermer' {
   return status === 'ouvret' ? 'ouvret' : 'fermer';
@@ -199,12 +200,13 @@ isFullUrl(path: string): boolean {
     // Vérifier la disponibilité avant d'ajouter
     if (!produit.disponible || produit.quantite === 0) {
       alert('Ce produit n\'est pas disponible');
+          Swal.fire({
+        title: 'Ce produit n\'est pas disponible',
+        icon: 'warning',
+      })
       return;
     }
-
-    this.panierService.ajouterAuPanier(produit, 1);
-    // Optionnel: afficher une notification de succès
-    alert(`${produit.libelle} ajouté au panier !`);
+        this.panierService.ajouterAuPanier(produit, 1);
   }
 
   goToPanier(): void {

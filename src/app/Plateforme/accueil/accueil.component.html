@@ -26,9 +26,14 @@
           <a routerLink="/login" class="btn btn-outline-light">Se connecter</a>
           <a routerLink="/creatboutique" class="btn btn-warning">Devenir commerçant</a>
           <a class="btn btn-warning" 
-             *ngIf="isVendeur()"
-             routerLink="/vendeur/produit">
+            *ngIf="isVendeur" 
+            routerLink="/vendeur/produit">
             Ma Boutique
+          </a>
+          <a class="btn btn-warning" 
+             *ngIf="isClient"
+             routerLink="/client/profil">
+            Mon Profil
           </a>
         </div>
       </div>

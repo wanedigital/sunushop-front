@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CardsBoutiquesComponent } from "../cards-boutiques/cards-boutiques.component";
+import { AuthService } from '../../services/authservice.service';
 
 @Component({
   selector: 'app-acceuil',
@@ -10,15 +11,22 @@ import { CardsBoutiquesComponent } from "../cards-boutiques/cards-boutiques.comp
   templateUrl: './accueil.component.html',
   styleUrls: ['./accueil.component.css']
 })
-export class AcceuilComponent {
+export class AcceuilComponent implements OnInit{
 
 
   role: any;
+  isVendeur = false;
+  isClient = false;
 
-  ngOnInit(): void {
-     
+  constructor(private auth:AuthService){
+
   }
- isVendeur(): boolean { 
-  return this.role === 'Vendeur';
-}
+  ngOnInit(): void {
+     this.isVendeur = this.auth.isVendeur();
+    this.isClient = this.auth.isClient();
+
+
+  }
+
+
 }

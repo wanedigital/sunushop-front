@@ -1,10 +1,11 @@
+<!-- Navbar Component Template -->
 <nav class="navbar">
   <div class="navbar-container">
     <div class="navbar-left">
       <div class="navbar-brand">
         <!-- Default Brand -->
-        <div *ngIf="!currentBoutique" class="default-brand">
-          <h1>MonMarché</h1>
+        <div *ngIf="!currentBoutique" class="default-brand" >
+          <h1 (click)="navigateToBoutique()">MonMarché</h1>
         </div>
         <!-- Dynamic Boutique Brand -->
         <div *ngIf="currentBoutique" class="boutique-brand">
@@ -12,6 +13,8 @@
           <span class="brand-name">{{ currentBoutique.nom }}</span>
         </div>
       </div>
+      
+      <!-- Desktop Navigation -->
       <div class="navbar-nav">
         <ng-container *ngFor="let item of menuItems">
           <a *ngIf="item.path" [routerLink]="item.path" routerLinkActive="active">
@@ -24,6 +27,15 @@
           </a>
         </ng-container>
       </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </button>
     </div>
 
     <div class="navbar-actions">
@@ -35,14 +47,15 @@
       <!-- User Menu (Authenticated) -->
       <div class="user-menu" *ngIf="currentUser">
         <div class="dropdown">
-          <button class="user-btn" (click)="toggleMenu()">
+          <button class="user-btn" (click)="toggleMenu()" [class.open]="isMenuOpen">
             <i class="icon-user">👤</i>
             <span>{{currentUser?.prenom}} {{currentUser?.nom}}</span>
             <i class="icon-arrow">▼</i>
           </button>
           <div class="dropdown-menu" [class.open]="isMenuOpen">
-            <a routerLink="/client/profil">Mon Profil</a>
+            <a routerLink="/client/historique">Mon Profil</a>
             <button (click)="logout()">Déconnexion</button>
+
           </div>
         </div>
       </div>
@@ -50,7 +63,7 @@
       <!-- Guest Menu (Unauthenticated) -->
       <div class="guest-menu" *ngIf="!currentUser">
         <div class="dropdown">
-          <button class="login-btn" (click)="toggleGuestMenu()">
+          <button class="login-btn" (click)="toggleGuestMenu()" [class.open]="isGuestMenuOpen">
             <span>🔒 Accès Client</span>
           </button>
           <div class="dropdown-menu" [class.open]="isGuestMenuOpen">
@@ -64,3 +77,54 @@
     </div>
   </div>
 </nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-nav-overlay" 
+     [class.active]="isMobileMenuOpen" 
+     (click)="closeMobileMenu()"
+     *ngIf="isMobileMenuOpen">
+</div>
+
+<!-- Mobile Navigation Menu -->
+<div class="mobile-nav-menu" [class.active]="isMobileMenuOpen">
+  <div class="mobile-nav-items">
+    <ng-container *ngFor="let item of menuItems">
+      <a *ngIf="item.path" 
+         [routerLink]="item.path" 
+         routerLinkActive="active"
+         (click)="closeMobileMenu()">
+        <span class="nav-icon">{{item.icon}}</span>
+        <span class="nav-label">{{item.label}}</span>
+      </a>
+      <a *ngIf="item.action" 
+         (click)="item.action(); closeMobileMenu()" 
+         style="cursor: pointer;">
+        <span class="nav-icon">{{item.icon}}</span>
+        <span class="nav-label">{{item.label}}</span>
+      </a>
+    </ng-container>
+  </div>
+
+  <div class="mobile-actions">
+    <!-- Mode utilisateur connecté -->
+     
+    <div *ngIf="currentUser" class="mobile-user-section">
+                <button class="mobile-action-btn mobile-profil-btn"(click)="goToProfil()">{{currentUser?.prenom}}  {{currentUser?.nom}}</button>
+      <button class="mobile-action-btn mobile-logout-btn" (click)="logout()">
+        🚪 Déconnexion
+      </button>
+    </div>
+
+    <!-- Mode invité -->
+    <div *ngIf="!currentUser" class="mobile-guest-section">
+      <div class="mobile-preview">
+        <div class="preview-header">En tant que client, vous aurez accès à :</div>
+        <div *ngFor="let label of userMenuLabelsPreview" class="preview-item">- {{ label }}</div>
+      </div>
+      <button class="mobile-action-btn mobile-login-btn" (click)="goToLogin()">
+        🔒 Se connecter
+      </button>
+    </div>
+  </div>
+</div>
+

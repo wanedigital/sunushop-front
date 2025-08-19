@@ -1,172 +1,208 @@
+<!-- commandes.component.html -->
 <div class="commandes-container">
-  <div class="commandes-header">
-    <h1>Finaliser ma commande</h1>
-    <button class="back-btn" (click)="retourPanier()">
-      ← Retour au panier
-    </button>
-  </div>
-
-  <!-- Message d'information pour les invités -->
-  <div class="guest-info" *ngIf="!isUserConnected">
-    <div class="info-banner">
-      <div class="info-content">
-        <h3>🔐 Commande en tant qu'invité</h3>
-        <p>Vous commandez en tant qu'invité. Vous recevrez un numéro de commande par email pour suivre votre commande.</p>
-        <button class="login-btn" (click)="goToLogin()">
-          Vous avez un compte ? Connectez-vous
+    <div class="commandes-header">
+        <h1>Finaliser ma commande</h1>
+        <button class="back-btn" (click)="retourPanier()">
+            ← Retour au panier
         </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="commandes-content">
-    <!-- Résumé de la commande -->
-    <div class="order-summary">
-      <h2>Résumé de votre commande</h2>
-      
-      <div class="summary-items">
-        <div class="summary-item" *ngFor="let item of panierItems">
-          <img [src]="item.produit.image" [alt]="item.produit.libelle" class="item-thumb">
-          <div class="item-info">
-            <h4>{{item.produit.libelle}}</h4>
-            <p>Quantité: {{item.quantite}}</p>
-          </div>
-          <div class="item-price">
-            {{(item.produit.prix * item.quantite) | currency:'XOF':'symbol':'1.0-0'}}
-          </div>
-        </div>
-      </div>
-      
-      <div class="summary-total">
-        <div class="total-line">
-          <span>Total</span>
-          <span class="total-amount">{{total | currency:'XOF':'symbol':'1.0-0'}}</span>
-        </div>
-      </div>
     </div>
 
-    <!-- Formulaire de commande -->
-    <div class="delivery-form">
-      <h2>Informations de commande</h2>
-      
-      <form (ngSubmit)="onSubmit()" #commandeForm="ngForm">
-        
-        <!-- Informations personnelles (seulement pour les invités) -->
-        <div class="form-section" *ngIf="!isUserConnected">
-          <h3>Vos informations</h3>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="nom">Nom *</label>
-              <input 
-                type="text"
-                id="nom"
-                [(ngModel)]="formData.nom"
-                name="nom"
-                required
-                placeholder="Votre nom">
+    <!-- Message d'information pour les invités -->
+    <div class="guest-info" *ngIf="!isUserConnected">
+        <div class="info-banner">
+            <div class="info-content">
+                <h3>🔐 Commande en tant qu'invité</h3>
+                <p>Vous commandez en tant qu'invité. Vous recevrez un numéro de commande par email pour suivre votre commande.</p>
+                <button class="login-btn" (click)="goToLogin()">
+                    Vous avez un compte ? Connectez-vous
+                </button>
             </div>
-
-            <div class="form-group">
-              <label for="prenom">Prénom *</label>
-              <input 
-                type="text"
-                id="prenom"
-                [(ngModel)]="formData.prenom"
-                name="prenom"
-                required
-                placeholder="Votre prénom">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email *</label>
-            <input 
-              type="email"
-              id="email"
-              [(ngModel)]="formData.email"
-              name="email"
-              required
-              placeholder="votre.email@exemple.com">
-            <small class="form-help">Vous recevrez la confirmation de commande à cette adresse</small>
-          </div>
         </div>
-
-        <!-- Informations de livraison -->
-        <div class="form-section">
-          <h3>Informations de livraison</h3>
-          
-          <div class="form-group">
-            <label for="adresse">Adresse de livraison *</label>
-            <textarea 
-              id="adresse"
-              [(ngModel)]="formData.adresseLivraison"
-              name="adresseLivraison"
-              required
-              placeholder="Entrez votre adresse complète de livraison"
-              rows="3">
-            </textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="telephone">Numéro de téléphone *</label>
-            <input 
-              type="tel"
-              id="telephone"
-              [(ngModel)]="formData.telephone"
-              name="telephone"
-              required
-              placeholder="Ex: +221 77 123 45 67">
-          </div>
-
-          <div class="form-group">
-            <label for="notes">Notes pour le livreur (optionnel)</label>
-            <textarea 
-              id="notes"
-              [(ngModel)]="formData.notes"
-              name="notes"
-              placeholder="Instructions spéciales pour la livraison"
-              rows="2">
-            </textarea>
-          </div>
-        </div>
-
-        <!-- Informations de livraison -->
-        <div class="delivery-info">
-          <div class="info-card">
-            <h3>🚚 Informations de livraison</h3>
-            <ul>
-              <li>Livraison gratuite</li>
-              <li>Délai: 24-48h ouvrables</li>
-              <li>Paiement à la livraison disponible</li>
-              <li>Suivi de commande par SMS</li>
-              <li *ngIf="!isUserConnected">Suivi par email avec le numéro de commande</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Actions du formulaire -->
-        <div class="form-actions">
-          <button 
-            type="button" 
-            class="cancel-btn"
-            (click)="retourPanier()">
-            Annuler
-          </button>
-          <button 
-            type="submit" 
-            class="submit-btn"
-            [disabled]="!isFormValid() || loading">
-            <span *ngIf="!loading">
-              <i class="icon-check"></i>
-              Confirmer la commande
-            </span>
-            <span *ngIf="loading">
-              ⏳ Traitement en cours...
-            </span>
-          </button>
-        </div>
-      </form>
     </div>
-  </div>
+
+    <div class="commandes-content">
+        <!-- Résumé de la commande -->
+        <div class="order-summary">
+            <h2>Résumé de votre commande</h2>
+            
+            <div class="summary-items">
+                <div class="summary-item" *ngFor="let item of panierItems">
+                    <img [src]="item.produit.image || 'images/noproduct.png'" 
+                         [alt]="item.produit.libelle" 
+                         class="item-thumb">
+                    <div class="item-info">
+                        <h4>{{ item.produit.libelle }}</h4>
+                        <p>Quantité: {{ item.quantite }}</p>
+                    </div>
+                    <div class="item-price">
+                        {{ (item.produit.prix * item.quantite) | number:'1.0-0' }} XOF
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary-total">
+                <div class="total-line">
+                    <span>Total</span>
+                    <span class="total-amount">{{ total | number:'1.0-0' }} XOF</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire de commande -->
+        <div class="delivery-form">
+            <h2>Informations de commande</h2>
+            
+            <form (ngSubmit)="onSubmit()" #commandeForm="ngForm">
+                
+                <!-- Informations personnelles (seulement pour les invités) -->
+                <div class="form-section" *ngIf="!isUserConnected">
+                    <h3>👤 Vos informations</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nom">Nom *</label>
+                            <input 
+                                type="text"
+                                id="nom"
+                                name="nom"
+                                [(ngModel)]="formData.nom"
+                                required
+                                placeholder="Votre nom"
+                                #nom="ngModel">
+                            <div *ngIf="nom.invalid && nom.touched" class="error-message">
+                                Le nom est obligatoire
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prenom">Prénom *</label>
+                            <input 
+                                type="text"
+                                id="prenom"
+                                name="prenom"
+                                [(ngModel)]="formData.prenom"
+                                required
+                                placeholder="Votre prénom"
+                                #prenom="ngModel">
+                            <div *ngIf="prenom.invalid && prenom.touched" class="error-message">
+                                Le prénom est obligatoire
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input 
+                            type="email"
+                            id="email"
+                            name="email"
+                            [(ngModel)]="formData.email"
+                            required
+                            email
+                            placeholder="votre.email@exemple.com"
+                            #email="ngModel">
+                        <small class="form-help">Vous recevrez la confirmation de commande à cette adresse</small>
+                        <div *ngIf="email.invalid && email.touched" class="error-message">
+                            <span *ngIf="email.errors?.['required']">L'email est obligatoire</span>
+                            <span *ngIf="email.errors?.['email']">Format d'email invalide</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informations utilisateur connecté -->
+                <div class="form-section" *ngIf="isUserConnected && currentUser">
+                    <h3>👤 Vos informations</h3>
+                    <div class="user-info-display">
+                        <p><strong>{{ currentUser.prenom }} {{ currentUser.nom }}</strong></p>
+                        <p>{{ currentUser.email }}</p>
+                    </div>
+                </div>
+
+                <!-- Informations de livraison -->
+                <div class="form-section">
+                    <h3>📍 Informations de livraison</h3>
+                    
+                    <div class="form-group">
+                        <label for="adresse">Adresse de livraison *</label>
+                        <textarea 
+                            id="adresse"
+                            name="adresseLivraison"
+                            [(ngModel)]="formData.adresseLivraison"
+                            required
+                            placeholder="Entrez votre adresse complète de livraison"
+                            rows="3"
+                            #adresse="ngModel">
+                        </textarea>
+                        <div *ngIf="adresse.invalid && adresse.touched" class="error-message">
+                            L'adresse de livraison est obligatoire
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telephone">Numéro de téléphone *</label>
+                        <input 
+                            type="tel"
+                            id="telephone"
+                            name="telephone"
+                            [(ngModel)]="formData.telephone"
+                            required
+                            placeholder="Ex: +221 77 123 45 67"
+                            #telephone="ngModel">
+                        <div *ngIf="telephone.invalid && telephone.touched" class="error-message">
+                            Le numéro de téléphone est obligatoire
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Notes pour le livreur (optionnel)</label>
+                        <textarea 
+                            id="notes"
+                            name="notes"
+                            [(ngModel)]="formData.notes"
+                            placeholder="Instructions spéciales pour la livraison"
+                            rows="2">
+                        </textarea>
+                    </div>
+                </div>
+
+                <!-- Informations de livraison -->
+                <div class="delivery-info">
+                    <div class="info-card">
+                        <h3>🚚 Informations de livraison</h3>
+                        <ul>
+                            <li>Livraison gratuite</li>
+                            <li>Délai: 24-48h ouvrables</li>
+                            <li>Paiement à la livraison disponible</li>
+                            <li>Suivi de commande par SMS</li>
+                            <li *ngIf="!isUserConnected">Suivi par email avec le numéro de commande</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Actions du formulaire -->
+                <div class="form-actions">
+                    <button 
+                        type="button" 
+                        class="cancel-btn"
+                        (click)="retourPanier()"
+                        [disabled]="loading">
+                        Annuler
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="submit-btn"
+                        [disabled]="loading || !isFormValid()">
+                        <span *ngIf="!loading">
+                            <i class="icon-check"></i>
+                            Confirmer la commande
+                        </span>
+                        <span *ngIf="loading">
+                            ⏳ Traitement en cours...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+

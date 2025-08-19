@@ -92,7 +92,7 @@ export const routes: Routes = [
                   
                   
                   // Route par défaut - à adapter selon votre choix
-                  { path: '', redirectTo: 'boutiques/1/produits', pathMatch: 'full' },
+                  //{ path: '', redirectTo: 'boutiques/1/produits', pathMatch: 'full' },
             ],
       }
 ];

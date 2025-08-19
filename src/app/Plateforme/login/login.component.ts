@@ -64,7 +64,16 @@ onSubmit() {
               this.router.navigate(['/vendeur/produit']);
             } else {
               console.warn('⚠️ Aucun ID de boutique trouvé pour ce vendeur.');
-              this.router.navigate(['/accueil']); // ou une autre page par défaut
+              this.router.navigate(['/accueil']); 
+            }
+          } if (role === 'Administrateur') {
+            const boutiqueId = result.user['boutique']?.id;
+            if (boutiqueId) {
+              // Redirection vers la page boutique
+              this.router.navigate(['/admin/produit']);
+            } else {
+              console.warn('⚠️ Aucun ID de boutique trouvé pour ce vendeur.');
+              this.router.navigate(['/accueil']); 
             }
           } else {
             // Redirection standard
