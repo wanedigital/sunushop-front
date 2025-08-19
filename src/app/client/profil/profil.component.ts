@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService, PasswordChangeRequest, ProfilUpdateRequest } from '../../services/authservice.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profil',
@@ -221,10 +222,35 @@ export class ProfilComponent implements OnInit {
     });
   }
 
-  logout(): void {
-    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-      this.authService.logout();
-      this.router.navigate(['/login']);
+logout(): void {
+  Swal.fire({
+    title: 'Êtes-vous sûr ?',
+    text: "Vous ne pourrez pas annuler cette action !",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Oui, continuer',
+    cancelButtonText: 'Annuler'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      try {
+        // Déconnexion de l'utilisateur
+        this.authService.logout();
+
+        // Redirection vers la page de login
+        this.router.navigate(['/login']);
+
+        // Message de confirmation
+        Swal.fire('Déconnecté', 'Vous avez été déconnecté avec succès.', 'success');
+      } catch (err) {
+        console.error('Erreur lors de la déconnexion :', err);
+        Swal.fire('Erreur', 'La déconnexion a échoué.', 'error');
+      }
     }
-  }
+  }).catch((err) => {
+    console.error('Erreur lors de l’affichage du dialogue :', err);
+    Swal.fire('Erreur', 'Une erreur est survenue.', 'error');
+  });
+}
 }

@@ -58,11 +58,7 @@
       <div class="produit-card" *ngFor="let produit of filteredProduits"
        >
         <div class="produit-image">
-            <img [src]="produit.image || 'assets/sunushop.jpeg'
-" 
-                [alt]="produit.libelle"
-                >
-                
+            <img [src]="produit.image || '/images/noproduct.png'" [alt]="produit.libelle">   
             <div class="stock-badge" [ngClass]="getStockBadgeClass(produit)">
                 {{ getStockText(produit) }}
             </div>
