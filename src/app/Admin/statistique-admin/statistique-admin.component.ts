@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StatistiqueService } from '../../services/statistique.service';
+import { StatistiqueService, ApiResponse, UserGrowthData, TopShop, TopProduct } from '../../services/statistique.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,9 +11,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class StatistiqueAdminComponent implements OnInit {
   // Données des statistiques
-  userGrowthData: any[] = [];
-  topShopsData: any[] = [];
-  topProductsData: any[] = [];
+  userGrowthData: UserGrowthData[] = [];
+  topShopsData: TopShop[] = [];
+  topProductsData: TopProduct[] = [];
 
   // États de chargement
   isLoadingGrowth = false;
@@ -61,17 +61,16 @@ export class StatistiqueAdminComponent implements OnInit {
     this.growthError = null;
     
     this.statService.getUserGrowth(this.selectedPeriode).subscribe({
-      next: (response) => {
+      next: (response: ApiResponse<UserGrowthData[]>) => {
         if (response.success) {
           this.userGrowthData = response.data;
         } else {
-          this.growthError = 'Erreur lors du chargement des données de croissance';
+          this.growthError = response.message || 'Erreur lors du chargement des données de croissance';
         }
         this.isLoadingGrowth = false;
       },
       error: (err) => {
-        console.error('Erreur croissance utilisateurs:', err);
-        this.growthError = 'Impossible de charger les données de croissance';
+        this.growthError = err.message || 'Impossible de charger les données de croissance';
         this.isLoadingGrowth = false;
       }
     });
@@ -85,17 +84,16 @@ export class StatistiqueAdminComponent implements OnInit {
     this.shopsError = null;
 
     this.statService.getTopShops(this.shopsLimit).subscribe({
-      next: (response) => {
+      next: (response: ApiResponse<TopShop[]>) => {
         if (response.success) {
           this.topShopsData = response.data;
         } else {
-          this.shopsError = 'Erreur lors du chargement du classement des boutiques';
+          this.shopsError = response.message || 'Erreur lors du chargement du classement des boutiques';
         }
         this.isLoadingShops = false;
       },
       error: (err) => {
-        console.error('Erreur classement boutiques:', err);
-        this.shopsError = 'Impossible de charger le classement des boutiques';
+        this.shopsError = err.message || 'Impossible de charger le classement des boutiques';
         this.isLoadingShops = false;
       }
     });
@@ -109,17 +107,16 @@ export class StatistiqueAdminComponent implements OnInit {
     this.productsError = null;
 
     this.statService.getTopProducts(this.productsLimit).subscribe({
-      next: (response) => {
+      next: (response: ApiResponse<TopProduct[]>) => {
         if (response.success) {
           this.topProductsData = response.data;
         } else {
-          this.productsError = 'Erreur lors du chargement du classement des produits';
+          this.productsError = response.message || 'Erreur lors du chargement du classement des produits';
         }
         this.isLoadingProducts = false;
       },
       error: (err) => {
-        console.error('Erreur classement produits:', err);
-        this.productsError = 'Impossible de charger le classement des produits';
+        this.productsError = err.message || 'Impossible de charger le classement des produits';
         this.isLoadingProducts = false;
       }
     });
