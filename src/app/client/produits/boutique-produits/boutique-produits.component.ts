@@ -5,6 +5,7 @@ import { PanierService } from '../../../services/panier.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LayoutService } from '../../../services/layout.service';
+import Swal from 'sweetalert2';
 
 function mapStatus(status: string): 'ouvret' | 'fermer' {
   return status === 'ouvret' ? 'ouvret' : 'fermer';
@@ -27,7 +28,6 @@ export class BoutiqueProduitsComponent implements OnInit, OnDestroy {
   selectedCategory: string | null = null;
   filteredProduits: Produit[] = [];
   showAllCategories = true;
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -42,9 +42,16 @@ export class BoutiqueProduitsComponent implements OnInit, OnDestroy {
       if (this.boutiqueId) {
         this.loadBoutiqueAndProduits();
         this.loadCategories();
+        // Charger boutique et produits en une seule requête
+        console.log("boutique :" ),this.loadBoutiqueAndProduits();
+        
       }
     });
   }
+imageBaseUrl = 'http://localhost:8000';
+isFullUrl(path: string): boolean {
+  return path?.startsWith('http') || path?.startsWith('/storage');
+}
 
   ngOnDestroy(): void {
     this.layoutService.setCurrentBoutique(null);
@@ -69,7 +76,7 @@ export class BoutiqueProduitsComponent implements OnInit, OnDestroy {
           id: this.boutiqueId,
           nom: response.boutique,
           adresse: response.boutique,
-          logo: response.boutique_image,
+          logo: response.boutique_image ?? '',
           numeroCommercial: response.boutique ?? null,
           status: mapStatus(response.boutique),
           id_user: response.boutique,
@@ -80,6 +87,10 @@ export class BoutiqueProduitsComponent implements OnInit, OnDestroy {
 
         this.layoutService.setCurrentBoutique(this.boutique);
 
+
+        console.log("logo :", this.boutique.logo)
+        
+        // IMPORTANT: Définir la boutique courante dans le service panier
         this.panierService.setBoutiqueCourante(this.boutiqueId, response.boutique);
         
         this.loading = false;
@@ -189,12 +200,13 @@ export class BoutiqueProduitsComponent implements OnInit, OnDestroy {
     // Vérifier la disponibilité avant d'ajouter
     if (!produit.disponible || produit.quantite === 0) {
       alert('Ce produit n\'est pas disponible');
+          Swal.fire({
+        title: 'Ce produit n\'est pas disponible',
+        icon: 'warning',
+      })
       return;
     }
-
-    this.panierService.ajouterAuPanier(produit, 1);
-    // Optionnel: afficher une notification de succès
-    alert(`${produit.libelle} ajouté au panier !`);
+        this.panierService.ajouterAuPanier(produit, 1);
   }
 
   goToPanier(): void {

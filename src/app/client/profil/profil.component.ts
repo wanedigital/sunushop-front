@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService, PasswordChangeRequest, ProfilUpdateRequest } from '../../services/authservice.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profil',
@@ -42,27 +43,6 @@ export class ProfilComponent implements OnInit {
 
   ) {}
 
-  /*ngOnInit(): void {
-      this.authService.initializeUserFromStorage(); // Assure la synchro avant le subscribe
-    this.authService.currentUser.subscribe(user => {
-      this.currentUser = user;
-      if (user) {
-        this.profilForm = {
-          nom: user.nom || '',
-          prenom: user.prenom || '',
-          email: user.email || '',
-          telephone: user.telephone || '',
-          adresse: user.adresse || ''
-        };
-      }
-      // Force la mise à jour de la vue
-      this.cdRef.detectChanges();
-    });
-    console.log('Stocké:', localStorage.getItem('auth_user'));
-
-    this.loadProfil();
-  }*/
-
   ngOnInit(): void {
     this.authService.initializeUserFromStorage(); // ← assure que le BehaviorSubject est prêt
 
@@ -88,29 +68,6 @@ export class ProfilComponent implements OnInit {
     };
   }
 
-
-  /*loadProfil(): void {
-    this.authService.getProfil().subscribe({
-      next: (user) => {
-                console.log('Profil chargé:', user); // Debug
-
-        this.currentUser = user;
-        this.profilForm = {
-          nom: user.nom || '',
-          prenom: user.prenom || '',
-          email: user.email || '',
-          telephone: user.telephone || '',
-          adresse: user.adresse || ''
-        };
-                this.cdRef.detectChanges();
-
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement du profil:', error);
-        this.error = 'Erreur lors du chargement du profil';
-      }
-    });
-  }*/
 
   toggleEdit(): void {
     this.isEditing = !this.isEditing;
@@ -265,10 +222,35 @@ export class ProfilComponent implements OnInit {
     });
   }
 
-  logout(): void {
-    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-      this.authService.logout();
-      this.router.navigate(['/login']);
+logout(): void {
+  Swal.fire({
+    title: 'Êtes-vous sûr ?',
+    text: "Vous ne pourrez pas annuler cette action !",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Oui, continuer',
+    cancelButtonText: 'Annuler'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      try {
+        // Déconnexion de l'utilisateur
+        this.authService.logout();
+
+        // Redirection vers la page de login
+        this.router.navigate(['/login']);
+
+        // Message de confirmation
+        Swal.fire('Déconnecté', 'Vous avez été déconnecté avec succès.', 'success');
+      } catch (err) {
+        console.error('Erreur lors de la déconnexion :', err);
+        Swal.fire('Erreur', 'La déconnexion a échoué.', 'error');
+      }
     }
-  }
+  }).catch((err) => {
+    console.error('Erreur lors de l’affichage du dialogue :', err);
+    Swal.fire('Erreur', 'Une erreur est survenue.', 'error');
+  });
+}
 }

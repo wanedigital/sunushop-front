@@ -1,4 +1,5 @@
-<div class="container-fluid p-4">
+<main class="content">
+  <div class="container-fluid p-4">
   <!-- En-tête avec bouton de rafraîchissement -->
   <div class="row mb-4">
     <div class="col-md-8">
@@ -25,6 +26,7 @@
               <select class="form-select form-select-sm form-control-translucent-light"
                       [(ngModel)]="selectedPeriode"
                       (change)="onPeriodeChange()">
+
                 <option *ngFor="let periode of periodesOptions" [value]="periode.value">
                   {{ periode.label }}
                 </option>
@@ -105,7 +107,7 @@
         <div class="card-header bg-gradient-success text-white">
           <div class="row align-items-center">
             <div class="col-8">
-              <h5 class="mb-0">🏪 Top Boutiques</h5>
+              <h5 class="mb-0" style="color: black">🏪 Top Boutiques</h5>
             </div>
             <div class="col-4">
               <input type="number"
@@ -114,6 +116,7 @@
                      (change)="onShopsLimitChange()"
                      min="1" max="50"
                      placeholder="Limite">
+
             </div>
           </div>
         </div>
@@ -253,3 +256,4 @@
     </div>
   </div>
 </div>
+</main>

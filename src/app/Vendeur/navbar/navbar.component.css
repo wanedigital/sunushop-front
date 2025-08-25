@@ -2,193 +2,475 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: #ffffff;
-  padding: 0.75rem 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid #e2e8f0;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .navbar.scrolled {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
+  padding: 0.75rem 2rem;
+  border-bottom: 1px solid #cbd5e0;
+}
+.boutique-logo-link {
+  text-decoration: none;
+  display: inline-block;
 }
 
 .navbar-content {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
+  gap: 1rem;
 }
 
-.left-section, .right-section {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.toggle-sidebar {
-  font-size: 1.5rem;
-  color: #4a5568;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.toggle-sidebar:hover {
-  color: #6366f1;
-  transform: scale(1.1);
-}
-
-.search-form {
-  position: relative;
+.left-section {
   display: flex;
   align-items: center;
+  justify-self: start;
 }
 
-.search-form i {
-  position: absolute;
-  left: 12px;
-  color: #a0aec0;
-}
-
-.search-form input {
-  padding: 0.5rem 1rem 0.5rem 2.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  min-width: 250px;
-}
-
-.search-form input:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-.notification {
-  position: relative;
-  cursor: pointer;
-  color: #4a5568;
-  transition: all 0.2s ease;
-}
-
-.notification:hover {
-  color: #6366f1;
-}
-
-.notification .count {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #ef4444;
-  color: white;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
+.center-section {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.65rem;
-  font-weight: bold;
+  justify-self: center;
 }
 
-.profile {
-  position: relative;
-  cursor: pointer;
-}
-
-.profile img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #e2e8f0;
-  transition: all 0.3s ease;
-}
-
-.profile:hover img {
-  border-color: #6366f1;
-  transform: scale(1.05);
-}
-
-.dropdown-menu {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 10px);
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
-  overflow: hidden;
-  z-index: 1100;
-  border: 1px solid #e2e8f0;
-}
-
-.dropdown-item {
+.right-section {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem;
-  color: #4a5568;
-  text-decoration: none;
+  justify-content: flex-end;
+  justify-self: end;
+  gap: 1rem;
+}
+
+/*  Alerte de stock*/
+/* Ajoutez ces règles à la fin de votre fichier CSS existant */
+
+/* Notification Container Styles */
+.notification-container {
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+/* Alert Styles */
+.alert {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  min-width: 280px;
+  max-width: 320px;
+  z-index: 1000;
+  margin-top: 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease-out forwards;
+  border: none;
+  padding: 1rem;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border-left: 4px solid #ffc107;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-left: 4px solid #17a2b8;
+}
+
+.alert .btn-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-size: 0.75rem;
+}
+
+.alert strong {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alert ul {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0 0;
+}
+
+.alert li {
+  margin-bottom: 0.25rem;
   font-size: 0.9rem;
-  transition: all 0.2s ease;
-  gap: 0.75rem;
 }
 
-.dropdown-item i {
-  width: 20px;
-  text-align: center;
-  color: #718096;
-}
-
-.dropdown-item:hover {
-  background-color: #f8fafc;
-  color: #6366f1;
-}
-
-.dropdown-item:hover i {
-  color: #6366f1;
-}
-
-.dropdown-item:not(:last-child) {
-  border-bottom: 1px solid #edf2f7;
-}
-
-/* Animation */
-@keyframes fadeInScale {
+/* Animations */
+@keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px) scale(0.95);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
-.dropdownAnimation {
-  animation: fadeInScale 0.2s ease-out forwards;
+/* Badge Styles */
+.action-button .badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 0.65rem;
+  padding: 0.35em 0.6em;
+  min-width: 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 2px solid white;
 }
 
-/* Responsive */
+.notification .badge {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.cart .badge {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .alert {
+    right: -20px;
+    min-width: 260px;
+  }
+  
+  .notification-container {
+    margin-left: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .alert {
+    position: fixed;
+    top: 70px;
+    right: 10px;
+    left: 10px;
+    max-width: calc(100% - 20px);
+  }
+  
+  .right-section {
+    gap: 8px;
+  }
+}
+
+.action-button.notification {
+  position: relative;
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0.5rem;
+}
+
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 0.7rem;
+}
+
+.alert {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  min-width: 300px;
+  z-index: 1000;
+  margin-top: 0.5rem;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* Toggle Sidebar */
+.toggle-sidebar {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.6rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-sidebar:hover {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  color: #6366f1;
+  transform: scale(1.05);
+}
+
+.toggle-sidebar:active {
+  transform: scale(0.95);
+}
+
+/* Boutique Info */
+.boutique-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f8fafc, #ffffff);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.boutique-info:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.boutique-logo {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #e2e8f0;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.default-logo {
+  color: white;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.boutique-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #2d3748, #4a5568);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Action Buttons */
+.action-button {
+  position: relative;
+  cursor: pointer;
+  color: #4a5568;
+  transition: all 0.3s ease;
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-size: 1.3rem;
+  background: linear-gradient(135deg, #f8fafc, #ffffff);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  min-height: 50px;
+}
+
+.action-button:hover {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+  border-color: transparent;
+}
+
+.action-button:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Badge */
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border-radius: 12px;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0 6px;
+  box-shadow: 0 3px 8px rgba(239, 68, 68, 0.4);
+  border: 2px solid white;
+  animation: pulse 2s infinite;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.1); 
+    opacity: 0.8;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 0.875rem 1.5rem;
+  }
+  
+  .navbar-content {
+    gap: 0.75rem;
+  }
+  
+  .boutique-name {
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: 0.75rem 1rem;
   }
   
-  .search-form input {
-    min-width: 180px;
+  .navbar-content {
+    grid-template-columns: auto 1fr auto;
+    gap: 0.5rem;
   }
   
-  .dropdown-menu {
-    position: fixed;
-    top: auto;
-    bottom: 70px;
-    right: 15px;
-    left: auto;
-    min-width: 250px;
+  .boutique-info {
+    gap: 0.75rem;
+    padding: 0.4rem 0.8rem;
   }
+  
+  .boutique-logo {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .boutique-name {
+    font-size: 0.95rem;
+  }
+  
+  .action-button {
+    padding: 0.6rem;
+    font-size: 1.2rem;
+    min-width: 45px;
+    min-height: 45px;
+  }
+  
+  .right-section {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .boutique-info {
+    gap: 0.5rem;
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .boutique-logo {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .boutique-name {
+    font-size: 0.9rem;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .action-button {
+    padding: 0.5rem;
+    font-size: 1.1rem;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  .right-section {
+    gap: 0.5rem;
+  }
+}
+
+/* Amélioration de l'accessibilité */
+.toggle-sidebar:focus,
+.action-button:focus {
+  outline: 3px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Animation d'entrée */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar {
+  animation: slideInDown 0.5s ease-out;
+}
+/* Ajoutez à la fin de votre fichier CSS */
+
+/* Animation sonore (feedback visuel) */
+@keyframes pulse-sound {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.action-button.notification:hover,
+.action-button.cart:hover {
+  animation: pulse-sound 0.5s ease;
+}
+
+/* Style pour le badge qui pulse quand il y a une nouvelle notification */
+.badge.new-notification {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }

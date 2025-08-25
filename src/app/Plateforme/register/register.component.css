@@ -67,6 +67,10 @@
   position: relative;
 }
 
+.phone-field {
+  position: relative;
+}
+
 .toggle-password {
   position: absolute;
   right: 15px;
@@ -78,6 +82,7 @@
   opacity: 0.5;
   cursor: pointer;
   transition: var(--transition);
+  z-index: 10;
 }
 
 .toggle-password:hover {
@@ -108,6 +113,67 @@
 
 .strength-bar.strong {
   background-color: var(--success-color);
+}
+
+/* Styles pour l'affichage des opérateurs */
+.operator-badge {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 5;
+  box-shadow: 0 2px 8px rgba(67, 97, 238, 0.3);
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.operator-badge i {
+  font-size: 0.7rem;
+}
+
+.phone-help {
+  margin-top: 5px;
+}
+
+.phone-help small {
+  font-size: 0.75rem;
+  color: #6c757d;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+/* Styles pour différents opérateurs */
+.operator-badge.orange {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+}
+
+.operator-badge.free {
+  background: linear-gradient(135deg, #00a8cc 0%, #0077be 100%);
+}
+
+.operator-badge.expresso {
+  background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+}
+
+.operator-badge.promobile {
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
 }
 
 .btn-primary {
@@ -173,7 +239,7 @@
 
 .social-btn:hover {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-
+  color: white;
 }
 
 .auth-footer {
@@ -205,5 +271,10 @@
   
   .social-buttons {
     grid-template-columns: 1fr;
+  }
+  
+  .operator-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
   }
 }

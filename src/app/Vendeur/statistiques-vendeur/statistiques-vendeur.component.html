@@ -1,0 +1,80 @@
+<main class="content"><div class="dashboard-container">
+  <!-- En-tête -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">
+      📊 Tableau de Bord Vendeur
+    </h1>
+    
+    <div class="period-selector">
+      <div *ngFor="let period of periods"
+     [class.active]="activePeriod === period"
+     (click)="changePeriod(period)">
+  {{ period }}
+</div>
+    </div>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="dashboard-content">
+    <!-- Chargement -->
+    <div *ngIf="isLoading" class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Chargement des données...</p>
+    </div>
+
+    <!-- Cartes de statistiques -->
+    <div class="stats-grid" *ngIf="!isLoading && ventes.length > 0">
+      <div class="stat-card" *ngFor="let vente of ventes">
+        <div class="stat-card-content">
+          <h3>{{ getLabelForPeriod(vente.periode) }}</h3>
+          <p class="stat-value">{{ formatCurrency(vente.total_ventes) }}</p>
+          <p class="stat-label">{{ vente.nombre_commandes }} commande{{ vente.nombre_commandes > 1 ? 's' : '' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graphique -->
+<div class="chart-container" *ngIf="!isLoading && ventes.length > 0">
+  <div class="chart-wrapper">
+    <canvas #salesChart></canvas> <!-- Changé id en référence # -->
+  </div>
+</div>
+
+    <!-- Meilleurs clients -->
+    <div class="clients-section" *ngIf="!isLoading && clients.length > 0">
+      <h2 class="section-title">🏆 Meilleurs Clients</h2>
+      
+      <div class="clients-table-container">
+        <table class="clients-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Email</th>
+              <th class="text-right">Dépenses</th>
+              <th class="text-right">Commandes</th>
+              <th class="text-right">Dernière commande</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let client of clients; let i = index" [class.top-client]="i < 3">
+              <td>
+                <span class="client-rank" *ngIf="i < 3">🏆</span>
+                {{ client.nom }} {{ client.prenom || '' }}
+              </td>
+              <td>{{ client.email }}</td>
+              <td class="text-right">{{ formatCurrency(client.total_depense) }}</td>
+              <td class="text-right">{{ client.nombre_commandes }}</td>
+              <td class="text-right">{{ formatDate(client.derniere_commande) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Messages d'erreur -->
+    <div *ngIf="!isLoading && ventes.length === 0" class="no-data-message">
+      <p>Aucune donnée de vente disponible pour la période sélectionnée.</p>
+    </div>
+  </div>
+</div>
+</main>

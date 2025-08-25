@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
-import { SignUpComponent } from './Plateforme/sign-up/sign-up.component';
 import { DashboardComponent } from './Vendeur/dashboard/dashboard.component';
 import { NavbarComponent } from './Vendeur/navbar/navbar.component';
-import { EmployeeManagementComponent } from './components/employee-management/employee-management.component';
 import { RegisterComponent } from './Plateforme/register/register.component';
 import { LoginComponent } from './Plateforme/login/login.component';
 import { BoutiqueComponent } from './Vendeur/boutique/boutique.component';
@@ -11,8 +9,6 @@ import { VendeurLayoutComponent } from './Vendeur/vendeur-layout/vendeur-layout.
 import { ProductComponent } from './Vendeur/product/product.component';
 import { ProduitComponent } from './Admin/produit/produit.component';
 
-import { ClientComponent } from './Admin/client/client.component';
-import { SellerComponent } from './Admin/seller/seller.component';
 
 
 
@@ -31,16 +27,19 @@ import { HistoriqueComponent } from './client/historique/historique.component';
 import { ProfilComponent } from './client/profil/profil.component';
 import { ConfirmationCommandeComponent } from './client/confirmation-commande/confirmation-commande.component';
 import { RechercheCommandeComponent } from './client/recherche-commande/recherche-commande.component';
-
+import { CommandeclientsComponent } from './Vendeur/commandeclients/commandeclients.component';
+import { StatistiquesVendeurComponent } from './Vendeur/statistiques-vendeur/statistiques-vendeur.component';
+import { ParametreComponent } from './Vendeur/parametre/parametre.component';
 
 
 export const routes: Routes = [
       { path: '', redirectTo: 'accueil', pathMatch: 'full' },
       { path: 'accueil', component:AcceuilComponent },
-      { path: 'signup', component: SignUpComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
       { path: 'categories', component: CategorieComponent },
+      { path: 'creatboutique', component: BoutiqueComponent },
+
 
       { path: 'admin', component: AdminLayoutComponent,
       children: [
@@ -64,6 +63,10 @@ export const routes: Routes = [
       { path: 'statistique', component: DashboardComponent },
       { path: 'card', component: CardsStatisticComponent },
       { path: 'categorie', component: CategorieComponent },
+      { path: 'mes-commandes', component: CommandeclientsComponent },
+      { path: 'statistiques', component: StatistiquesVendeurComponent },
+      { path: 'parametre', component: ParametreComponent },
+
 
 
 ]
@@ -89,7 +92,7 @@ export const routes: Routes = [
                   
                   
                   // Route par défaut - à adapter selon votre choix
-                  { path: '', redirectTo: 'boutiques/1/produits', pathMatch: 'full' },
+                  //{ path: '', redirectTo: 'boutiques/1/produits', pathMatch: 'full' },
             ],
       }
 ];

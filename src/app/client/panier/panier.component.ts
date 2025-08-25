@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PanierItem, PanierService } from '../../services/panier.service';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-panier',
@@ -31,6 +32,8 @@ export class PanierComponent implements OnInit {
       this.panierItems = panier;
       this.total = this.panierService.getTotalPanier();
     });
+
+    console.log("Infos :", !!this.currentBoutiqueId && !!this.currentBoutiqueName)
   }
 
   modifierQuantiteDepuisEvent(idProduit: string, event: Event): void {
@@ -48,15 +51,56 @@ export class PanierComponent implements OnInit {
   }
 
   retirerProduit(produitId: string): void {
-    if (confirm('Êtes-vous sûr de vouloir retirer ce produit du panier ?')) {
-      this.panierService.retirerDuPanier(produitId);
-    }
+Swal.fire({
+        title: 'Êtes-vous sûr de vouloir retirer ce produit du panier ?',
+        text: "Vous ne pourrez pas annuler cette action !",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Oui, continuer',
+        cancelButtonText: 'Annuler'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          try {
+            this.panierService.retirerDuPanier(produitId);
+            // Message de confirmation
+            Swal.fire('Retiré', 'Vous avez retiré le produit avec succès.', 'success');
+          } catch (err) {
+            Swal.fire('Erreur', 'échoué.', 'error');
+          }
+        }
+      }).catch((err) => {
+            console.error('Erreur lors de l’affichage du dialogue :', err);
+            Swal.fire('Erreur', 'Une erreur est survenue.', 'error');
+          });
   }
 
   viderPanier(): void {
-    if (confirm('Êtes-vous sûr de vouloir vider votre panier ?')) {
-      this.panierService.viderPanier();
-    }
+    Swal.fire({
+        title: 'Êtes-vous sûr de vouloir vider votre panier ?',
+        text: "Vous ne pourrez pas annuler cette action !",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Oui, continuer',
+        cancelButtonText: 'Annuler'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          try {
+                this.panierService.viderPanier();
+
+            // Message de confirmation
+            Swal.fire('Ajouté', 'Vous avez retiré le produit avec succès.', 'success');
+          } catch (err) {
+            Swal.fire('Erreur', 'L/operation a échoué.', 'error');
+          }
+        }
+      }).catch((err) => {
+            console.error('Erreur lors de l’affichage du dialogue :', err);
+            Swal.fire('Erreur', 'Une erreur est survenue.', 'error');
+          });
   }
 
   continuerAchats(): void {
@@ -65,7 +109,7 @@ export class PanierComponent implements OnInit {
       this.router.navigate(['/client/boutiques', this.currentBoutiqueId, 'produits']);
     } else {
       // Fallback si pas de boutique courante
-      this.router.navigate(['/client/boutiques']);
+      this.router.navigate(['/accueil']);
     }
   }
 

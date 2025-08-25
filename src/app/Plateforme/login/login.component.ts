@@ -33,33 +33,70 @@ export class LoginComponent {
     })
   }
 
-  onSubmit() {
-     
-    if (this.loginForm.valid) {
-      this.isLoading = true;
-      this.errorMessage = '';
-      const loginData = {
+onSubmit() {
+  if (this.loginForm.valid) {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const loginData = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
       remember: this.loginForm.value.remember
-
     };
-      this.authService.login(loginData).subscribe({
-         next: (result) => {
-          
-          },
-        error: (error) => {
-          console.error("Erreur:", error);
-          this.isLoading = false;
+
+    this.authService.login(loginData).subscribe({
+      next: (result) => {
+        if (result && result.token) {
+          // Stocker le token
+          localStorage.setItem('token', JSON.stringify(result.token));
+          console.log('✅ Token enregistré :', result.token);
+
+          // Stocker l'utilisateur
+          localStorage.setItem('user', JSON.stringify(result.user));
+          console.log('✅ Utilisateur connecté :', result.user);
+
+          // Vérifier le rôle
+          const role = result.user['profil']?.libelle;
+          if (role === 'Vendeur') {
+            const boutiqueId = result.user['boutique']?.id;
+            if (boutiqueId) {
+              // Redirection vers la page boutique
+              this.router.navigate(['/vendeur/produit']);
+            } else {
+              console.warn('⚠️ Aucun ID de boutique trouvé pour ce vendeur.');
+              this.router.navigate(['/accueil']); 
+            }
+          } if (role === 'Administrateur') {
+            const boutiqueId = result.user['boutique']?.id;
+            if (boutiqueId) {
+              // Redirection vers la page boutique
+              this.router.navigate(['/admin/produit']);
+            } else {
+              console.warn('⚠️ Aucun ID de boutique trouvé pour ce vendeur.');
+              this.router.navigate(['/accueil']); 
+            }
+          } else {
+            // Redirection standard
+            this.router.navigate([this.returnUrl]);
+          }
+        } else {
+          console.error('❌ Aucun token reçu depuis l’API');
+          this.errorMessage = 'Erreur lors de la connexion.';
         }
-      });
-      setTimeout(() => {
         this.isLoading = false;
-        // ✅ Redirection dynamique après login
-          this.router.navigate([this.returnUrl]);      
-        }, 2000);
-    }
+      },
+      error: (error) => {
+        console.error('Erreur de connexion:', error);
+        this.errorMessage = 'Identifiants incorrects';
+        this.isLoading = false;
+      }
+    });
   }
+}
+
+
+
+
   
   togglePassword() {
     this.showPassword = !this.showPassword;

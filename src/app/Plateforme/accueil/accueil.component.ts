@@ -1,46 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ServiceService } from '../../services/service.service';
+import { CardsBoutiquesComponent } from "../cards-boutiques/cards-boutiques.component";
+import { AuthService } from '../../services/authservice.service';
 
 @Component({
   selector: 'app-acceuil',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CardsBoutiquesComponent],
   templateUrl: './accueil.component.html',
   styleUrls: ['./accueil.component.css']
 })
-export class AcceuilComponent {
-  boutiques: any = [];
-  isLoading = true;
-  boutique: any = [];
+export class AcceuilComponent implements OnInit{
 
-  constructor(private boutiqueService: ServiceService) {}
 
+  role: any;
+  isVendeur = false;
+  isClient = false;
+
+  constructor(private auth:AuthService){
+
+  }
   ngOnInit(): void {
-    this.loadBoutiques();
-  }
-imageBaseUrl = 'http://localhost:8000';
+     this.isVendeur = this.auth.isVendeur();
+    this.isClient = this.auth.isClient();
 
 
-  loadBoutiques(): void {
-    this.boutiqueService.getBoutiques().subscribe({
-      next: (data) => {
-        this.boutiques = data;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Erreur:', err);
-        this.isLoading = false;
-      }
-    });
   }
 
-  getStatusClass(status: string): string {
-    return status === 'ouvret' ? 'bg-success' : 'bg-secondary';
-  }
 
-  getStatusText(status: string): string {
-    return status === 'ouvret' ? 'Ouvert' : 'Fermé';
-  }
 }
