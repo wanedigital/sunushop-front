@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StatistiqueService } from '../../services/statistique.service';
+import { StatistiqueService, SummaryData, ApiResponse } from '../../services/statistique.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,9 +9,10 @@ import { CommonModule } from '@angular/common';
   styleUrl: './cards-statistic.component.css'
 })
 export class CardsStatisticComponent implements OnInit {
-  summaryData: any = null;
+  summaryData: SummaryData | null = null;
   isLoading = true;
   error: string | null = null;
+  lastUpdated: Date | null = null;
 
   constructor(private statService: StatistiqueService) {}
 
@@ -24,17 +25,18 @@ export class CardsStatisticComponent implements OnInit {
     this.error = null; // Reset error state
     
     this.statService.getSummary().subscribe({
-      next: (response) => {
+      next: (response: ApiResponse<SummaryData>) => {
         if (response.success) {
           this.summaryData = response.data;
+          this.lastUpdated = new Date(); // Enregistre le moment de la dernière mise à jour
         } else {
-          this.error = 'Erreur lors de la récupération des données';
+          this.error = response.message || 'Erreur lors de la récupération des données';
         }
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Erreur lors de la récupération du résumé', err);
-        this.error = "Impossible de charger les statistiques. Vérifiez la console pour plus de détails.";
+        // L'erreur est déjà loggée par le service, ici on gère l'affichage pour l'utilisateur
+        this.error = err.message || "Impossible de charger les statistiques. Veuillez réessayer.";
         this.isLoading = false;
       }
     });
@@ -84,10 +86,13 @@ export class CardsStatisticComponent implements OnInit {
   }
 
   /**
-   * Retourne l'heure actuelle formatée
+   * Retourne l'heure de la dernière mise à jour formatée
    */
-  getCurrentTime(): string {
-    return new Date().toLocaleTimeString('fr-FR', {
+  getFormattedLastUpdate(): string {
+    if (!this.lastUpdated) {
+      return 'N/A';
+    }
+    return this.lastUpdated.toLocaleTimeString('fr-FR', {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit'

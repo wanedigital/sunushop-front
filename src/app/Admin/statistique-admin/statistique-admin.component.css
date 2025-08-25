@@ -153,6 +153,26 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+.card-header .form-control-translucent-light {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.card-header .form-control-translucent-light::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.card-header .form-control-translucent-dark {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white; /* Changed to white for better visibility on dark background */
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.card-header .form-control-translucent-dark::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 /* Amélioration de l'espacement */
 .mb-5 {
   margin-bottom: 3rem !important;
