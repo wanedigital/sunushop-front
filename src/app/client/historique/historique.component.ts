@@ -18,8 +18,8 @@ export class HistoriqueComponent implements OnInit {
   selectedCommande: Commande | null = null;
   userId: string | null = null;
 
-  constructor(
-    private commandeService: CommandeService,
+    constructor(
+    public commandeService: CommandeService,
     private authService: AuthService
   ) {}
 

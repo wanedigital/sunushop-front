@@ -16,10 +16,10 @@ export class ConfirmationCommandeComponent implements OnInit {
   numeroCommande = '';
   email = '';
 
-  constructor(
+    constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private commandeService: CommandeService
+    public commandeService: CommandeService
   ) {}
 
   /*ngOnInit(): void {

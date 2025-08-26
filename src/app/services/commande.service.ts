@@ -1,9 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders  } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { PanierItem } from './panier.service';
 import { AuthService } from './authservice.service';
 import { ServiceService } from './service.service';
+
+export interface Paiement {
+  id: number;
+  montantTotal: number;
+  status: 'en attente' | 'reussi' | 'echoue';
+  date: string;
+  type_paiement_id?: number;
+}
 
 export interface Commande {
   id: number;
@@ -21,6 +29,7 @@ export interface Commande {
     quantite: number;
     prixUnitaire: number;
   }[];
+  paiement?: Paiement; // Modifié pour être optionnel au cas où
 }
 
 export interface CommandeRequest {
@@ -56,24 +65,24 @@ export class CommandeService {
   private apiUrl = 'http://localhost:8000/api'; // URL Laravel
 
   constructor(private http: HttpClient,
-      private authService: AuthService
+    private authService: AuthService
 
 
-  ) {}
+  ) { }
   private getAuthHeaders(): HttpHeaders {
-  // Utilisez la même clé que dans AuthService
-  const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
-  
-  if (!token) {
-    console.error('❌ Aucun token trouvé');
-    return new HttpHeaders();
-  }
+    // Utilisez la même clé que dans AuthService
+    const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
 
-  return new HttpHeaders({
-    'Authorization': `Bearer ${token}`,
-    'Accept': 'application/json'
-  });
-}
+    if (!token) {
+      console.error('❌ Aucun token trouvé');
+      return new HttpHeaders();
+    }
+
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json'
+    });
+  }
 
   // Créer une commande (connecté ou non connecté)
   creerCommande(commandeData: CommandeRequest): Observable<ApiResponse<Commande>> {
@@ -92,9 +101,9 @@ export class CommandeService {
 
   getCommandes(): Observable<Commande[]> {
     const headers = this.authService.getHeaders();
-    
+
     return this.http.get<ApiResponse<Commande[]>>(
-      `${this.apiUrl}/commandes`, 
+      `${this.apiUrl}/commandes`,
       { headers }
     ).pipe(
       map(response => {
@@ -150,36 +159,69 @@ export class CommandeService {
     return ['en attente', 'valider'].includes(statut);
   }
 
+  getPaiementStatusLabel(status: string): string {
+    const labels: { [key: string]: string } = {
+      'en attente': 'Paiement en attente',
+      'reussi': 'Paiement réussi',
+      'echoue': 'Paiement échoué',
+    };
+    return labels[status] || status;
+  }
+
+  getPaiementStatusColor(status: string): string {
+    const colors: { [key: string]: string } = {
+      'en attente': '#ffc107', // Jaune
+      'reussi': '#28a745',     // Vert
+      'echoue': '#dc3545',      // Rouge
+    };
+    return colors[status] || '#6c757d';
+  }
+
   // recuperation de commande pour le vendeur
 
-      getCommandesByBoutique(boutiqueId: number): Observable<any> {
-        const headers = this.getAuthHeaders();
-        return this.http.get(`${this.apiUrl}/boutique/${boutiqueId}/commandes`, { headers }).pipe(
-          catchError(error => {
-            if (error.status === 401) {
-              //this.authService.logout();
-              
-            }
-            return throwError(error);
-          })
-        );
-      }
+  getCommandesByBoutique(boutiqueId: number): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get(`${this.apiUrl}/boutique/${boutiqueId}/commandes`, { headers }).pipe(
+      catchError(error => {
+        if (error.status === 401) {
+          //this.authService.logout();
+
+        }
+        return throwError(error);
+      })
+    );
+  }
   // modification de statut de commande pour le vendeur
 
-      updateStatut(commandeId: number, newStatut: string): Observable<any> {
-      const headers = this.getAuthHeaders();
-      return this.http.patch(
-        `${this.apiUrl}/commandes/${commandeId}/statut`,
-        { etat: newStatut },
-        { headers }
-      ).pipe(
-        catchError(error => {
-          if (error.status === 401) {
-            this.authService.logout();
-          }
-          return throwError(error);
-        })
-      );
-    }
+  updateStatut(commandeId: number, newStatut: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.patch(
+      `${this.apiUrl}/commandes/${commandeId}/statut`,
+      { etat: newStatut },
+      { headers }
+    ).pipe(
+      catchError(error => {
+        if (error.status === 401) {
+          this.authService.logout();
+        }
+        return throwError(error);
+      })
+    );
+  }
 
+  updatePaiementStatus(commandeId: number, newStatus: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.patch(
+      `${this.apiUrl}/commandes/${commandeId}/paiement/statut`,
+      { status: newStatus }, // Le backend attend 'status'
+      { headers }
+    ).pipe(
+      catchError(error => {
+        if (error.status === 401) {
+          this.authService.logout();
+        }
+        return throwError(error);
+      })
+    );
+  }
 }
