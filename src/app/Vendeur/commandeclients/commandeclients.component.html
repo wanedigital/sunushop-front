@@ -1,6 +1,6 @@
 <main class="content">
   <div class="container-fluid py-4">
-    
+
     <!-- Cartes de statistiques -->
     <div class="row mb-4">
       <div class="col-xl-3 col-md-6 mb-4">
@@ -83,32 +83,25 @@
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center flex-wrap">
           <h4 class="mb-0">Liste des Commandes</h4>
-          
+
           <div class="d-flex gap-3 align-items-center flex-wrap">
             <!-- Barre de recherche -->
-            <input 
-              type="text" 
-              class="search-input"
-              placeholder="Rechercher une commande..."
-              [(ngModel)]="searchTerm"
+            <input type="text" class="search-input" placeholder="Rechercher une commande..." [(ngModel)]="searchTerm"
               (input)="onSearchChange()">
-            
-            <!-- Filtres par statut -->
-              <div class="d-flex align-items-center mb-3">
-                <label class="me-2 fw-bold">Filtrer :</label>
-                <!-- Checkbox pour sélectionner/désélectionner toutes les commandes -->
-<div class="form-check mb-3">
-  <input class="form-check-input"
-         type="checkbox"
-         id="selectAll"
-         (change)="onToggleSelectAll($event)">
-  <label class="form-check-label" for="selectAll">
-    Sélectionner tout
-  </label>
-</div>
-              </div>
 
-            
+            <!-- Filtres par statut -->
+            <div class="d-flex align-items-center mb-3">
+              <label class="me-2 fw-bold">Filtrer :</label>
+              <!-- Checkbox pour sélectionner/désélectionner toutes les commandes -->
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="selectAll" (change)="onToggleSelectAll($event)">
+                <label class="form-check-label" for="selectAll">
+                  Sélectionner tout
+                </label>
+              </div>
+            </div>
+
+
             <!-- Actions -->
             <div class="btn-group">
               <button class="btn btn-outline-success btn-sm" (click)="refreshData()" [disabled]="isLoading">
@@ -120,57 +113,49 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Actions par lot -->
         <div class="mt-3" *ngIf="selectedCommandes.size > 0">
           <div class="d-flex align-items-center gap-3">
             <span class="badge bg-primary">{{ selectedCommandes.size }} sélectionnée(s)</span>
-            
+
             <div class="btn-group">
-              <button class="btn btn-sm btn-outline-warning" 
-                      (click)="bulkUpdateStatus('en attente')">
+              <button class="btn btn-sm btn-outline-warning" (click)="bulkUpdateStatus('en attente')">
                 Mettre en attente
               </button>
-              <button class="btn btn-sm btn-outline-success" 
-                      (click)="bulkUpdateStatus('valider')">
+              <button class="btn btn-sm btn-outline-success" (click)="bulkUpdateStatus('valider')">
                 Valider
               </button>
-              <button class="btn btn-sm btn-outline-danger" 
-                      (click)="bulkUpdateStatus('annuler')">
+              <button class="btn btn-sm btn-outline-danger" (click)="bulkUpdateStatus('annuler')">
                 Annuler
               </button>
             </div>
-            
+
             <button class="btn btn-sm btn-outline-secondary" (click)="clearSelection()">
               Désélectionner
             </button>
           </div>
         </div>
       </div>
-      
+
       <div class="table-responsive">
         <table class="table table-hover align-items-center mb-0">
           <thead class="thead-light">
             <tr>
-             <th width="50">
-  <div class="d-flex flex-column gap-2">
-    <input 
-      type="checkbox" 
-      (change)="onToggleSelectAll($event)" 
-      class="form-check-input"
-      [checked]="selectedCommandes.size === filteredCommandes.length && filteredCommandes.length > 0">
-    
-    <select 
-      (change)="onStatusSelectChange($event)"
-      class="form-select form-select-sm"
-      [disabled]="filteredCommandes.length === 0">
-      <option value="all">Tous</option>
-      <option *ngFor="let status of statutOptions" [value]="status.value">
-        {{status.label}}
-      </option>
-    </select>
-  </div>
-</th>
+              <th width="50">
+                <div class="d-flex flex-column gap-2">
+                  <input type="checkbox" (change)="onToggleSelectAll($event)" class="form-check-input"
+                    [checked]="selectedCommandes.size === filteredCommandes.length && filteredCommandes.length > 0">
+
+                  <select (change)="onStatusSelectChange($event)" class="form-select form-select-sm"
+                    [disabled]="filteredCommandes.length === 0">
+                    <option value="all">Tous</option>
+                    <option *ngFor="let status of statutOptions" [value]="status.value">
+                      {{status.label}}
+                    </option>
+                  </select>
+                </div>
+              </th>
               <th (click)="sortBy('numeroCommande')" style="cursor: pointer;">
                 N° Commande <i class="fas fa-sort"></i>
               </th>
@@ -181,24 +166,22 @@
               <th (click)="sortBy('total')" style="cursor: pointer;">
                 Montant <i class="fas fa-sort"></i>
               </th>
-              <th>Statut</th>
+              <th>Statut Cde</th>
+              <th>Statut Paiement</th>
               <th class="text-end">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let cmd of paginatedCommandes; trackBy: trackByFn">
               <td>
-                <input type="checkbox" 
-                       [checked]="selectedCommandes.has(cmd.id)"
-                       (change)="toggleCommandeSelection(cmd.id)"
-                       class="form-check-input">
+                <input type="checkbox" [checked]="selectedCommandes.has(cmd.id)"
+                  (change)="toggleCommandeSelection(cmd.id)" class="form-check-input">
               </td>
               <td class="font-weight-bold">#{{ cmd.numeroCommande }}</td>
               <td>{{ formatDate(cmd.date) }}</td>
               <td>
                 <div class="d-flex align-items-center">
-                  <div class="user-avatar me-3" 
-                       [style.background-color]="getStatusColor(cmd.etat)">
+                  <div class="user-avatar me-3" [style.background-color]="getStatusColor(cmd.etat)">
                     {{ getClientFullName(cmd).charAt(0).toUpperCase() }}
                   </div>
                   <div>
@@ -209,30 +192,35 @@
               </td>
               <td>{{ cmd.total | truncate:0:false:'...':'fcfa' }}</td>
               <td>
-                <select class="form-select form-select-sm" 
-                        [(ngModel)]="cmd.etat" 
-                        (change)="updateStatut(cmd, cmd.etat)"
-                        [disabled]="isLoading || isStatusDisabled(cmd.etat)">
+                <select class="form-select form-select-sm" [(ngModel)]="cmd.etat" (change)="updateStatut(cmd, cmd.etat)"
+                  [disabled]="isLoading || isStatusDisabled(cmd.etat)">
                   <option *ngFor="let status of statutOptions" [value]="status.value">
                     {{ status.icon }} {{ status.label }}
                   </option>
                 </select>
               </td>
+              <td>
+                <select *ngIf="cmd.paiement" class="form-select form-select-sm" [(ngModel)]="cmd.paiement.status"
+                  (change)="updatePaiementStatus(cmd, cmd.paiement.status)" [disabled]="isLoading">
+                  <option *ngFor="let p_status of statutPaiementOptions" [value]="p_status.value">
+                    {{ p_status.icon }} {{ p_status.label }}
+                  </option>
+                </select>
+                <span *ngIf="!cmd.paiement" class="badge bg-secondary">N/A</span>
+              </td>
               <td class="text-end">
                 <div class="btn-group">
-                  <button class="btn btn-sm btn-outline-primary" 
-                          (click)="openDetailModal(detailModal, cmd)"
-                          title="Voir les détails">
+                  <button class="btn btn-sm btn-outline-primary" (click)="openDetailModal(detailModal, cmd)"
+                    title="Voir les détails">
                     <i class="fas fa-eye"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-info"
-                          title="Imprimer">
+                  <button class="btn btn-sm btn-outline-info" title="Imprimer">
                     <i class="fas fa-print"></i>
                   </button>
                 </div>
               </td>
             </tr>
-            
+
             <!-- Message si aucune commande -->
             <tr *ngIf="paginatedCommandes.length === 0 && !isLoading">
               <td colspan="7" class="text-center py-4">
@@ -240,7 +228,8 @@
                   <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
                   <h5 class="text-muted">Aucune commande trouvée</h5>
                   <p class="text-muted">
-                    {{ searchTerm ? 'Essayez de modifier vos critères de recherche' : 'Aucune commande disponible pour le moment' }}
+                    {{ searchTerm ? 'Essayez de modifier vos critères de recherche' : 'Aucune commande disponible pour
+                    le moment' }}
                   </p>
                 </div>
               </td>
@@ -248,23 +237,18 @@
           </tbody>
         </table>
       </div>
-      
+
       <div class="card-footer">
         <div class="d-flex justify-content-between align-items-center">
           <div class="showing-info">
-            Affichage de {{ ((page-1) * pageSize) + 1 }} à 
-            {{ Math.min(page * pageSize, filteredCommandes.length) }} 
+            Affichage de {{ ((page-1) * pageSize) + 1 }} à
+            {{ Math.min(page * pageSize, filteredCommandes.length) }}
             sur {{ filteredCommandes.length }} commandes
           </div>
-          
+
           <nav>
-            <ngb-pagination 
-              [(page)]="page" 
-              [pageSize]="pageSize" 
-              [collectionSize]="filteredCommandes.length"
-              [maxSize]="5"
-              [rotate]="true"
-              [boundaryLinks]="true">
+            <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="filteredCommandes.length"
+              [maxSize]="5" [rotate]="true" [boundaryLinks]="true">
             </ngb-pagination>
           </nav>
         </div>
@@ -280,7 +264,7 @@
         </h5>
         <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
       </div>
-      
+
       <div class="modal-body">
         <!-- Informations principales -->
         <div class="row mb-4">
@@ -291,13 +275,13 @@
                 <strong>Nom:</strong> {{ getClientFullName(selectedCommande!) }}
               </p>
               <p class="mb-2">
-                <strong>Email:</strong> 
+                <strong>Email:</strong>
                 <a [href]="'mailto:' + getClientEmail(selectedCommande!)">
                   {{ getClientEmail(selectedCommande!) }}
                 </a>
               </p>
               <p class="mb-2">
-                <strong>Téléphone:</strong> 
+                <strong>Téléphone:</strong>
                 <a [href]="'tel:' + selectedCommande?.telephone_client">
                   {{ selectedCommande?.telephone_client }}
                 </a>
@@ -307,7 +291,7 @@
               </p>
             </div>
           </div>
-          
+
           <div class="col-md-6">
             <h6><i class="fas fa-shopping-cart me-2"></i>Informations Commande</h6>
             <div class="info-card">
@@ -315,25 +299,32 @@
                 <strong>Date:</strong> {{ formatDate(selectedCommande?.date!) }}
               </p>
               <p class="mb-2">
-                <strong>Statut:</strong> 
+                <strong>Statut:</strong>
                 <span [class]="getEtatBadgeClass(selectedCommande?.etat!)">
                   {{ getStatutIcon(selectedCommande?.etat!) }} {{ getStatutLabel(selectedCommande?.etat!) }}
                 </span>
               </p>
               <p class="mb-0">
-                <strong>Total:</strong> 
-                <span class="total-amount">{{ selectedCommande?.total! | truncate:0:false:'...':'fcfa' }}</span>
+                <strong>Total:</strong>
+                <span class="total-amount">{{ selectedCommande?.total! | truncate:0:false:'..._fcfa' }}</span>
+              </p>
+              <p class="mb-2" *ngIf="selectedCommande?.paiement">
+                <strong>Paiement:</strong>
+                <span [class]="getPaiementStatusBadgeClass(selectedCommande!.paiement.status)">
+                  {{ getPaiementStatusLabel(selectedCommande!.paiement.status) }}
+                </span>
               </p>
             </div>
           </div>
         </div>
+
 
         <!-- Produits commandés -->
         <h6 class="mb-3">
           <i class="fas fa-box me-2"></i>
           Produits Commandés ({{ selectedCommande?.detail_commandes?.length }} article(s))
         </h6>
-        
+
         <div class="table-responsive">
           <table class="table table-bordered">
             <thead>
@@ -348,23 +339,19 @@
               <tr *ngFor="let item of selectedCommande?.detail_commandes">
                 <td>
                   <div class="d-flex align-items-center">
-                    <img *ngIf="item.produit.image" 
-                         [src]="'http://localhost:8000/storage/' + item.produit.image" 
-                         [alt]="item.produit.libelle"
-                         class="img-thumbnail me-3" 
-                         style="width: 60px; height: 60px; object-fit: cover;"
-                         onerror="this.src='assets/images/no-image.png'">
-                    
-                    <div class="product-placeholder me-3" 
-                         *ngIf="!item.produit.image"
-                         style="width: 60px; height: 60px;">
+                    <img *ngIf="item.produit.image" [src]="'http://localhost:8000/storage/' + item.produit.image"
+                      [alt]="item.produit.libelle" class="img-thumbnail me-3"
+                      style="width: 60px; height: 60px; object-fit: cover;"
+                      onerror="this.src='assets/images/no-image.png'">
+
+                    <div class="product-placeholder me-3" *ngIf="!item.produit.image"
+                      style="width: 60px; height: 60px;">
                       <i class="fas fa-image"></i>
                     </div>
-                    
+
                     <div>
                       <strong>{{ item.produit.libelle }}</strong>
-                      <p class="mb-0 text-muted small" 
-                         *ngIf="item.produit.description">
+                      <p class="mb-0 text-muted small" *ngIf="item.produit.description">
                         {{ item.produit.description | truncate:50 }}
                       </p>
                     </div>
@@ -388,15 +375,15 @@
           </table>
         </div>
       </div>
-      
+
       <div class="modal-footer">
-  <button type="button" class="btn btn-outline-primary" (click)="printPage()">
-    <i class="fas fa-print me-1"></i> Imprimer
-  </button>
-  <button type="button" class="btn btn-secondary" (click)="modal.close()">
-    <i class="fas fa-times me-1"></i> Fermer
-  </button>
-</div>
+        <button type="button" class="btn btn-outline-primary" (click)="printPage()">
+          <i class="fas fa-print me-1"></i> Imprimer
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="modal.close()">
+          <i class="fas fa-times me-1"></i> Fermer
+        </button>
+      </div>
     </ng-template>
   </div>
 </main>

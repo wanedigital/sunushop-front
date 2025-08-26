@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { CommandeService } from '../../services/commande.service';
+import { CommandeService, Paiement } from '../../services/commande.service';
 import { TruncatePipe } from '../../shared/pipes/truncate.pipe';
 import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 // Interfaces
 interface Commande {
@@ -25,6 +26,7 @@ interface Commande {
   total: number;
   etat: 'en attente' | 'valider' | 'en cours' | 'terminer' | 'annuler';
   detail_commandes: DetailCommande[];
+  paiement: Paiement; // Assurez-vous que chaque commande a un paiement
 }
 
 interface DetailCommande {
@@ -42,7 +44,7 @@ interface DetailCommande {
   templateUrl: './commandeClients.component.html',
   imports: [TruncatePipe, CommonModule, NgbPaginationModule, FormsModule],
   styleUrls: ['./commandeClients.component.css'],
-  providers: [DecimalPipe,CurrencyPipe],
+  providers: [DecimalPipe, CurrencyPipe],
   standalone: true
 })
 export class CommandeclientsComponent implements OnInit, OnDestroy {
@@ -73,6 +75,13 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
     { value: 'en cours', label: 'En cours', color: 'primary', icon: '🚛' },
     { value: 'terminer', label: 'Terminée', color: 'success', icon: '🎉' },
     { value: 'annuler', label: 'Annulée', color: 'danger', icon: '❌' }
+  ];
+
+  // Options pour le statut du paiement
+  statutPaiementOptions = [
+    { value: 'en attente', label: 'En attente', color: 'warning', icon: '⏳' },
+    { value: 'reussi', label: 'Réussi', color: 'success', icon: '✅' },
+    { value: 'echoue', label: 'Échoué', color: 'danger', icon: '❌' }
   ];
 
   // Observables
@@ -109,9 +118,9 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
   // Méthodes de chargement
   loadCommandes(): void {
     this.isLoading = true;
-    
+
     setTimeout(() => {
-      this.commandeService.getCommandesByBoutique(10).subscribe({
+      this.commandeService.getCommandesByBoutique(1).subscribe({
         next: (res) => {
           this.commandes = res.data || [];
           this.filteredCommandes = [...this.commandes];
@@ -143,7 +152,7 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
     return commande.user?.email || commande.email_client || '';
   }
 
- 
+
 
   formatDate(date: string): string {
     return new Date(date).toLocaleDateString('fr-FR', {
@@ -174,7 +183,7 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
   getStatusColor(etat: string): string {
     const colors = {
       'en attente': '#f59e0b',
-      'valider': '#06b6d4', 
+      'valider': '#06b6d4',
       'en cours': '#4361ee',
       'terminer': '#10b981',
       'annuler': '#ef4444'
@@ -182,17 +191,56 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
     return colors[etat as keyof typeof colors] || '#6b7280';
   }
 
+  // --- Gestion du statut de paiement ---
+  getPaiementStatusLabel(status: string): string {
+    const statutOption = this.statutPaiementOptions.find(opt => opt.value === status);
+    return statutOption?.label || status;
+  }
+
+  getPaiementStatusBadgeClass(status: string): string {
+    const statutOption = this.statutPaiementOptions.find(opt => opt.value === status);
+    return `badge bg-${statutOption?.color || 'secondary'}`;
+  }
+
+  updatePaiementStatus(commande: Commande, newStatus: string): void {
+    if (!commande.paiement) {
+      this.showErrorMessage('Information de paiement introuvable pour cette commande.');
+      return;
+    }
+
+    this.isLoading = true;
+    this.commandeService.updatePaiementStatus(commande.id, newStatus).subscribe({
+      next: (res) => {
+        // Mettre à jour le statut localement
+        const index = this.commandes.findIndex(c => c.id === commande.id);
+        if (index !== -1) {
+          this.commandes[index].paiement.status = newStatus as any;
+          this.performSearch(this.searchTerm); // Rafraîchir le filtre
+        }
+        this.isLoading = false;
+        this.showSuccessMessage('Statut du paiement mis à jour avec succès.');
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Erreur lors de la mise à jour du paiement:', err);
+        this.showErrorMessage(err.error?.message || 'Une erreur est survenue.');
+        // Recharger pour avoir l'état correct en cas d'erreur
+        this.loadCommandes();
+      }
+    });
+  }
+
   canUpdateStatus(commande: Commande, newStatus: string): boolean {
     const currentStatus = commande.etat;
-    
+
     if (currentStatus === 'terminer' && newStatus !== 'terminer') {
       return false;
     }
-    
+
     if (currentStatus === 'annuler' && newStatus !== 'annuler' && newStatus !== 'terminer') {
       return false;
     }
-    
+
     return true;
   }
 
@@ -211,7 +259,7 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
     this.filteredCommandes = this.commandes.filter(cmd =>
       this.matchesSearchTerm(cmd, searchTerm)
     );
-    
+
     this.page = 1;
   }
 
@@ -230,7 +278,7 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
       commande.total?.toString()
     ];
 
-    return searchFields.some(field => 
+    return searchFields.some(field =>
       field?.toLowerCase().includes(term)
     );
   }
@@ -262,7 +310,7 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
 
       const strA = String(valueA).toLowerCase();
       const strB = String(valueB).toLowerCase();
-      
+
       if (direction === 'asc') {
         return strA < strB ? -1 : strA > strB ? 1 : 0;
       } else {
@@ -299,7 +347,7 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
   // Gestion des modales
   openDetailModal(content: any, commande: Commande): void {
     this.selectedCommande = { ...commande };
-    
+
     const modalRef = this.modalService.open(content, {
       size: 'xl',
       centered: true,
@@ -329,8 +377,8 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
       const checked = (event.target as HTMLInputElement).checked;
       checked ? this.selectedCommandes.add(commandeId) : this.selectedCommandes.delete(commandeId);
     } else {
-      this.selectedCommandes.has(commandeId) 
-        ? this.selectedCommandes.delete(commandeId) 
+      this.selectedCommandes.has(commandeId)
+        ? this.selectedCommandes.delete(commandeId)
         : this.selectedCommandes.add(commandeId);
     }
   }
@@ -345,8 +393,8 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
 
   // Mise à jour des statuts
   updateStatut(commande: Commande, newStatut: string): void {
-    console.log('Tentative de mise à jour:', {id: commande.id, newStatut});
-    
+    console.log('Tentative de mise à jour:', { id: commande.id, newStatut });
+
     this.commandeService.updateStatut(commande.id, newStatut).subscribe({
       next: (res) => {
         console.log('Réponse du serveur:', res);
@@ -368,8 +416,8 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const commandesToUpdate = this.commandes.filter(cmd => 
-      this.selectedCommandes.has(cmd.id) && 
+    const commandesToUpdate = this.commandes.filter(cmd =>
+      this.selectedCommandes.has(cmd.id) &&
       this.canUpdateStatus(cmd, newStatus)
     );
 
@@ -384,7 +432,7 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
 
     if (!confirmation) return;
 
-    const updatePromises = commandesToUpdate.map(cmd => 
+    const updatePromises = commandesToUpdate.map(cmd =>
       this.commandeService.updateStatut(cmd.id, newStatus).toPromise()
     );
 
@@ -421,7 +469,7 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
     const csvContent = this.convertToCSV(data);
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
-    
+
     if (link.download !== undefined) {
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
@@ -435,12 +483,12 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
 
   private convertToCSV(data: any[]): string {
     if (data.length === 0) return '';
-    
+
     const headers = Object.keys(data[0]);
     const csvRows = [];
-    
+
     csvRows.push(headers.join(','));
-    
+
     for (const row of data) {
       const values = headers.map(header => {
         const escaped = ('' + row[header]).replace(/"/g, '\\"');
@@ -448,7 +496,7 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
       });
       csvRows.push(values.join(','));
     }
-    
+
     return csvRows.join('\n');
   }
 
@@ -467,9 +515,9 @@ export class CommandeclientsComponent implements OnInit, OnDestroy {
     console.error('❌ Erreur:', message);
   }
   printPage(): void {
-  window.print();
-}
-isStatusDisabled(currentStatus: string): boolean {
-  return ['terminer', 'annuler'].includes(currentStatus);
-}
+    window.print();
+  }
+  isStatusDisabled(currentStatus: string): boolean {
+    return ['terminer', 'annuler'].includes(currentStatus);
+  }
 }

@@ -53,6 +53,15 @@
                 </span>
             </span>
           </div>
+          <div class="detail-row" *ngIf="commande?.paiement">
+            <span class="label">Paiement:</span>
+            <span class="value">
+              <span class="status-badge"
+                    [style.background-color]="commandeService.getPaiementStatusColor(commande.paiement!.status)">
+                 {{ commandeService.getPaiementStatusLabel(commande.paiement!.status) }}
+              </span>
+            </span>
+          </div>
           
           <div class="detail-row">
             <span class="label">Total:</span>

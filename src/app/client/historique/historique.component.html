@@ -38,6 +38,9 @@
           <span class="status-badge" [style.backgroundColor]="getStatusClass(commande.etat)">
             {{getStatusText(commande.etat)}}
           </span>
+          <span *ngIf="commande.paiement" class="status-badge" [style.backgroundColor]="commandeService.getPaiementStatusColor(commande.paiement!.status)">
+            {{commandeService.getPaiementStatusLabel(commande.paiement!.status)}}
+          </span>
         </div>
       </div>
 
@@ -92,9 +95,18 @@
         </div>
         <div class="info-row">
           <span class="label">Statut:</span>
+          <div class="info-row">
+          <span class="label">Statut:</span>
           <span class="status-badge" [style.backgroundColor]="getStatusClass(selectedCommande.etat)">
             {{getStatusText(selectedCommande.etat)}}
           </span>
+        </div>
+        <div class="info-row" *ngIf="selectedCommande.paiement">
+          <span class="label">Paiement:</span>
+          <span class="status-badge" [style.backgroundColor]="commandeService.getPaiementStatusColor(selectedCommande.paiement!.status)">
+            {{commandeService.getPaiementStatusLabel(selectedCommande.paiement!.status)}}
+          </span>
+        </div>
         </div>
         <div class="info-row">
           <span class="label">Adresse:</span>
