@@ -28,11 +28,15 @@ imageBaseUrl = 'http://localhost:8000/';
 
   loadBoutiques(): void {
     this.boutiqueService.getBoutiques().subscribe({
-      next: (data) => {
-        this.boutiques = data;
+      next: (data: any[]) => { // Assurez-vous que data est bien un tableau
+        this.boutiques = data.map(boutique => {
+          if (boutique.logo && !boutique.logo.startsWith('http')) {
+            boutique.logo = 'http://localhost:8000' + boutique.logo;
+          }
+          return boutique;
+        });
         this.isLoading = false;
-        console.error('boutique:', this.boutiques);
-
+        console.log('Boutiques avec URL complètes:', this.boutiques);
       },
       error: (err) => {
         console.error('Erreur:', err);

@@ -13,7 +13,7 @@
       <!-- Zone image avec container -->
       <div class="boutique-image-container">
         <img *ngIf="boutique.logo; else defaultLogo"
-             [src]="imageBaseUrl + boutique.logo"
+             [src]="boutique.logo"
              [alt]="boutique.nom || 'Logo boutique'"
              class="boutique-image" />
         

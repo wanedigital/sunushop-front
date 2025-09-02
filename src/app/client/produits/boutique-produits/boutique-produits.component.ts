@@ -149,53 +149,6 @@ isFullUrl(path: string): boolean {
     });
   }
 
-  // Méthodes devenues obsolètes - on peut les supprimer
-  /*
-  loadBoutiqueData(): void {
-    this.produitService.getBoutiqueById(this.boutiqueId).subscribe({
-      next: (boutique) => {
-        this.boutique = boutique;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement de la boutique:', error);
-        this.error = 'Erreur lors du chargement de la boutique';
-      }
-    });
-  }
-
-  loadProduits(): void {
-    this.loading = true;
-    
-    // Option 1: Utiliser la méthode qui récupère juste les produits
-    this.produitService.getProduitsByBoutique(this.boutiqueId).subscribe({
-      next: (produits) => {
-        this.produits = produits;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement des produits:', error);
-        this.error = 'Erreur lors du chargement des produits';
-        this.loading = false;
-      }
-    });
-
-    // Option 2: Alternative - Utiliser la méthode qui récupère boutique + produits
-    /*
-    this.produitService.getBoutiqueWithProduits(this.boutiqueId).subscribe({
-      next: (response) => {
-        this.produits = response.produits;
-        // Vous pouvez aussi utiliser response.boutique si nécessaire
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement des produits:', error);
-        this.error = 'Erreur lors du chargement des produits';
-        this.loading = false;
-      }
-    });
-    */
-  //}*/
-
   ajouterAuPanier(produit: Produit): void {
     // Vérifier la disponibilité avant d'ajouter
     if (!produit.disponible || produit.quantite === 0) {
@@ -214,15 +167,8 @@ isFullUrl(path: string): boolean {
   }
 
   retourBoutiques(): void {
-    // À adapter selon où vous voulez rediriger
-    // Option 1: Si vous avez une page de liste des boutiques
     this.router.navigate(['/client/boutiques']);
-    
-    // Option 2: Si vous n'avez pas de page boutiques, rediriger vers l'accueil
-    // this.router.navigate(['/client']);
-    
-    // Option 3: Utiliser le history back
-    // window.history.back();
+  
   }
 
   // Méthode utilitaire pour vérifier si un produit est en stock
