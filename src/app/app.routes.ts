@@ -8,10 +8,6 @@ import { AcceuilComponent } from './Plateforme/accueil/accueil.component';
 import { VendeurLayoutComponent } from './Vendeur/vendeur-layout/vendeur-layout.component';
 import { ProductComponent } from './Vendeur/product/product.component';
 import { ProduitComponent } from './Admin/produit/produit.component';
-
-
-
-
 import { CategorieComponent } from './Admin/categorie/categorie.component';
 import { SidebardAdminComponent } from './Admin/sidebard-admin/sidebard-admin.component';
 import { HeaderAdminComponent } from './Admin/header-admin/header-admin.component';
@@ -30,97 +26,90 @@ import { RechercheCommandeComponent } from './client/recherche-commande/recherch
 import { CommandeclientsComponent } from './Vendeur/commandeclients/commandeclients.component';
 import { StatistiquesVendeurComponent } from './Vendeur/statistiques-vendeur/statistiques-vendeur.component';
 import { ParametreComponent } from './Vendeur/parametre/parametre.component';
+import { adminGuard } from './guard/admin.guard';
+import { authGuard } from './guard/auth.guard';
+import { clientGuard } from './guard/client.guard';
+import { vendeurGuard } from './guard/vendeur.guard';
+import { visitorGuard } from './guard/visitor.guard';
+import { UnauthorizedComponent } from './Plateforme/unauthorized/unauthorized.component';
 
 
 export const routes: Routes = [
-      { path: '', redirectTo: 'accueil', pathMatch: 'full' },
-      { path: 'accueil', component:AcceuilComponent },
-      { path: 'register', component: RegisterComponent },
-      { path: 'login', component: LoginComponent },
-      { path: 'categories', component: CategorieComponent },
-      { path: 'creatboutique', component: BoutiqueComponent },
-
-
-      { path: 'admin', component: AdminLayoutComponent,
-      children: [
-      { path: 'sidebar', component: SidebardAdminComponent },
-      { path: 'header', component: HeaderAdminComponent },
+      { 
+    path: '', 
+    redirectTo: 'accueil', 
+    pathMatch: 'full' 
+  },
+  { 
+    path: 'accueil', 
+    component: AcceuilComponent,
+  },
+  { 
+    path: 'register', 
+    component: RegisterComponent,
+  },
+  { 
+    path: 'login', 
+    component: LoginComponent,
+  },
+ { path: 'unauthorized', component: UnauthorizedComponent }
+,
+  // Routes Admin
+  { 
+    path: 'admin', 
+    component: AdminLayoutComponent,
+    canActivate: [authGuard, adminGuard],
+    children: [
       { path: 'statistique', component: StatistiqueAdminComponent },
-      { path: 'boutiques', component:  BoutiquesComponent},
-      { path: 'produit', component:  ProduitComponent},
-      { path: 'cards', component:  CardsStatisticComponent},
+      { path: 'boutiques', component: BoutiquesComponent },
+      { path: 'produit', component: ProduitComponent },
+      { path: 'categories', component: CategorieComponent },
+      { path: '', redirectTo: 'statistique', pathMatch: 'full' }
+    ]
+  },
 
-
-
-
-
-]
-},
-      { path: 'vendeur', component: VendeurLayoutComponent,
-      children: [
-      { path: 'home', component: NavbarComponent },
+  // Routes Vendeur
+  { 
+    path: 'vendeur', 
+    component: VendeurLayoutComponent,
+    canActivate: [authGuard, vendeurGuard],
+    children: [
       { path: 'produit', component: ProductComponent },
       { path: 'statistique', component: DashboardComponent },
-      { path: 'card', component: CardsStatisticComponent },
-      { path: 'categorie', component: CategorieComponent },
       { path: 'mes-commandes', component: CommandeclientsComponent },
       { path: 'statistiques', component: StatistiquesVendeurComponent },
       { path: 'parametre', component: ParametreComponent },
+      { path: '', redirectTo: 'statistique', pathMatch: 'full' }
+    ]
+  },
 
-
-
-]
-      } ,            
-
-
-      {
-      path: 'client',
-            component: ClientLayoutComponent,
-            children: [
-                  // OPTION 1: Route recommandée - plus claire sémantiquement
-                  { path: 'boutiques/:id/produits', component: BoutiqueProduitsComponent },
-                  
-                  // OPTION 2: Si vous préférez garder une structure similaire
-                  // { path: 'boutiques/:id', component: BoutiqueProduitsComponent },
-                  
-                  { path: 'panier', component: PanierComponent },
-                  { path: 'commandes', component: CommandesComponent },
-                  { path: 'historique', component: HistoriqueComponent },
-                  { path: 'profil', component: ProfilComponent },
-                  { path: 'commande/confirmation', component: ConfirmationCommandeComponent },
-                  { path: 'commande/recherche', component: RechercheCommandeComponent},
-                  
-                  
-                  // Route par défaut - à adapter selon votre choix
-                  //{ path: '', redirectTo: 'boutiques/1/produits', pathMatch: 'full' },
-            ],
-      }
-];
-
-
-      /*{ path: 'boutique', component: BoutiqueComponent },
-      { path: 'categorie', component: CategorieComponent },
-      { path: 'produit', component: ProduitComponent },
-      { path: 'client', component: ClientComponent },
-      { path: 'vendeur', component: SellerComponent },*/
-      
-
-
-    /* { path: 'dashboard', component: DashboardComponent,
+  // Routes Client
+  { 
+    path: 'client', 
+    component: ClientLayoutComponent,
+    canActivate: [authGuard, clientGuard],
     children: [
-      { path: 'home', component: DashboardHomeComponent },
-      { path: 'orders', component: OrdersComponent },
-      { path: 'sales', component: SalesComponent },
-      { path: 'clients', component: ClientsComponent },
-      { path: 'settings', component: SettingsComponent },
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
-    ],
-      },*/
+      { path: 'boutiques/:id/produits', component: BoutiqueProduitsComponent },
+      { path: 'panier', component: PanierComponent },
+      { path: 'commandes', component: CommandesComponent },
+      { path: 'historique', component: HistoriqueComponent },
+      { path: 'profil', component: ProfilComponent },
+      { path: 'commande/confirmation', component: ConfirmationCommandeComponent },
+      { path: 'commande/recherche', component: RechercheCommandeComponent },
+      { path: '', redirectTo: 'boutiques', pathMatch: 'full' }
+    ]
+  },
 
+  // Routes accessibles à tous les utilisateurs authentifiés
+  { 
+    path: 'creatboutique', 
+    component: BoutiqueComponent,
+    canActivate: [authGuard] 
+  },
 
-      
-
-
+  // Route de fallback
+  { path: '**', redirectTo: 'accueil' }
+];
       
      
      

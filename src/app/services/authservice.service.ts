@@ -53,14 +53,19 @@ export class AuthService {
   
 isVendeur(): boolean {
   const user = this.getUserInfo();
-  return !!user && user.profil?.libelle?.toLowerCase() === 'vendeur';
- 
+  return user?.profil?.libelle.toLowerCase() === 'vendeur'; 
 }
 
 isClient(): boolean {
   const user = this.getUserInfo();
-  return user?.profil?.libelle === 'Client'; 
+  return user?.profil?.libelle.toLowerCase() === 'client'; 
 }
+
+isAdmin(): boolean {
+  const user = this.getUserInfo();
+  return user?.profil?.libelle.toLowerCase() === 'administrateur'; 
+}
+
   // ✅ Enregistrement
   register(userData: any): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, {
@@ -75,17 +80,22 @@ isClient(): boolean {
   login(credentials: User & { remember?: boolean }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
-        tap(response => {this.storeAuthData(response, credentials.remember ?? false);
-           console.log('Réponse login:', response);
-           const token = (response.token as any).plainTextToken;
-           localStorage.setItem('auth_token', token); 
-                   // Stockez aussi le profil si nécessaire
-          //localStorage.setItem('user_profile', response.user.profil.libelle);
-           
-          })
+        tap(response => {
+          this.storeAuthData(response, credentials.remember ?? false);
+          console.log('Réponse login:', response);
+          const token = (response.token as any).plainTextToken;
+          localStorage.setItem('auth_token', token); 
+          // Stocker le rôle pour un accès global facile
+          if (response.user && response.user['profil']) {
+            localStorage.setItem('role', response.user['profil']['libelle']);
+          }
+        })
       );
   }
-
+getUserEmail(): string {
+  const user = this.getUserInfo();
+  return user?.email || 'votre adresse email';
+}
   // ✅ Stockage utilisateur
   private storeAuthData(response: AuthResponse, remember: boolean = false): void {
   const storage = remember ? localStorage : sessionStorage;
@@ -125,6 +135,7 @@ isClient(): boolean {
   initializeUserFromStorage(): void {
     const token = this.getToken();
     const user = this.getUserInfo();
+   // console.log("Role dans storage:", localStorage.getItem('role'));
 
     if (token && user) {
       this.currentUser.next(user);
@@ -137,6 +148,7 @@ isClient(): boolean {
   logout(): void {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
+    localStorage.removeItem('role'); // Supprimer le rôle
     sessionStorage.removeItem('auth_token');
     sessionStorage.removeItem('auth_user');
     this.currentUser.next(null);
@@ -145,6 +157,7 @@ isClient(): boolean {
   // ✅ Statut de connexion
   isAuthenticated(): boolean {
     return !!this.getToken();
+    
   }
 
   // ✅ Accès au nom, rôle...
@@ -174,8 +187,6 @@ getHeaders(): HttpHeaders {
   }
   return headers;
 }
-
-
 
   // ✅ Méthodes de gestion de profil
   getProfil(): Observable<User> {

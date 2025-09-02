@@ -17,14 +17,14 @@ export class AcceuilComponent implements OnInit{
   role: any;
   isVendeur = false;
   isClient = false;
-
+  isAdmin = false;
   constructor(private auth:AuthService){
 
   }
   ngOnInit(): void {
-     this.isVendeur = this.auth.isVendeur();
+    this.isVendeur = this.auth.isVendeur();
     this.isClient = this.auth.isClient();
-
+    this.isAdmin = this.auth.isAdmin();
 
   }
 

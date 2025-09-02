@@ -55,28 +55,27 @@ onSubmit() {
           localStorage.setItem('user', JSON.stringify(result.user));
           console.log('✅ Utilisateur connecté :', result.user);
 
-          // Vérifier le rôle
+          // Extraire et stocker le rôle
           const role = result.user['profil']?.libelle;
+          if (role) {
+            localStorage.setItem('role', role);
+            console.log('✅ Rôle enregistré :', role);
+          } else {
+            console.warn('⚠️ Aucun rôle trouvé dans la réponse API');
+          }
+
+          // Vérifier le rôle et rediriger
           if (role === 'Vendeur') {
             const boutiqueId = result.user['boutique']?.id;
             if (boutiqueId) {
-              // Redirection vers la page boutique
               this.router.navigate(['/vendeur/produit']);
             } else {
               console.warn('⚠️ Aucun ID de boutique trouvé pour ce vendeur.');
               this.router.navigate(['/accueil']); 
             }
-          } if (role === 'Administrateur') {
-            const boutiqueId = result.user['boutique']?.id;
-            if (boutiqueId) {
-              // Redirection vers la page boutique
-              this.router.navigate(['/admin/produit']);
-            } else {
-              console.warn('⚠️ Aucun ID de boutique trouvé pour ce vendeur.');
-              this.router.navigate(['/accueil']); 
-            }
+          } else if (role === 'Administrateur') {
+            this.router.navigate(['/admin/produit']);
           } else {
-            // Redirection standard
             this.router.navigate([this.returnUrl]);
           }
         } else {
@@ -93,6 +92,7 @@ onSubmit() {
     });
   }
 }
+
 
 
 

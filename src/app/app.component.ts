@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private auth:AuthService) {}
 
   ngOnInit(): void {
+
      this.router.events.subscribe(event => {
     if (event instanceof NavigationEnd) {
       this.isPageVendeur = event.url.includes('/dashboard');
@@ -25,9 +26,7 @@ export class AppComponent implements OnInit {
 
     const role=this.auth.getRole()
 
-      console.log("Utilisateur connecté :", this.auth.getName(), this.auth.getIdUser(), role);
-
-
+     /// console.log("Utilisateur connecté :", this.auth.getName(), this.auth.getIdUser(), role);
   }
 
   title = 'sunushop';

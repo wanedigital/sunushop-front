@@ -1,7 +1,7 @@
 // Exemple de correction pour le service BoutiqueService
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { AuthService } from './authservice.service';
 
 @Injectable({
@@ -45,6 +45,20 @@ export class BoutiqueService {
         })
       );
     }
+
+    // Méthode pour vérifier si l'utilisateur a une boutique
+// Méthode pour vérifier si l'utilisateur a une boutique
+hasBoutique(): Observable<any> {
+  const headers = this.getHeaders();
+  return this.http.get(`${this.apiUrl}/user/has-boutique`, { headers }).pipe(
+    catchError(error => {
+      if (error.status === 401) {
+        this.authService.logout();
+      }
+      return throwError(error);
+    })
+  );
+}
 
   // Méthode pour récupérer toutes les boutiques (pour la vérification de doublons)
   getBoutiques(): Observable<any[]> {

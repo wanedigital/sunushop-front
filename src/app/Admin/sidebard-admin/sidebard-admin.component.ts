@@ -4,6 +4,7 @@ import { MenuItem } from '../../models/menu-item';
 import { LayoutService } from '../../services/layout.service';
 import { NgForOf, NgIf, NgClass } from '@angular/common';
 import { AuthService } from '../../services/authservice.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sidebard-admin',
@@ -76,9 +77,36 @@ isSidebarExpanded = false;
       });
       item.isActive = true;
     }
-    logout() {
-    this.auth.logout();
-    alert("Vous avez été déconnecté.");
-    this.router.navigate(['/accueil']);
+  logout(): void {
+    Swal.fire({
+      title: 'Êtes-vous sûr ?',
+      text: "Vous ne pourrez pas annuler cette action !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Oui, continuer',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        try {
+          // Déconnexion de l'utilisateur
+          this.auth.logout();
+  
+          // Redirection vers la page de login
+          this.router.navigate(['/accueil']);
+
+  
+          // Message de confirmation
+          Swal.fire('Déconnecté', 'Vous avez été déconnecté avec succès.', 'success');
+        } catch (err) {
+          console.error('Erreur lors de la déconnexion :', err);
+          Swal.fire('Erreur', 'La déconnexion a échoué.', 'error');
+        }
+      }
+    }).catch((err) => {
+      console.error('Erreur lors de l’affichage du dialogue :', err);
+      Swal.fire('Erreur', 'Une erreur est survenue.', 'error');
+    });
   }
 }
