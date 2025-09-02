@@ -92,7 +92,7 @@ Swal.fire({
                 this.panierService.viderPanier();
 
             // Message de confirmation
-            Swal.fire('Ajouté', 'Vous avez retiré le produit avec succès.', 'success');
+            Swal.fire('Panier vidé', 'Votre panier a été vidé avec succès.', 'success');
           } catch (err) {
             Swal.fire('Erreur', 'L/operation a échoué.', 'error');
           }
