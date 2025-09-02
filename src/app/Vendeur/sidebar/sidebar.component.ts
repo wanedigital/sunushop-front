@@ -6,6 +6,7 @@ import { AuthService } from '../../services/authservice.service';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 interface User {
   nom: string;
@@ -201,17 +202,35 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    const confirmation = confirm('Êtes-vous sûr de vouloir vous déconnecter ?');
-    if (confirmation) {
-      try {
-        this.auth.logout();
-        this.router.navigate(['/accueil']);
-        // Optionnel: afficher une notification de succès
-        console.log('Déconnexion réussie');
-      } catch (error) {
-        console.error('Erreur lors de la déconnexion:', error);
-        alert('Une erreur est survenue lors de la déconnexion. Veuillez réessayer.');
+    Swal.fire({
+      title: 'Êtes-vous sûr ?',
+      text: "Vous ne pourrez pas annuler cette action !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Oui, continuer',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        try {
+          // Déconnexion de l'utilisateur
+          this.auth.logout();
+  
+          // Redirection vers la page de login
+          this.router.navigate(['/accueil']);
+
+  
+          // Message de confirmation
+          Swal.fire('Déconnecté', 'Vous avez été déconnecté avec succès.', 'success');
+        } catch (err) {
+          console.error('Erreur lors de la déconnexion :', err);
+          Swal.fire('Erreur', 'La déconnexion a échoué.', 'error');
+        }
       }
-    }
+    }).catch((err) => {
+      console.error('Erreur lors de l’affichage du dialogue :', err);
+      Swal.fire('Erreur', 'Une erreur est survenue.', 'error');
+    });
   }
 }

@@ -12,6 +12,7 @@ import { ClientModule } from './client/client.module';
 import { routes } from './app.routes';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { DecimalPipe } from '@angular/common';
+import { UnauthorizedComponent } from './Plateforme/unauthorized/unauthorized.component';
 //import { ClientModule } from './client/client.module';
 
 @NgModule({
@@ -24,7 +25,7 @@ import { DecimalPipe } from '@angular/common';
     RouterModule,
     HttpClientModule,
     FormsModule,
-
+    UnauthorizedComponent,
 
     NgxPaginationModule,
 

@@ -33,7 +33,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   private guestMenuItems = [
     { action: () => this.navigateToBoutique(), icon: '🏪', label: 'Boutiques' },
-    { path: '/client/panier', icon: '🛒', label: 'Panier', badge: true },
     { path: '/client/commandes', icon: '📦', label: 'Passer Commande' },
     { path: '/client/commande/recherche', icon: '📜', label: 'Suivre Commande' },
     { path: '/client/profil', icon: '👤', label: 'Mon Profil' },
@@ -42,7 +41,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   private userMenuItems = [
     { action: () => this.navigateToBoutique(), icon: '🏪', label: 'Boutiques' },
-    { path: '/client/panier', icon: '🛒', label: 'Mon Panier', badge: true },
     { path: '/client/commandes', icon: '📦', label: 'Mes Commandes' },
     { path: '/client/historique', icon: '📜', label: 'Historique' },
    // { path: '/client/profil', icon: '👤', label: 'Mon Profil' },

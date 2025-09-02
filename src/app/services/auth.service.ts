@@ -19,10 +19,17 @@ export class AuthService {
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    // Vérifier si un token existe au démarrage
     const token = localStorage.getItem('token');
     if (token) {
-      this.getCurrentUser().subscribe();
+      this.getCurrentUser().subscribe({
+        error: () => {
+          // En cas d'erreur (token invalide), déconnecter l'utilisateur
+          this.logout();
+        }
+      });
+    } else {
+      // Si pas de token, notifier que l'utilisateur n'est pas connecté
+      this.currentUserSubject.next(null);
     }
   }
   
@@ -51,7 +58,7 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem('token');
   }
 
   isAuthenticated(): boolean {

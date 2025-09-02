@@ -30,6 +30,11 @@
             routerLink="/vendeur/produit">
             Ma Boutique
           </a>
+          <a class="btn btn-outline-light" 
+            *ngIf="isAdmin" 
+            routerLink="/admin/produit">
+            Gestion
+          </a>
           <a class="btn btn-warning" 
              *ngIf="isClient"
              routerLink="/client/profil">

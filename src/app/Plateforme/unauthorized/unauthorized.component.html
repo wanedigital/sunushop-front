@@ -1,0 +1,44 @@
+<div class="unauthorized-container">
+    <!-- Background decorative elements -->
+    <div class="bg-decoration"></div>
+    <div class="bg-decoration"></div>
+    <div class="bg-decoration"></div>
+
+    <div class="content-wrapper">
+        <div class="lock-container">
+            <div class="lock-icon"></div>
+        </div>
+
+        <div class="error-code">401</div>
+        <h1 class="error-title">Accès Non Autorisé</h1>
+        <p class="error-message">
+            Désolé, vous n'avez pas l'autorisation d'accéder à cette page. 
+            Veuillez vous connecter avec un compte ayant les permissions appropriées.
+        </p>
+
+        <div class="action-buttons">
+            <button (click)="goToLogin()" class="btn btn-primary">
+                🔑 Se Connecter
+            </button>
+            <button (click)="goToHome()" class="btn btn-secondary">
+                🏠 Retour à l'accueil
+            </button>
+        </div>
+
+        <div class="help-section">
+            <h3 class="help-title">Que faire maintenant ?</h3>
+            <div class="help-list">
+                <div class="help-item">Connectez-vous avec votre compte</div>
+                <div class="help-item">Vérifiez vos permissions d'accès</div>
+                <div class="help-item">Contactez l'administrateur si nécessaire</div>
+                <div class="help-item">Retournez à la page d'accueil</div>
+            </div>
+        </div>
+
+        <div class="contact-info">
+            <p><strong>Besoin d'aide ?</strong></p>
+            <p>Contactez notre équipe support : <a href="wanedigital@gmail.com">wanedigital&#64;gmail.com</a></p>
+            <p>Ou appelez le : <a href="tel:+221779086031">+221 77 908 60 31 </a></p>
+        </div>
+    </div>
+</div>
